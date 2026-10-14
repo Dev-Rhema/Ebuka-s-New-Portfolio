@@ -8,6 +8,9 @@ import headerImgNoBg from "./assets/headerImgNoBg.webp";
 
 gsap.registerPlugin(useGSAP, CustomEase);
 
+// Always play in real time; never stretch the animation to absorb slow frames
+gsap.ticker.lagSmoothing(0);
+
 // slow start, quick jump, long settle
 CustomEase.create(
   "jump",
@@ -37,8 +40,19 @@ function Loader({ onComplete }) {
         .querySelector(".fullscreen")
         .getBoundingClientRect();
 
+      let startedAt = 0;
       const tl = gsap
-        .timeline({ paused: true, onComplete })
+        .timeline({
+          paused: true,
+          onComplete: () => {
+            if (import.meta.env.DEV) {
+              console.info(
+                `Loader took ${((performance.now() - startedAt) / 1000).toFixed(2)}s`,
+              );
+            }
+            onComplete?.();
+          },
+        })
         .timeScale(SPEED)
         // Intro
         .from(
@@ -145,7 +159,10 @@ function Loader({ onComplete }) {
       Promise.all([
         ...[...images].map((img) => img.decode().catch(() => {})),
         document.fonts.ready,
-      ]).then(() => tl.play());
+      ]).then(() => {
+        startedAt = performance.now();
+        tl.play();
+      });
     },
     { scope: container },
   );
@@ -186,7 +203,7 @@ function Loader({ onComplete }) {
         </div>
       </div>
 
-      <p className="counter absolute bottom-10 w-full text-center font-['Geist'] text-[18px] font-medium leading-none text-[#555]">
+      <p className="counter absolute bottom-10 w-full text-center font-['Geist'] text-[16px] font-medium leading-none text-[#555]">
         <span className="count">0</span>%
       </p>
 

@@ -14,6 +14,9 @@ CustomEase.create(
   "M0,0 C0.2,0.03 0.38,0.12 0.46,0.3 C0.5,0.42 0.5,0.7 0.56,0.8 C0.66,0.93 0.8,0.98 1,1",
 );
 
+// Playback speed of the whole loader (1 = original, lower = slower)
+const SPEED = 0.6;
+
 // Width of the full-size frame when it first appears (px)
 const FULLSCREEN_START_W = 176;
 
@@ -31,18 +34,19 @@ function Loader({ onComplete }) {
 
       gsap
         .timeline({ onComplete })
+        .timeScale(SPEED)
         // Intro
         .from(
           ".name",
           {
-            yPercent: -100,
+            yPercent: -110,
             duration: 0.47,
             ease: "power2.out",
             stagger: { each: 0.01, from: "end" },
           },
-          0.06,
+          0.36,
         )
-        .from(".sub", { yPercent: 100, duration: 0.37, ease: "power2.out" }, 0.165)
+        .from(".sub", { yPercent: 100, duration: 0.37, ease: "power2.out" }, 0.465)
         .from(
           ".line",
           { scaleX: 0, transformOrigin: "left", duration: 0.8, ease: "power3.out" },
@@ -57,6 +61,7 @@ function Loader({ onComplete }) {
         .from(".photo img", { scale: 0.5, duration: 0.3, ease: "power2.out" }, 0.09)
         .from(".logo", { scale: 0, duration: 0.5, ease: "sine.out" }, 0.12)
         .from(".counter", { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" }, 0.15)
+        .to(".count", { textContent: 100, snap: { textContent: 1 }, duration: 0.65, ease: "power1.inOut" }, 0.2)
         // Full-size photo grows over everything
         .from(".fullscreen", { opacity: 0, duration: 0.11 }, 0.88)
         .from(
@@ -105,7 +110,7 @@ function Loader({ onComplete }) {
       </div>
 
       <p className="counter absolute bottom-10 w-full text-center font-['Geist'] text-[28px] font-medium leading-none text-[#555]">
-        0%
+        <span className="count">0</span>%
       </p>
 
       <div className={`backdrop absolute inset-0 ${backdrop}`} />

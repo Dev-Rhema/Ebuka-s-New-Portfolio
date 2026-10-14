@@ -17,6 +17,12 @@ CustomEase.create(
   "M0,0 C0.2,0.03 0.38,0.12 0.46,0.3 C0.5,0.42 0.5,0.7 0.56,0.8 C0.66,0.93 0.8,0.98 1,1",
 );
 
+// logo and text reveal: cubic-bezier(0.35, 0, 0, 1)
+CustomEase.create("reveal", "M0,0 C0.35,0 0,1 1,1");
+
+// logo slide to corner: cubic-bezier(0.99, 0.18, 0.08, 0.82)
+CustomEase.create("logoMove", "M0,0 C0.99,0.18 0.08,0.82 1,1");
+
 // Playback speed of the whole loader (1 = original, lower = slower)
 const SPEED = 0.6;
 
@@ -59,15 +65,15 @@ function Loader({ onComplete }) {
           ".name",
           {
             yPercent: -110,
-            duration: 0.47,
-            ease: "power2.out",
+            duration: 1,
+            ease: "reveal",
             stagger: { each: 0.01, from: "end" },
           },
           0.36,
         )
         .from(
           ".sub",
-          { yPercent: 100, duration: 0.37, ease: "power2.out" },
+          { yPercent: 100, duration: 1, ease: "reveal" },
           0.465,
         )
         .from(
@@ -75,8 +81,8 @@ function Loader({ onComplete }) {
           {
             scaleX: 0,
             transformOrigin: "left",
-            duration: 0.8,
-            ease: "power3.out",
+            duration: 1,
+            ease: "reveal",
           },
           0.1,
         )
@@ -85,8 +91,8 @@ function Loader({ onComplete }) {
           { clipPath: "inset(50% 50% 50% 50%)" },
           {
             clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.75,
-            ease: "power3.out",
+            duration: 1,
+            ease: "reveal",
           },
           0.09,
         )
@@ -95,7 +101,7 @@ function Loader({ onComplete }) {
           { scale: 0.5, duration: 0.3, ease: "power2.out" },
           0.09,
         )
-        .from(".logo", { scale: 0, duration: 0.5, ease: "sine.out" }, 0.12)
+        .from(".logo", { scale: 0, duration: 1.2, ease: "reveal" }, 0.12)
         .from(
           ".counter",
           { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" },
@@ -148,8 +154,8 @@ function Loader({ onComplete }) {
           {
             x: (_, el) =>
               window.innerWidth * (0.044 - 0.5) + el.offsetWidth / 2,
-            duration: 0.65,
-            ease: "jump",
+            duration: 0.8,
+            ease: "logoMove",
           },
           1.58,
         );

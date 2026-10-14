@@ -4,7 +4,7 @@ import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
 import headerImg from "./assets/headerImg.webp";
 // Background removed; grayscale + 85% brightness baked in
-import headerImgCutout from "./assets/headerImgCutout.webp";
+import headerImgNoBg from "./assets/headerImgNoBg.webp";
 
 gsap.registerPlugin(useGSAP, CustomEase);
 
@@ -139,7 +139,7 @@ function Loader({ onComplete }) {
           className={`fullscreen aspect-176/143 w-[min(100vw,calc(100vh*176/143))] shrink-0 overflow-hidden will-change-transform ${backdrop}`}
         >
           <img
-            src={headerImgCutout}
+            src={headerImgNoBg}
             alt=""
             fetchPriority="high"
             className="h-full w-full origin-top translate-y-15 scale-110 object-cover"

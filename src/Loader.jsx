@@ -2,9 +2,9 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
-import headerImg from "./assets/headerImg.svg";
+import headerImg from "./assets/headerImg.webp";
 // Background removed; grayscale + 85% brightness baked in
-import headerImgCutout from "./assets/headerImgCutout.png";
+import headerImgCutout from "./assets/headerImgCutout.webp";
 
 gsap.registerPlugin(useGSAP, CustomEase);
 
@@ -32,8 +32,8 @@ function Loader({ onComplete }) {
     () => {
       gsap.set(".logo", { xPercent: -50 });
 
-      gsap
-        .timeline({ onComplete })
+      const tl = gsap
+        .timeline({ paused: true, onComplete })
         .timeScale(SPEED)
         // Intro
         .from(
@@ -61,7 +61,11 @@ function Loader({ onComplete }) {
         .from(".photo img", { scale: 0.5, duration: 0.3, ease: "power2.out" }, 0.09)
         .from(".logo", { scale: 0, duration: 0.5, ease: "sine.out" }, 0.12)
         .from(".counter", { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" }, 0.15)
-        .to(".count", { textContent: 100, snap: { textContent: 1 }, duration: 0.65, ease: "power1.inOut" }, 0.2)
+        .to(
+          ".count",
+          { textContent: 100, snap: { textContent: 1 }, duration: 0.65, ease: "power1.inOut" },
+          0.2,
+        )
         // Full-size photo grows over everything
         .from(".fullscreen", { opacity: 0, duration: 0.11 }, 0.88)
         .from(
@@ -75,8 +79,23 @@ function Loader({ onComplete }) {
           0.88,
         )
         .from(".backdrop", { opacity: 0, duration: 0.35 }, 1.25)
-        // Logo moves to the corner
-        .to(".logo", { left: "4.4vw", xPercent: 0, duration: 0.65, ease: "jump" }, 1.36);
+        // Logo slides from top centre to 4.4vw from the left edge
+        .to(
+          ".logo",
+          {
+            x: (_, el) => window.innerWidth * (0.044 - 0.5) + el.offsetWidth / 2,
+            duration: 0.65,
+            ease: "jump",
+          },
+          1.36,
+        );
+
+      // Start once images are decoded and fonts are in, so nothing pops in mid-animation
+      const images = container.current.querySelectorAll("img");
+      Promise.all([
+        ...[...images].map((img) => img.decode().catch(() => {})),
+        document.fonts.ready,
+      ]).then(() => tl.play());
     },
     { scope: container },
   );
@@ -96,7 +115,7 @@ function Loader({ onComplete }) {
         </div>
 
         <div className="photo mx-4.5 h-29.75 w-36.75 overflow-hidden">
-          <img src={headerImg} alt="" className="h-full w-full object-cover object-[50%_17%]" />
+          <img src={headerImg} alt="" fetchPriority="high" className="h-full w-full object-cover" />
         </div>
 
         <div className={nameColumn}>
@@ -122,6 +141,7 @@ function Loader({ onComplete }) {
           <img
             src={headerImgCutout}
             alt=""
+            fetchPriority="high"
             className="h-full w-full origin-top translate-y-15 scale-110 object-cover"
           />
         </div>

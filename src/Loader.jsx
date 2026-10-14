@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
 import headerImg from "./assets/headerImg.svg";
+// Background removed; grayscale + 85% brightness baked in
 import headerImgCutout from "./assets/headerImgCutout.png";
 
 gsap.registerPlugin(useGSAP, CustomEase);
@@ -13,6 +14,14 @@ CustomEase.create(
   "M0,0 C0.2,0.03 0.38,0.12 0.46,0.3 C0.5,0.42 0.5,0.7 0.56,0.8 C0.66,0.93 0.8,0.98 1,1",
 );
 
+// Width of the full-size frame when it first appears (px)
+const FULLSCREEN_START_W = 176;
+
+const backdrop = "bg-[linear-gradient(#aaa,#b4b4b4_40%)]";
+const nameColumn =
+  "flex h-29.75 flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
+const subText = "sub pb-1 font-['Geist'] text-lg/none font-medium text-[#555]";
+
 function Loader({ onComplete }) {
   const container = useRef(null);
 
@@ -22,6 +31,7 @@ function Loader({ onComplete }) {
 
       gsap
         .timeline({ onComplete })
+        // Intro
         .from(
           ".name",
           {
@@ -32,47 +42,27 @@ function Loader({ onComplete }) {
           },
           0.06,
         )
-        .from(
-          ".sub",
-          { yPercent: 100, duration: 0.37, ease: "power2.out" },
-          0.165,
-        )
+        .from(".sub", { yPercent: 100, duration: 0.37, ease: "power2.out" }, 0.165)
         .from(
           ".line",
-          {
-            scaleX: 0,
-            transformOrigin: "left",
-            duration: 0.8,
-            ease: "power3.out",
-          },
+          { scaleX: 0, transformOrigin: "left", duration: 0.8, ease: "power3.out" },
           0.1,
         )
         .fromTo(
           ".photo",
           { clipPath: "inset(50% 50% 50% 50%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.75,
-            ease: "power3.out",
-          },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 0.75, ease: "power3.out" },
           0.09,
         )
-        .from(
-          ".photo img",
-          { scale: 0.5, duration: 0.3, ease: "power2.out" },
-          0.09,
-        )
+        .from(".photo img", { scale: 0.5, duration: 0.3, ease: "power2.out" }, 0.09)
         .from(".logo", { scale: 0, duration: 0.5, ease: "sine.out" }, 0.12)
-        .from(
-          ".counter",
-          { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" },
-          0.15,
-        )
+        .from(".counter", { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" }, 0.15)
+        // Full-size photo grows over everything
         .from(".fullscreen", { opacity: 0, duration: 0.11 }, 0.88)
         .from(
           ".fullscreen",
           {
-            scale: (_, el) => 176 / el.offsetWidth,
+            scale: (_, el) => FULLSCREEN_START_W / el.offsetWidth,
             y: -9,
             duration: 0.77,
             ease: "jump",
@@ -80,47 +70,33 @@ function Loader({ onComplete }) {
           0.88,
         )
         .from(".backdrop", { opacity: 0, duration: 0.35 }, 1.25)
-        .to(
-          ".logo",
-          { left: "4.4vw", xPercent: 0, duration: 0.65, ease: "jump" },
-          1.36,
-        );
+        // Logo moves to the corner
+        .to(".logo", { left: "4.4vw", xPercent: 0, duration: 0.65, ease: "jump" }, 1.36);
     },
     { scope: container },
   );
 
   return (
-    <div
-      ref={container}
-      className="fixed inset-0 z-50 overflow-hidden bg-black"
-    >
+    <div ref={container} className="fixed inset-0 z-50 overflow-hidden bg-black">
       <div className="line absolute top-[calc(50%-9px)] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
 
       <div className="absolute inset-0 grid -translate-y-[9px] grid-cols-[1fr_auto_1fr] items-center max-sm:scale-[0.55]">
-        <div className="flex h-29.75 flex-col items-end justify-between font-['DM-Serif'] text-[38px] leading-none text-white">
+        <div className={`${nameColumn} items-end`}>
           <div className="overflow-hidden pt-1.5">
             <p className="name">EBUKA</p>
           </div>
           <div className="-mb-1.75 overflow-hidden">
-            <p className="sub pb-1 font-['Geist'] text-lg/none font-medium text-[#555]">
-              Nihil Sine Deo
-            </p>
+            <p className={subText}>Nihil Sine Deo</p>
           </div>
         </div>
 
         <div className="photo mx-4.5 h-29.75 w-36.75 overflow-hidden">
-          <img
-            src={headerImg}
-            alt=""
-            className="h-full w-full object-cover object-[50%_17%]"
-          />
+          <img src={headerImg} alt="" className="h-full w-full object-cover object-[50%_17%]" />
         </div>
 
-        <div className="flex h-29.75 flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white">
+        <div className={nameColumn}>
           <div className="mt-6.5 overflow-hidden">
-            <p className="sub pb-1 font-['Geist'] text-lg/none font-medium text-[#555]">
-              Senior Digital Marketer
-            </p>
+            <p className={subText}>Senior Digital Marketer</p>
           </div>
           <div className="-mb-1.5 overflow-hidden pt-1.5">
             <p className="name">CHIDUBE</p>
@@ -132,23 +108,21 @@ function Loader({ onComplete }) {
         0%
       </p>
 
-      <div className="backdrop absolute inset-0 bg-[linear-gradient(#aaa,#b4b4b4_40%)]" />
+      <div className={`backdrop absolute inset-0 ${backdrop}`} />
 
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="fullscreen aspect-176/143 w-[min(100vw,calc(100vh*176/143))] shrink-0 overflow-hidden bg-[linear-gradient(#aaa,#b4b4b4_40%)]">
+        <div
+          className={`fullscreen aspect-176/143 w-[min(100vw,calc(100vh*176/143))] shrink-0 overflow-hidden will-change-transform ${backdrop}`}
+        >
           <img
             src={headerImgCutout}
             alt=""
-            className="h-full w-full origin-top translate-y-15 scale-110 object-cover brightness-[.85] grayscale"
+            className="h-full w-full origin-top translate-y-15 scale-110 object-cover"
           />
         </div>
       </div>
 
-      <img
-        src="/logo.svg"
-        alt="Logo"
-        className="logo absolute top-7.75 left-1/2 h-11 w-10"
-      />
+      <img src="/logo.svg" alt="Logo" className="logo absolute top-7.75 left-1/2 h-11 w-10" />
     </div>
   );
 }

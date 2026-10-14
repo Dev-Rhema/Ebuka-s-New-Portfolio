@@ -17,9 +17,6 @@ CustomEase.create(
 // Playback speed of the whole loader (1 = original, lower = slower)
 const SPEED = 0.6;
 
-// Width of the full-size frame when it first appears (px)
-const FULLSCREEN_START_W = 176;
-
 const backdrop = "bg-[linear-gradient(#aaa,#b4b4b4_40%)]";
 const nameColumn =
   "flex h-29.75 flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
@@ -31,6 +28,14 @@ function Loader({ onComplete }) {
   useGSAP(
     () => {
       gsap.set(".logo", { xPercent: -50 });
+
+      // The B&W frame starts exactly on top of the colour photo, then grows
+      const photo = container.current
+        .querySelector(".photo")
+        .getBoundingClientRect();
+      const full = container.current
+        .querySelector(".fullscreen")
+        .getBoundingClientRect();
 
       const tl = gsap
         .timeline({ paused: true, onComplete })
@@ -46,48 +51,93 @@ function Loader({ onComplete }) {
           },
           0.36,
         )
-        .from(".sub", { yPercent: 100, duration: 0.37, ease: "power2.out" }, 0.465)
+        .from(
+          ".sub",
+          { yPercent: 100, duration: 0.37, ease: "power2.out" },
+          0.465,
+        )
         .from(
           ".line",
-          { scaleX: 0, transformOrigin: "left", duration: 0.8, ease: "power3.out" },
+          {
+            scaleX: 0,
+            transformOrigin: "left",
+            duration: 0.8,
+            ease: "power3.out",
+          },
           0.1,
         )
         .fromTo(
           ".photo",
           { clipPath: "inset(50% 50% 50% 50%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 0.75, ease: "power3.out" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 0.75,
+            ease: "power3.out",
+          },
           0.09,
         )
-        .from(".photo img", { scale: 0.5, duration: 0.3, ease: "power2.out" }, 0.09)
+        .from(
+          ".photo img",
+          { scale: 0.5, duration: 0.3, ease: "power2.out" },
+          0.09,
+        )
         .from(".logo", { scale: 0, duration: 0.5, ease: "sine.out" }, 0.12)
-        .from(".counter", { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" }, 0.15)
+        .from(
+          ".counter",
+          { x: 100, opacity: 0, duration: 0.3, ease: "power3.out" },
+          0.15,
+        )
         .to(
           ".count",
-          { textContent: 100, snap: { textContent: 1 }, duration: 0.65, ease: "power1.inOut" },
+          {
+            textContent: 100,
+            snap: { textContent: 1 },
+            duration: 0.65,
+            ease: "power1.inOut",
+          },
           0.2,
         )
         // Full-size photo grows over everything
-        .from(".fullscreen", { opacity: 0, duration: 0.11 }, 0.88)
+        // Colour fades to B&W in place, then the B&W photo grows
+        .from(
+          ".fullscreen",
+          { opacity: 0, duration: 0.22, ease: "sine.inOut" },
+          0.88,
+        )
         .from(
           ".fullscreen",
           {
-            scale: (_, el) => FULLSCREEN_START_W / el.offsetWidth,
-            y: -9,
+            scale: photo.width / full.width,
+            y: photo.top + photo.height / 2 - (full.top + full.height / 2),
             duration: 0.77,
             ease: "jump",
           },
-          0.88,
+          1.1,
         )
-        .from(".backdrop", { opacity: 0, duration: 0.35 }, 1.25)
+        // Person eases into the larger, lower full-view framing
+        .fromTo(
+          ".fullscreen img",
+          { scale: 1, y: 0 },
+          {
+            scale: 1.1,
+            y: 60,
+            transformOrigin: "top",
+            duration: 0.77,
+            ease: "jump",
+          },
+          1.1,
+        )
+        .from(".backdrop", { opacity: 0, duration: 0.35 }, 1.47)
         // Logo slides from top centre to 4.4vw from the left edge
         .to(
           ".logo",
           {
-            x: (_, el) => window.innerWidth * (0.044 - 0.5) + el.offsetWidth / 2,
+            x: (_, el) =>
+              window.innerWidth * (0.044 - 0.5) + el.offsetWidth / 2,
             duration: 0.65,
             ease: "jump",
           },
-          1.36,
+          1.58,
         );
 
       // Start once images are decoded and fonts are in, so nothing pops in mid-animation
@@ -101,7 +151,10 @@ function Loader({ onComplete }) {
   );
 
   return (
-    <div ref={container} className="fixed inset-0 z-50 overflow-hidden bg-black">
+    <div
+      ref={container}
+      className="fixed inset-0 z-50 overflow-hidden bg-black"
+    >
       <div className="line absolute top-[calc(50%-9px)] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
 
       <div className="absolute inset-0 grid -translate-y-[9px] grid-cols-[1fr_auto_1fr] items-center max-sm:scale-[0.55]">
@@ -115,7 +168,12 @@ function Loader({ onComplete }) {
         </div>
 
         <div className="photo mx-4.5 h-29.75 w-36.75 overflow-hidden">
-          <img src={headerImg} alt="" fetchPriority="high" className="h-full w-full object-cover" />
+          <img
+            src={headerImg}
+            alt=""
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+          />
         </div>
 
         <div className={nameColumn}>
@@ -128,7 +186,7 @@ function Loader({ onComplete }) {
         </div>
       </div>
 
-      <p className="counter absolute bottom-10 w-full text-center font-['Geist'] text-[28px] font-medium leading-none text-[#555]">
+      <p className="counter absolute bottom-10 w-full text-center font-['Geist'] text-[18px] font-medium leading-none text-[#555]">
         <span className="count">0</span>%
       </p>
 
@@ -136,18 +194,22 @@ function Loader({ onComplete }) {
 
       <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className={`fullscreen aspect-176/143 w-[min(100vw,calc(100vh*176/143))] shrink-0 overflow-hidden will-change-transform ${backdrop}`}
+          className={`fullscreen aspect-147/119 w-[min(100vw,calc(100vh*147/119))] shrink-0 overflow-hidden will-change-transform ${backdrop}`}
         >
           <img
             src={headerImgNoBg}
             alt=""
             fetchPriority="high"
-            className="h-full w-full origin-top translate-y-15 scale-110 object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
       </div>
 
-      <img src="/logo.svg" alt="Logo" className="logo absolute top-7.75 left-1/2 h-11 w-10" />
+      <img
+        src="/logo.svg"
+        alt="Logo"
+        className="logo absolute top-7.75 left-1/2 h-11 w-10"
+      />
     </div>
   );
 }

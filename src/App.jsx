@@ -1,12 +1,7 @@
-import Loader from "./Loader";
+import Spiral from "./components/Spiral";
 
 function App() {
-  return (
-    <>
-      <Loader />
-      <h1>Hellooo</h1>
-    </>
-  );
+  return <Spiral />;
 }
 
 export default App;

@@ -71,11 +71,7 @@ function Loader({ onComplete }) {
           },
           0.36,
         )
-        .from(
-          ".sub",
-          { yPercent: 100, duration: 1, ease: "reveal" },
-          0.465,
-        )
+        .from(".sub", { yPercent: 100, duration: 1, ease: "reveal" }, 0.465)
         .from(
           ".line",
           {
@@ -180,7 +176,7 @@ function Loader({ onComplete }) {
     >
       <div className="line absolute top-[calc(50%-9px)] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
 
-      <div className="absolute inset-0 grid -translate-y-[9px] grid-cols-[1fr_auto_1fr] items-center max-sm:scale-[0.55]">
+      <div className="absolute inset-0 grid -translate-y-2.25 grid-cols-[1fr_auto_1fr] items-center max-sm:scale-[0.55]">
         <div className={`${nameColumn} items-end`}>
           <div className="overflow-hidden pt-1.5">
             <p className="name">EBUKA</p>

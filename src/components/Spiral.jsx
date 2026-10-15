@@ -20,10 +20,6 @@ const smoothstep = (min, max, value) => {
   return x * x * (3 - 2 * x);
 };
 
-// Size the helix was tuned at; smaller containers scale the whole scene down
-const DESIGN_WIDTH = 980;
-const DESIGN_HEIGHT = 880;
-
 // Card textures are drawn at this width, with a transparent margin that
 // gives the mipmap blur room to soften the card edges
 const TEXTURE_WIDTH = 600;
@@ -194,8 +190,6 @@ const Spiral = ({
     host.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const group = new THREE.Group();
-    scene.add(group);
     const camera = new THREE.PerspectiveCamera(50, 1, 1, 20000);
     cameraRef.current = camera;
 
@@ -247,7 +241,7 @@ const Spiral = ({
       const mesh = new THREE.Mesh(geometry, material);
       mesh.visible = false;
       mesh.userData.item = item;
-      group.add(mesh);
+      scene.add(mesh);
 
       Promise.all([getTexture(item.src), getTexture(backImage)])
         .then(([front, back]) => {
@@ -271,10 +265,6 @@ const Spiral = ({
       camera.fov = (2 * Math.atan(h / 2 / perspective) * 180) / Math.PI;
       camera.position.set(0, 0, perspective);
       camera.updateProjectionMatrix();
-      // Narrow screens keep a minimum size and let the side cards crop
-      group.scale.setScalar(
-        Math.min(1, Math.max(w / DESIGN_WIDTH, 0.55), h / DESIGN_HEIGHT),
-      );
     };
     resize();
     const resizeObserver = new ResizeObserver(resize);

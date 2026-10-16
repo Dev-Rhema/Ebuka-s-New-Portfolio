@@ -114,7 +114,7 @@ function CaseStudy({ study }) {
 
 function CaseStudies() {
   return (
-    <section className="bg-white px-[5.556vw] pt-[calc(var(--u)*34.5)] pb-[calc(var(--u)*32)] [--u:calc(100vw/1440)]">
+    <section className="bg-white px-[5.556vw] pt-[calc(var(--u)*56)] pb-[calc(var(--u)*32)] [--u:calc(100vw/1440)]">
       <p className={label}>Selected case studies</p>
 
       {CaseStudyData.map((study) => (

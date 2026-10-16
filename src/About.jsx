@@ -40,12 +40,12 @@ function ShadowIcon({ src, className = "" }) {
 
 function About() {
   return (
-    <section className="relative min-h-screen bg-white px-[5.556vw] pt-[calc(var(--u)*44)] [--u:calc(100vw/1440)]">
-      <p className={`absolute top-[calc(var(--u)*47)] left-[5.556vw] ${label}`}>
+    <section className="relative bg-white px-[5.556vw] [--u:calc(100vw/1440)]">
+      <p className={`absolute top-[calc(var(--u)*59)] left-[5.556vw] ${label}`}>
         About me
       </p>
 
-      <p className="indent-[calc(var(--u)*101.5)] font-['DM-Serif'] text-[calc(var(--u)*55)] leading-[calc(var(--u)*53.5)] tracking-[-0.01em] [word-spacing:-0.03em] text-[#838383]">
+      <p className="py-[calc(var(--u)*56)] indent-[calc(var(--u)*101.5)] font-['DM-Serif'] text-[calc(var(--u)*55)] leading-[calc(var(--u)*53.5)] tracking-[-0.01em] [word-spacing:-0.03em] text-[#838383]">
         With <Star /> <span className="text-black">7 years of experience</span>{" "}
         <Star /> I have helped brands{" "}
         <img
@@ -62,11 +62,11 @@ function About() {
         <span className="text-black">revenue</span>
       </p>
 
-      <div className="absolute top-[calc(var(--u)*225)] bottom-0 left-[calc(var(--u)*469)] w-[calc(var(--u)*581)] mask-[linear-gradient(transparent,black_18%,black_82%,transparent)]">
-        <Spiral viewHeight={900} />
+      <div className="absolute top-[calc(var(--u)*237)] h-screen left-[calc(var(--u)*469)] w-[calc(var(--u)*581)] mask-[linear-gradient(transparent,black_18%,black_82%,transparent)]">
+        <Spiral viewHeight={900} cardWidth={200} cardHeight={280} />
       </div>
 
-      <div className="mt-[calc(var(--u)*58)] flex items-start justify-between">
+      <div className="flex min-h-screen items-start justify-between">
         <div className="w-[calc(var(--u)*360)]">
           <p className={`mt-[calc(var(--u)*4)] ${label}`}>
             Trusted by incredible companies
@@ -86,7 +86,7 @@ function About() {
           </a>
         </div>
 
-        <ul className="-mt-[calc(var(--u)*15)] w-[calc(var(--u)*289)]">
+        <ul className="mb-[calc(var(--u)*56)] w-[calc(var(--u)*289)] self-end">
           {stats.map((stat, index) => (
             <li
               key={stat.label}

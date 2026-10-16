@@ -40,7 +40,7 @@ function ShadowIcon({ src, className = "" }) {
 
 function About() {
   return (
-    <section className="relative bg-white px-[5.556vw] pt-[calc(var(--u)*44)] [--u:calc(100vw/1440)]">
+    <section className="relative min-h-screen bg-white px-[5.556vw] pt-[calc(var(--u)*44)] [--u:calc(100vw/1440)]">
       <p className={`absolute top-[calc(var(--u)*47)] left-[5.556vw] ${label}`}>
         About me
       </p>

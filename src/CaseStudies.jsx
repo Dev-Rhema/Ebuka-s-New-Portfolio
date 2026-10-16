@@ -1,6 +1,7 @@
 import { CaseStudyData } from "./Data";
 import { Naira, Plus } from "./components/StatSymbols";
 import { Fabric } from "./components/Fabric";
+import { WavingFlag } from "./components/WavingFlag";
 
 const label =
   "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
@@ -12,11 +13,20 @@ function CaseStudy({ study }) {
     <article className="mt-[calc(var(--u)*26)]">
       <div className="grid grid-cols-[calc(var(--u)*759)_1fr]">
         <div>
-          <img
-            src={study.logo}
-            alt=""
-            className="h-[calc(var(--u)*48)] w-auto"
-          />
+          <div className="relative h-[calc(var(--u)*48)] w-[calc(var(--u)*94)]">
+            {study.logoFlag && (
+              // The pennant's spot on the 94×48 staff
+              <div className="absolute top-[calc(var(--u)*15.744)] left-[calc(var(--u)*4.91)] h-[calc(var(--u)*13.25)] w-[calc(var(--u)*88.85)]">
+                <WavingFlag image={study.logoFlag} />
+              </div>
+            )}
+            {/* Staff drawn over the cloth's edge, as in the original logo */}
+            <img
+              src={study.logo}
+              alt=""
+              className="pointer-events-none relative size-full"
+            />
+          </div>
           <h3 className="mt-[calc(-16*var(--u))] font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black">
             {study.name}
           </h3>

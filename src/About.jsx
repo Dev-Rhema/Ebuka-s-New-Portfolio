@@ -3,6 +3,7 @@ import aboutBrands from "./assets/AboutImgs/aboutBrands.svg";
 import shadowData from "./assets/AboutImgs/shadowData.svg";
 import shadowDecisions from "./assets/AboutImgs/shadowDecisions.svg";
 import Spiral from "./components/Spiral";
+import { Naira, Plus } from "./components/StatSymbols";
 
 const label =
   "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
@@ -34,38 +35,6 @@ function ShadowIcon({ src, className = "" }) {
         className="pointer-events-none absolute top-[calc(var(--u)*-5)] left-[calc(var(--u)*-232)] size-[calc(var(--u)*504)] max-w-none"
       />
     </span>
-  );
-}
-
-function Naira() {
-  return (
-    <svg
-      viewBox="0 0 36 46.5"
-      aria-label="₦"
-      role="img"
-      className="mr-[calc(var(--u)*0.5)] h-[calc(var(--u)*46.5)] shrink-0 self-end"
-      fill="currentColor"
-    >
-      <rect x="5" width="6" height="46.5" />
-      <rect x="25" width="6" height="46.5" />
-      <path d="M5 0h6.5L31 46.5h-6.5z" />
-      <rect y="14" width="36" height="4" />
-      <rect y="24" width="36" height="4" />
-    </svg>
-  );
-}
-
-function Plus() {
-  return (
-    <svg
-      viewBox="0 0 30 30"
-      className="ml-[calc(var(--u)*0.5)] w-[calc(var(--u)*30)] shrink-0 self-center"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path d="M15 0v30M0 15h30" />
-    </svg>
   );
 }
 

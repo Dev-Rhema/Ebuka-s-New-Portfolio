@@ -8,6 +8,7 @@ import piggyvest from "./assets/Brands/piggyvest.svg";
 import faceRings from "./assets/HeroImgs/faceRings.svg";
 import instagramThumb from "./assets/HeroImgs/instagramThumb.jpg";
 import About from "./About";
+import CaseStudies from "./CaseStudies";
 
 gsap.registerPlugin(useGSAP, CustomEase, SplitText);
 
@@ -202,6 +203,7 @@ function Home({ play }) {
       </section>
 
       <About />
+      <CaseStudies />
     </main>
   );
 }

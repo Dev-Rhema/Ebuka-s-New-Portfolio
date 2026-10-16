@@ -120,7 +120,6 @@ const Spiral = ({
   repeat = 4,
   speed = 0.5,
   direction = "down",
-  animationMode = "auto",
   radius = 400,
   cardWidth = 240,
   cardHeight = 336,
@@ -136,7 +135,6 @@ const Spiral = ({
   edgeBlur = 10,
   // How much cards on the far side are darkened, from 0 to 1
   depthDim = 0.5,
-  pauseOnHover = false,
   imageFit = "cover",
   grayscale = 0,
   // How much of the spiral (top to bottom, in px) fits in the box; the camera
@@ -146,31 +144,14 @@ const Spiral = ({
 }) => {
   const rootRef = useRef(null);
   const canvasHostRef = useRef(null);
-  const meshesRef = useRef([]);
-  const cameraRef = useRef(null);
   const progressRef = useRef(0);
   const targetProgressRef = useRef(0);
   const autoSpeedRef = useRef(0);
-  const hoveredRef = useRef(false);
   const visibleRef = useRef(true);
-  const draggingRef = useRef(false);
-  const lastPointerRef = useRef({ x: 0, y: 0 });
-  const dragMovedRef = useRef(false);
-
-  const normalizedItems = useMemo(
-    () =>
-      items.map((item, index) =>
-        typeof item === "string"
-          ? { src: item, alt: `Spiral card ${index + 1}` }
-          : { alt: `Spiral card ${index + 1}`, ...item },
-      ),
-    [items],
-  );
 
   const spiralItems = useMemo(
-    () =>
-      Array.from({ length: Math.max(repeat, 1) }, () => normalizedItems).flat(),
-    [normalizedItems, repeat],
+    () => Array.from({ length: Math.max(repeat, 1) }, () => items).flat(),
+    [items, repeat],
   );
 
   // Scene, textures and geometry: rebuilt only when the cards themselves change
@@ -194,7 +175,6 @@ const Spiral = ({
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, 1, 1, 20000);
-    cameraRef.current = camera;
 
     const aspect = cardHeight / cardWidth;
     const paddingScale = cardWidth / TEXTURE_WIDTH;
@@ -243,7 +223,6 @@ const Spiral = ({
       });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.visible = false;
-      mesh.userData.item = item;
       scene.add(mesh);
 
       Promise.all([getTexture(item.src), getTexture(backImage)])
@@ -256,7 +235,6 @@ const Spiral = ({
         .catch(() => {});
       return mesh;
     });
-    meshesRef.current = meshes;
 
     const resize = () => {
       const { width, height } = root.getBoundingClientRect();
@@ -281,23 +259,6 @@ const Spiral = ({
     intersectionObserver.observe(root);
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const scrollEnabled = animationMode === "scroll" || animationMode === "all";
-    const scrollSpeedMultiplier = Math.max(speed, 0) / 0.12;
-    let lastScrollY = window.scrollY;
-    const handleScroll = () => {
-      const nextScrollY = window.scrollY;
-      const scrollDelta = nextScrollY - lastScrollY;
-      lastScrollY = nextScrollY;
-      if (!scrollEnabled || !visibleRef.current || scrollDelta === 0) return;
-      targetProgressRef.current += clamp(
-        (scrollDelta * scrollSpeedMultiplier) /
-          Math.max(verticalSpacing * 2, 1),
-        -1.5,
-        1.5,
-      );
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
     const shearLimit = Math.tan((cardTilt * Math.PI) / 180);
 
     const render = (time) => {
@@ -306,21 +267,16 @@ const Spiral = ({
       previousTime = time;
       if (!visibleRef.current) return;
 
-      const autoEnabled = animationMode === "auto" || animationMode === "all";
-      const motionPaused =
-        draggingRef.current || (pauseOnHover && hoveredRef.current);
       const directionMultiplier = direction === "up" ? -1 : 1;
-      const desiredAutoSpeed =
-        autoEnabled && !reducedMotion.matches && !motionPaused
-          ? speed * directionMultiplier
-          : 0;
+      const desiredAutoSpeed = reducedMotion.matches
+        ? 0
+        : speed * directionMultiplier;
       const speedBlend = 1 - Math.exp(-delta * 7);
       autoSpeedRef.current +=
         (desiredAutoSpeed - autoSpeedRef.current) * speedBlend;
       targetProgressRef.current += autoSpeedRef.current * delta;
 
-      const followBlend =
-        1 - Math.exp(-delta * (draggingRef.current ? 22 : 11));
+      const followBlend = 1 - Math.exp(-delta * 11);
       progressRef.current +=
         (targetProgressRef.current - progressRef.current) * followBlend;
 
@@ -369,7 +325,6 @@ const Spiral = ({
       cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
-      window.removeEventListener("scroll", handleScroll);
       meshes.forEach((mesh) => mesh.material.dispose());
       geometry.dispose();
       textures.forEach((promise) =>
@@ -377,15 +332,12 @@ const Spiral = ({
       );
       renderer.dispose();
       renderer.domElement.remove();
-      meshesRef.current = [];
-      cameraRef.current = null;
     };
   }, [
     spiralItems,
     backImage,
     speed,
     direction,
-    animationMode,
     radius,
     cardWidth,
     cardHeight,
@@ -399,89 +351,15 @@ const Spiral = ({
     edgeFade,
     edgeBlur,
     depthDim,
-    pauseOnHover,
     imageFit,
     grayscale,
     viewHeight,
   ]);
 
-  const dragEnabled = animationMode === "drag" || animationMode === "all";
-
-  const stopDragging = (event) => {
-    if (!draggingRef.current) return;
-    draggingRef.current = false;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    event.currentTarget.style.cursor = dragEnabled ? "grab" : "default";
-  };
-
-  // Cards are drawn on a canvas, so links are found by raycasting the click
-  const openCardAt = (event) => {
-    const camera = cameraRef.current;
-    if (!camera) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const pointer = new THREE.Vector2(
-      ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
-      -((event.clientY - bounds.top) / bounds.height) * 2 + 1,
-    );
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(pointer, camera);
-    const [hit] = raycaster.intersectObjects(
-      meshesRef.current.filter((mesh) => mesh.visible),
-    );
-    const item = hit?.object.userData.item;
-    if (!item?.href) return;
-    if (item.target === "_blank") {
-      window.open(item.href, "_blank", "noreferrer");
-    } else {
-      window.location.assign(item.href);
-    }
-  };
-
   return (
     <section
       ref={rootRef}
       className={`relative isolate size-full overflow-hidden ${className}`}
-      style={{
-        cursor: dragEnabled ? "grab" : "default",
-        touchAction: dragEnabled ? "none" : "auto",
-        userSelect: dragEnabled ? "none" : "auto",
-      }}
-      onMouseEnter={() => {
-        hoveredRef.current = true;
-      }}
-      onMouseLeave={() => {
-        hoveredRef.current = false;
-      }}
-      onPointerDown={(event) => {
-        if (!dragEnabled || event.button !== 0) return;
-        draggingRef.current = true;
-        dragMovedRef.current = false;
-        lastPointerRef.current = { x: event.clientX, y: event.clientY };
-        targetProgressRef.current = progressRef.current;
-        event.currentTarget.setPointerCapture(event.pointerId);
-        event.currentTarget.style.cursor = "grabbing";
-      }}
-      onPointerMove={(event) => {
-        if (!draggingRef.current) return;
-        const dx = event.clientX - lastPointerRef.current.x;
-        const dy = event.clientY - lastPointerRef.current.y;
-        lastPointerRef.current = { x: event.clientX, y: event.clientY };
-        if (Math.abs(dx) + Math.abs(dy) > 0.5) dragMovedRef.current = true;
-        // Front cards travel right and down, so both directions move the strand
-        targetProgressRef.current +=
-          (dx * 0.6 + dy) / Math.max(verticalSpacing * 2.5, 1);
-      }}
-      onPointerUp={stopDragging}
-      onPointerCancel={stopDragging}
-      onClick={(event) => {
-        if (dragMovedRef.current) {
-          dragMovedRef.current = false;
-          return;
-        }
-        openCardAt(event);
-      }}
     >
       <div
         ref={canvasHostRef}
@@ -490,25 +368,12 @@ const Spiral = ({
       />
 
       <ul className="sr-only" aria-label="Spiral card gallery">
-        {normalizedItems.map((item, index) => (
-          <li key={item.id ?? `${item.src}-${index}`}>
-            {item.href ? (
-              <a
-                href={item.href}
-                target={item.target}
-                rel={item.target === "_blank" ? "noreferrer" : undefined}
-              >
-                {item.label ?? item.alt}
-              </a>
-            ) : (
-              (item.label ?? item.alt)
-            )}
-          </li>
+        {items.map((item, index) => (
+          <li key={`${item.src}-${index}`}>{item.alt}</li>
         ))}
       </ul>
     </section>
   );
 };
 
-export { Spiral };
 export default Spiral;

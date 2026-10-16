@@ -38,7 +38,6 @@ function Home({ play }) {
       gsap.set(".hero-fade", { autoAlpha: 0, y: 40 });
       gsap.set(".hero-card", { autoAlpha: 0, x: 80 });
       gsap.set(".hero-paragraph, .hero-rings", { autoAlpha: 0 });
-      // gsap.set(".hero-glow", { autoAlpha: 0 });
     },
     { scope: container },
   );
@@ -62,11 +61,6 @@ function Home({ play }) {
       gsap
         .timeline({ defaults: { duration: 1, ease: "reveal" } })
         .timeScale(SPEED)
-        // .to(
-        //   ".hero-glow",
-        //   { autoAlpha: 1, duration: 0.6, ease: "sine.inOut" },
-        //   0,
-        // )
         .to(
           ".hero-rings",
           { autoAlpha: 1, duration: 0.8, ease: "sine.inOut" },
@@ -105,8 +99,6 @@ function Home({ play }) {
             />
           </div>
         </div>
-
-        {/* <div className="hero-glow absolute inset-x-0 bottom-0 h-[31%] bg-[linear-gradient(rgb(255_255_255/0),rgb(255_255_255/0.13)_25%,rgb(255_255_255/0.45)_56%,rgb(255_255_255/0.85)_87%,white)]" /> */}
 
         <img
           src="/logo.svg"

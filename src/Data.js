@@ -14,6 +14,7 @@ export const CaseStudyData = [
       "Four years of paid media on Meta, Google, TikTok, Snapchat, Pinterest and Appnext. Every inflow attributed in AppsFlyer. Every user tracked from first click to first deposit.",
     link: "#",
     cover: piggyCover,
+    fabricCover: true,
     stat: {
       naira: true,
       value: "50b",

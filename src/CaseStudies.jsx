@@ -1,5 +1,6 @@
 import { CaseStudyData } from "./Data";
 import { Naira, Plus } from "./components/StatSymbols";
+import { Fabric } from "./components/Fabric";
 
 const label =
   "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
@@ -16,7 +17,7 @@ function CaseStudy({ study }) {
             alt=""
             className="h-[calc(var(--u)*48)] w-auto"
           />
-          <h3 className="-mt-[calc(var(--u)*16)] font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black">
+          <h3 className="mt-[calc(-16*var(--u))] font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black">
             {study.name}
           </h3>
           <p className="mt-[calc(var(--u)*16)] max-w-[calc(var(--u)*560)] font-['Geist'] text-[calc(var(--u)*28)] leading-[calc(var(--u)*28)] font-medium tracking-[-0.025em] text-[#6a6a6a]">
@@ -47,11 +48,17 @@ function CaseStudy({ study }) {
       </div>
 
       <div className="mt-[calc(var(--u)*24)] grid h-[calc(var(--u)*447)] grid-cols-[calc(var(--u)*794)_1fr] gap-[calc(var(--u)*16)]">
-        <img
-          src={study.cover}
-          alt={`${study.name} case study`}
-          className="size-full rounded-[calc(var(--u)*8)] object-cover"
-        />
+        {study.fabricCover ? (
+          <div className="size-full overflow-hidden rounded-[calc(var(--u)*8)]">
+            <Fabric image={study.cover} />
+          </div>
+        ) : (
+          <img
+            src={study.cover}
+            alt={`${study.name} case study`}
+            className="size-full rounded-[calc(var(--u)*8)] object-cover"
+          />
+        )}
 
         <div className="flex flex-col gap-[calc(var(--u)*16)]">
           <div className="grid h-[calc(var(--u)*205)] shrink-0 grid-cols-2 overflow-hidden rounded-[calc(var(--u)*8)]">
@@ -66,11 +73,7 @@ function CaseStudy({ study }) {
               </p>
             </div>
             {stat.image ? (
-              <img
-                src={stat.image}
-                alt=""
-                className="size-full object-cover"
-              />
+              <img src={stat.image} alt="" className="size-full object-cover" />
             ) : (
               <div className="bg-[#d9d9d9]" />
             )}

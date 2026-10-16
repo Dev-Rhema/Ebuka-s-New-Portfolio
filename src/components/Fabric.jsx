@@ -40,6 +40,9 @@ void main() {
 
 const SEGMENTS = 20;
 const FOV_F = 1 / Math.tan((35 * Math.PI) / 180 / 2);
+// The canvas overhangs the box by this fraction on each side, so the rippling
+// edges have room to move without being cut off
+const PAD = 0.05;
 
 // Fills its parent with `image`, which ripples out from the cursor.
 export const Fabric = ({ image, style }) => {
@@ -145,13 +148,12 @@ export const Fabric = ({ image, style }) => {
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = Math.max(canvas.clientWidth, 240);
-      canvas.width = Math.round(w * dpr);
+      canvas.width = Math.round(Math.max(canvas.clientWidth, 1) * dpr);
       canvas.height = Math.round(Math.max(canvas.clientHeight, 1) * dpr);
       gl.viewport(0, 0, canvas.width, canvas.height);
-      // Slight overscan so the ripple doesn't pull the edges into view.
-      halfW = canvas.width * 0.52;
-      halfH = canvas.height * 0.52;
+      // The image fills the box, not the padded canvas
+      halfW = canvas.width / (2 * (1 + 2 * PAD));
+      halfH = canvas.height / (2 * (1 + 2 * PAD));
       buildTexture();
     };
 
@@ -219,15 +221,19 @@ export const Fabric = ({ image, style }) => {
   }, [image]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        display: "block",
-        width: "100%",
-        height: "100%",
-        cursor: "cell",
-        ...style,
-      }}
-    />
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: "absolute",
+          top: `${-PAD * 100}%`,
+          left: `${-PAD * 100}%`,
+          width: `${(1 + 2 * PAD) * 100}%`,
+          height: `${(1 + 2 * PAD) * 100}%`,
+          cursor: "cell",
+          ...style,
+        }}
+      />
+    </div>
   );
 };

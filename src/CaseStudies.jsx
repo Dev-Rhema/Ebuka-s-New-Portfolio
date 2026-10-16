@@ -49,9 +49,7 @@ function CaseStudy({ study }) {
 
       <div className="mt-[calc(var(--u)*24)] grid h-[calc(var(--u)*447)] grid-cols-[calc(var(--u)*794)_1fr] gap-[calc(var(--u)*16)]">
         {study.fabricCover ? (
-          <div className="size-full overflow-hidden rounded-[calc(var(--u)*8)]">
-            <Fabric image={study.cover} />
-          </div>
+          <Fabric image={study.cover} />
         ) : (
           <img
             src={study.cover}

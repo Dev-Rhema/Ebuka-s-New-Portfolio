@@ -118,7 +118,7 @@ const Spiral = ({
   backImage = cardBack,
   // Copies of `items` placed on the helix so it reads as a continuous strand
   repeat = 4,
-  speed = 0.3,
+  speed = 0.5,
   direction = "down",
   animationMode = "auto",
   radius = 400,

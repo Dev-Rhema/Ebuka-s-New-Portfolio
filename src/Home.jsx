@@ -7,6 +7,7 @@ import headerImgNoBg from "./assets/headerImgNoBg.webp";
 import piggyvest from "./assets/Brands/piggyvest.svg";
 import faceRings from "./assets/HeroImgs/faceRings.svg";
 import instagramThumb from "./assets/HeroImgs/instagramThumb.jpg";
+import About from "./About";
 
 gsap.registerPlugin(useGSAP, CustomEase, SplitText);
 
@@ -115,7 +116,7 @@ function Home({ play }) {
         <nav className="absolute top-8 right-[5.556vw] flex gap-4 font-['Geist'] font-medium">
           <a
             href="#contact"
-            className="hero-fade flex h-11.5 items-center gap-3 bg-black px-4.5 text-[20px] tracking-[-0.04em] text-white"
+            className="hero-fade flex h-11.5 items-center gap-3 bg-black px-4.5 text-[16px] tracking-[-0.04em] text-white"
           >
             Let’s Chat
             <svg viewBox="0 0 12 12" className="size-2.75" fill="none">
@@ -199,6 +200,8 @@ function Home({ play }) {
           </div>
         </a>
       </section>
+
+      <About />
     </main>
   );
 }

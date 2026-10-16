@@ -121,10 +121,10 @@ const Spiral = ({
   speed = 0.3,
   direction = "down",
   animationMode = "auto",
-  radius = 380,
+  radius = 400,
   cardWidth = 240,
   cardHeight = 336,
-  verticalSpacing = 180,
+  verticalSpacing = 120,
   perspective = 4000,
   cardsPerTurn = 8,
   rotation = 0,
@@ -139,6 +139,9 @@ const Spiral = ({
   pauseOnHover = false,
   imageFit = "cover",
   grayscale = 0,
+  // How much of the spiral (top to bottom, in px) fits in the box; the camera
+  // zooms out to show it. Leave it out and 1 unit is 1 screen pixel.
+  viewHeight,
   className = "",
 }) => {
   const rootRef = useRef(null);
@@ -261,8 +264,11 @@ const Spiral = ({
       const h = Math.max(height, 1);
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
-      // Match CSS perspective: one world unit is one pixel on the z = 0 plane
-      camera.fov = (2 * Math.atan(h / 2 / perspective) * 180) / Math.PI;
+      // Match CSS perspective: one world unit is one pixel on the z = 0 plane,
+      // unless viewHeight asks the camera to show more (or less) of the spiral
+      const visibleHeight = viewHeight ?? h;
+      camera.fov =
+        (2 * Math.atan(visibleHeight / 2 / perspective) * 180) / Math.PI;
       camera.position.set(0, 0, perspective);
       camera.updateProjectionMatrix();
     };
@@ -396,6 +402,7 @@ const Spiral = ({
     pauseOnHover,
     imageFit,
     grayscale,
+    viewHeight,
   ]);
 
   const dragEnabled = animationMode === "drag" || animationMode === "all";
@@ -435,7 +442,7 @@ const Spiral = ({
   return (
     <section
       ref={rootRef}
-      className={`relative isolate h-svh min-h-80 w-full overflow-hidden bg-white ${className}`}
+      className={`relative isolate size-full overflow-hidden ${className}`}
       style={{
         cursor: dragEnabled ? "grab" : "default",
         touchAction: dragEnabled ? "none" : "auto",

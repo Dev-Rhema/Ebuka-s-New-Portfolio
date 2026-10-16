@@ -12,6 +12,7 @@ const stats = [
   { value: "20", label: "Brands Worked With" },
   { value: "3m", label: "New Customers Acquired" },
   { value: "3b", naira: true, label: "Total Revenue Generated" },
+  { value: "35b", naira: true, label: "Total Inflow Attributed" },
 ];
 
 function Star() {

@@ -20,7 +20,7 @@ function CaseStudy({ study }) {
       </h3>
 
       <div className="mt-[calc(var(--u)*8)] grid grid-cols-[calc(var(--u)*759)_1fr]">
-        <p className="max-w-[calc(var(--u)*560)] font-['Geist'] text-[calc(var(--u)*28)] leading-[calc(var(--u)*28)] font-medium tracking-[-0.025em] text-black">
+        <p className="max-w-[calc(var(--u)*560)] font-['Geist'] text-[calc(var(--u)*28)] leading-[calc(var(--u)*28)] font-medium tracking-[-0.02em] text-black">
           {study.headline}
         </p>
 
@@ -93,7 +93,9 @@ function CaseStudy({ study }) {
               />
               <div className="font-['Geist'] text-[calc(var(--u)*16)] leading-[calc(var(--u)*24)] font-medium tracking-[-0.04em]">
                 <p className="text-[#4d4d4d] italic">{testimonial.name}</p>
-                <p className="text-[#9a9a9a]">{testimonial.role}</p>
+                <p className="text-[calc(var(--u)*14)] text-[#9a9a9a]">
+                  {testimonial.role}
+                </p>
               </div>
             </figcaption>
           </figure>

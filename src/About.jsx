@@ -63,11 +63,11 @@ function About() {
         <span className="text-black">revenue</span>
       </p>
 
-      <div className="absolute top-[calc(var(--u)*237)] h-screen left-[calc(var(--u)*469)] w-[calc(var(--u)*581)] mask-[linear-gradient(transparent,black_18%,black_82%,transparent)]">
+      <div className="absolute top-[calc(var(--u)*301)] h-screen left-[calc(var(--u)*469)] w-[calc(var(--u)*581)] mask-[linear-gradient(transparent,black_18%,black_82%,transparent)]">
         <Spiral viewHeight={900} cardWidth={200} cardHeight={280} />
       </div>
 
-      <div className="flex min-h-screen items-start justify-between">
+      <div className="mt-[calc(var(--u)*64)] flex min-h-screen items-start justify-between">
         <div className="w-[calc(var(--u)*360)]">
           <p className={`mt-[calc(var(--u)*4)] ${label}`}>
             Trusted by incredible companies

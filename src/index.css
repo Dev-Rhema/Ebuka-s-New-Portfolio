@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --animate-marquee: marquee 8s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
 @font-face {
   font-family: "DM-Serif";
   src: url("./assets/fonts/loaderFonts/DMSerifDisplay-Regular.ttf")

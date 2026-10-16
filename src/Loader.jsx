@@ -144,12 +144,12 @@ function Loader({ onComplete }) {
           1.1,
         )
         .from(".backdrop", { opacity: 0, duration: 0.35 }, 1.47)
-        // Logo slides from top centre to 4.4vw from the left edge
+        // Logo slides from top centre to 80px (at 1440 wide) from the left edge
         .to(
           ".logo",
           {
             x: (_, el) =>
-              window.innerWidth * (0.044 - 0.5) + el.offsetWidth / 2,
+              window.innerWidth * (80 / 1440 - 0.5) + el.offsetWidth / 2,
             duration: 0.8,
             ease: "logoMove",
           },
@@ -227,7 +227,7 @@ function Loader({ onComplete }) {
       <img
         src="/logo.svg"
         alt="Logo"
-        className="logo absolute top-7.75 left-1/2 h-11 w-10"
+        className="logo absolute top-[34.5px] left-1/2 h-11 w-10"
       />
     </div>
   );

@@ -1,11 +1,23 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import staff from "../assets/flagStaff.svg";
+
+// The staff artwork is 94×48; the pennant hangs from it at this spot, and its
+// swallowtail notch reaches back to `notch` (all in the artwork's units)
+const STAFF_W = 94;
+const STAFF_H = 48;
+const PENNANT = { x: 4.91, y: 15.744, w: 88.85, h: 13.25, notch: 79.498 };
+const ASPECT = PENNANT.w / PENNANT.h;
+const CLOTH = "black";
+const TEXTURE_W = 1024;
 
 // After https://codepen.io/okada-web/pen/OJydGzy: the cloth is a lit plane
 // whose depth follows a travelling sine wave, growing with distance from the
 // pole. Lengths are in the pen's units, where the flag is 30 wide.
 const SIZE_W = 30;
+const SIZE_H = SIZE_W / ASPECT;
 const SEG_W = 30;
+const SEG_H = Math.max(2, Math.round(SEG_W / ASPECT));
 // Share of the resting brightness from ambient light; the rest comes from the
 // directional light, so the flat flag matches the original artwork
 const AMBIENT = 0.45;
@@ -13,11 +25,43 @@ const AMBIENT = 0.45;
 // Shading barely shows on dark cloth, so this is what makes the edges ripple.
 const TILT = 0.35;
 
-// Fills its parent with `image` as a flag attached to a pole on the left.
-// `pad`: how far the canvas overhangs the box on each side (fraction of its
-// size), so the waving cloth isn't cut off.
+// Paints the pennant with `logo` centred on its body (the part before the
+// notch), at its own size in the artwork's units
+const paintPennant = (logo) => {
+  const { w, h, notch } = PENNANT;
+  const scale = TEXTURE_W / w;
+  const canvas = document.createElement("canvas");
+  canvas.width = TEXTURE_W;
+  canvas.height = Math.round(h * scale);
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = CLOTH;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(w, 0);
+  ctx.lineTo(notch, h / 2);
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.closePath();
+  ctx.fill();
+
+  const { naturalWidth: logoW, naturalHeight: logoH } = logo;
+  ctx.drawImage(logo, (notch - logoW) / 2, (h - logoH) / 2, logoW, logoH);
+
+  return canvas;
+};
+
+const percent = (value, total) => `${(value / total) * 100}%`;
+
+// A staff flying a black pennant that waves and carries `logo`: a light
+// version exported at its size on the 94×48 artwork (e.g. 56×8). Size the
+// whole flag with `className`, keeping 94:48.
+// `pad`: how far the canvas overhangs the pennant on each side (fraction of
+// its size), so the waving cloth isn't cut off.
 export const WavingFlag = ({
-  image,
+  logo,
+  className = "",
   horizontal = 0.5,
   vertical = 0.3,
   swing = 0.2,
@@ -28,10 +72,6 @@ export const WavingFlag = ({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const box = canvas.parentElement;
-    const aspect = box.clientWidth / box.clientHeight || 1;
-    const sizeH = SIZE_W / aspect;
-    const segH = Math.max(2, Math.round(SEG_W / aspect));
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -45,9 +85,9 @@ export const WavingFlag = ({
     const distance = (SIZE_W * 4) / 3;
     const camera = new THREE.PerspectiveCamera(
       THREE.MathUtils.radToDeg(
-        2 * Math.atan((sizeH * (1 + 2 * pad)) / 2 / distance),
+        2 * Math.atan((SIZE_H * (1 + 2 * pad)) / 2 / distance),
       ),
-      aspect,
+      ASPECT,
       distance / 10,
       distance * 10,
     );
@@ -60,7 +100,7 @@ export const WavingFlag = ({
     light.intensity = ((1 - AMBIENT) / facing) * Math.PI;
     scene.add(light, new THREE.AmbientLight(0xffffff, AMBIENT * Math.PI));
 
-    const geometry = new THREE.PlaneGeometry(SIZE_W, sizeH, SEG_W, segH);
+    const geometry = new THREE.PlaneGeometry(SIZE_W, SIZE_H, SEG_W, SEG_H);
     const position = geometry.attributes.position;
     const rest = position.array.slice();
     const material = new THREE.MeshLambertMaterial({
@@ -76,25 +116,20 @@ export const WavingFlag = ({
     const img = new Image();
     img.onload = () => {
       if (disposed) return;
-      // Rasterise at a high resolution so the SVG stays sharp
-      const source = document.createElement("canvas");
-      source.width = 1024;
-      source.height = Math.round(1024 / aspect);
-      source.getContext("2d").drawImage(img, 0, 0, source.width, source.height);
-      texture = new THREE.CanvasTexture(source);
+      texture = new THREE.CanvasTexture(paintPennant(img));
       texture.colorSpace = THREE.SRGBColorSpace;
       material.map = texture;
       material.needsUpdate = true;
       flag.visible = true;
     };
-    img.src = image;
+    img.src = logo;
 
     const wave = (time) => {
       // The pen's Date.now() * speed / 50
       const t = (time / 1000) * speed * 20;
       for (let i = 0; i < position.count; i++) {
         const x = rest[i * 3] + SIZE_W / 2; // distance from the pole
-        const y = sizeH / 2 - rest[i * 3 + 1]; // distance from the top
+        const y = SIZE_H / 2 - rest[i * 3 + 1]; // distance from the top
         const z = (Math.sin(horizontal * x + vertical * y - t) * swing * x) / 4;
         position.setY(i, rest[i * 3 + 1] + z * TILT);
         position.setZ(i, z);
@@ -140,19 +175,35 @@ export const WavingFlag = ({
       texture?.dispose();
       renderer.dispose();
     };
-  }, [image, horizontal, vertical, swing, speed, pad]);
+  }, [logo, horizontal, vertical, swing, speed, pad]);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      <canvas
-        ref={canvasRef}
+    <div className={`relative ${className}`}>
+      <div
+        className="absolute"
         style={{
-          position: "absolute",
-          top: `${-pad * 100}%`,
-          left: `${-pad * 100}%`,
-          width: `${(1 + 2 * pad) * 100}%`,
-          height: `${(1 + 2 * pad) * 100}%`,
+          top: percent(PENNANT.y, STAFF_H),
+          left: percent(PENNANT.x, STAFF_W),
+          width: percent(PENNANT.w, STAFF_W),
+          height: percent(PENNANT.h, STAFF_H),
         }}
+      >
+        <canvas
+          ref={canvasRef}
+          className="absolute"
+          style={{
+            top: `${-pad * 100}%`,
+            left: `${-pad * 100}%`,
+            width: `${(1 + 2 * pad) * 100}%`,
+            height: `${(1 + 2 * pad) * 100}%`,
+          }}
+        />
+      </div>
+      {/* Staff drawn over the cloth's edge, as in the original logo */}
+      <img
+        src={staff}
+        alt=""
+        className="pointer-events-none relative size-full"
       />
     </div>
   );

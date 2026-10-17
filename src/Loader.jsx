@@ -2,9 +2,8 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
-import headerImg from "./assets/headerImg.webp";
+import { headerImg, headerImgNoBg } from "./Data";
 // Background removed; grayscale + 85% brightness baked in
-import headerImgNoBg from "./assets/headerImgNoBg.webp";
 
 gsap.registerPlugin(useGSAP, CustomEase);
 

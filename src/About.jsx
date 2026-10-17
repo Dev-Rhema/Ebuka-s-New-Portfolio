@@ -1,9 +1,6 @@
-import aboutStar from "./assets/AboutImgs/aboutStar.png";
-import aboutBrands from "./assets/AboutImgs/aboutBrands.svg";
-import shadowData from "./assets/AboutImgs/shadowData.svg";
-import shadowDecisions from "./assets/AboutImgs/shadowDecisions.svg";
 import Spiral from "./components/Spiral";
 import { Naira, Plus } from "./components/StatSymbols";
+import { aboutStar, aboutBrands, shadowData, shadowDecisions } from "./Data";
 
 const label =
   "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";

@@ -1,17 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import ace from "../assets/Brands/Card - Front/Ace.svg";
-import spade from "../assets/Brands/Card - Front/Spade.svg";
-import heart from "../assets/Brands/Card - Front/Heart.svg";
-import diamonds from "../assets/Brands/Card - Front/Diamonds.svg";
-import cardBack from "../assets/Brands/Card - Back.svg";
+import { SpiralCards, cardBack } from "../Data";
 
-const CARDS = [
-  { src: ace, alt: "Ace card" },
-  { src: spade, alt: "Spade card" },
-  { src: heart, alt: "Heart card" },
-  { src: diamonds, alt: "Diamonds card" },
-];
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const modulo = (value, divisor) => ((value % divisor) + divisor) % divisor;
@@ -114,7 +104,7 @@ const createCardGeometry = (width, height, radius) => {
 };
 
 const Spiral = ({
-  items = CARDS,
+  items = SpiralCards,
   backImage = cardBack,
   // Copies of `items` placed on the helix so it reads as a continuous strand
   repeat = 4,

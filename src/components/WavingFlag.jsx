@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import staff from "../assets/flagStaff.svg";
+import { flagStaff as staff } from "../Data";
 
 // The staff artwork is 94×48; the pennant hangs from it at this spot, and its
 // swallowtail notch reaches back to `notch` (all in the artwork's units)

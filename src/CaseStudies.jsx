@@ -82,14 +82,14 @@ function CaseStudy({ study }) {
             <p className="font-['Geist'] text-[calc(var(--u)*24)] leading-[calc(var(--u)*26)] font-medium tracking-[-0.04em] text-black">
               {testimonial.title}
             </p>
-            <blockquote className="mt-[calc(var(--u)*16)] max-w-[calc(var(--u)*380)] font-['Geist'] text-[calc(var(--u)*16)] leading-[calc(var(--u)*21)] font-medium tracking-[-0.04em] text-[#838383]">
+            <blockquote className="mt-[calc(var(--u)*16)] font-['Geist'] text-[calc(var(--u)*16)] leading-[calc(var(--u)*21)] font-medium tracking-[-0.04em] text-[#838383]">
               {testimonial.quote}
             </blockquote>
             <figcaption className="mt-[calc(var(--u)*14)] flex items-center gap-[calc(var(--u)*16)]">
               <img
                 src={testimonial.avatar}
                 alt=""
-                className="size-[calc(var(--u)*48)]"
+                className="m-[calc(-2*var(--u))] size-[calc(var(--u)*52)] max-w-none"
               />
               <div className="font-['Geist'] text-[calc(var(--u)*16)] leading-[calc(var(--u)*24)] font-medium tracking-[-0.04em]">
                 <p className="text-[#4d4d4d] italic">{testimonial.name}</p>

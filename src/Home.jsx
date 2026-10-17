@@ -3,12 +3,15 @@ import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
-import headerImgNoBg from "./assets/headerImgNoBg.webp";
-import piggyvest from "./assets/Brands/piggyvest.svg";
-import faceRings from "./assets/HeroImgs/faceRings.svg";
-import instagramThumb from "./assets/HeroImgs/instagramThumb.jpg";
 import About from "./About";
 import CaseStudies from "./CaseStudies";
+import Skills from "./Skills";
+import {
+  headerImgNoBg,
+  piggyvestWordmark,
+  faceRings,
+  instagramThumb,
+} from "./Data";
 
 gsap.registerPlugin(useGSAP, CustomEase, SplitText);
 
@@ -139,7 +142,7 @@ function Home({ play }) {
             <span className="hero-line flex items-center gap-[0.3em]">
               Senior Digital Marketer at
               <img
-                src={piggyvest}
+                src={piggyvestWordmark}
                 alt="piggyvest"
                 className="h-[0.9em] w-auto"
               />
@@ -196,6 +199,7 @@ function Home({ play }) {
 
       <About />
       <CaseStudies />
+      <Skills />
     </main>
   );
 }

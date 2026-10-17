@@ -1,3 +1,26 @@
+import headerImg from "./assets/headerImg.webp";
+import headerImgNoBg from "./assets/headerImgNoBg.webp";
+import piggyvestWordmark from "./assets/Brands/piggyvest.svg";
+import faceRings from "./assets/HeroImgs/faceRings.svg";
+import instagramThumb from "./assets/HeroImgs/instagramThumb.jpg";
+import aboutStar from "./assets/AboutImgs/aboutStar.png";
+import aboutBrands from "./assets/AboutImgs/aboutBrands.svg";
+import shadowData from "./assets/AboutImgs/shadowData.svg";
+import shadowDecisions from "./assets/AboutImgs/shadowDecisions.svg";
+import cardBack from "./assets/Brands/Card - Back.svg";
+import ace from "./assets/Brands/Card - Front/Ace.svg";
+import ace1 from "./assets/Brands/Card - Front/Ace-1.svg";
+import ace2 from "./assets/Brands/Card - Front/Ace-2.svg";
+import spade from "./assets/Brands/Card - Front/Spade.svg";
+import spade1 from "./assets/Brands/Card - Front/Spade-1.svg";
+import spade2 from "./assets/Brands/Card - Front/Spade-2.svg";
+import heart from "./assets/Brands/Card - Front/Heart.svg";
+import heart1 from "./assets/Brands/Card - Front/Heart-1.svg";
+import heart2 from "./assets/Brands/Card - Front/Heart-2.svg";
+import diamonds from "./assets/Brands/Card - Front/Diamonds.svg";
+import diamonds1 from "./assets/Brands/Card - Front/Diamonds-1.svg";
+import diamonds2 from "./assets/Brands/Card - Front/Diamonds-2.svg";
+import flagStaff from "./assets/CaseImgs/flagStaff.svg";
 import piggyLogo from "./assets/CaseImgs/piggy/case1Logo.svg";
 import piggyCover from "./assets/CaseImgs/piggy/case1Flag.svg";
 import piggyReviewer from "./assets/CaseImgs/piggy/case1Reviewer.svg";
@@ -10,6 +33,99 @@ import sendSprintLogo from "./assets/CaseImgs/SendS/case3Logo.svg";
 import sendSprintCover from "./assets/CaseImgs/SendS/case3Flag.svg";
 import sendSprintReviewer from "./assets/CaseImgs/SendS/case3Reviewer.svg";
 import sendSprintStatImage from "./assets/CaseImgs/SendS/case3RHS.svg";
+import skillCard from "./assets/Skills/skillCard.svg";
+import dataAnalysisIcon from "./assets/Skills/skillIcons/dataAnalysis.svg";
+import contentStrategyIcon from "./assets/Skills/skillIcons/contentStrategy.svg";
+import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg";
+import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
+import socialMediaIcon from "./assets/Skills/skillIcons/socialMediaManagement.svg";
+
+export {
+  headerImg,
+  headerImgNoBg,
+  piggyvestWordmark,
+  faceRings,
+  instagramThumb,
+  aboutStar,
+  aboutBrands,
+  shadowData,
+  shadowDecisions,
+  cardBack,
+  flagStaff,
+  skillCard,
+};
+
+// Skill cards, fanned left to right. Each icon was exported tilted with its
+// card, shadow included: `width` is the file's width, `center` the circle's
+// centre in it and `rotation` the tilt it carries (all in design pixels).
+export const SkillsData = [
+  {
+    title: "Data Analysis",
+    description: "Data helps us plan ahead.",
+    icon: {
+      src: dataAnalysisIcon,
+      width: 253,
+      center: [102.44, 26.41],
+      rotation: -24,
+    },
+  },
+  {
+    title: "Content Strategy",
+    description: "Content is king. I am a kingmaker.",
+    icon: {
+      src: contentStrategyIcon,
+      width: 216,
+      center: [95.65, 25],
+      rotation: -12,
+    },
+  },
+  {
+    title: "Growth Marketing",
+    description: "Driving growth and scaling numbers.",
+    icon: {
+      src: growthMarketingIcon,
+      width: 170,
+      center: [84.68, 25],
+      rotation: 0,
+    },
+  },
+  {
+    title: "Marketing Strategy",
+    description: "Love it when a good plan comes together.",
+    icon: {
+      src: marketingStrategyIcon,
+      width: 216,
+      center: [119.77, 25],
+      rotation: 12,
+    },
+  },
+  {
+    title: "Social Media Management",
+    description: "I use my agency to manage your socials.",
+    icon: {
+      src: socialMediaIcon,
+      width: 253,
+      center: [149.63, 26.4],
+      rotation: 24,
+    },
+  },
+];
+
+// Brand cards in the About spiral, in the order they come round
+export const SpiralCards = [
+  { src: ace, alt: "Piggyvest" },
+  { src: spade, alt: "Lenco" },
+  { src: heart, alt: "SendSprint" },
+  { src: diamonds, alt: "Pocket by Piggyvest" },
+  { src: ace1, alt: "i-Fitness" },
+  { src: spade1, alt: "Brand card" },
+  { src: heart1, alt: "Brand card" },
+  { src: diamonds1, alt: "AltSchool" },
+  { src: ace2, alt: "Crossroads Restaurant & Bar" },
+  { src: spade2, alt: "Brand card" },
+  { src: heart2, alt: "Brand card" },
+  { src: diamonds2, alt: "Truckmasters" },
+];
 
 export const CaseStudyData = [
   {

@@ -1,31 +1,11 @@
 import { useRef } from "react";
-import gsap from "gsap";
-import { CustomEase } from "gsap/CustomEase";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "./animation";
 import { headerImg, headerImgNoBg } from "./Data";
-// Background removed; grayscale + 85% brightness baked in
-
-gsap.registerPlugin(useGSAP, CustomEase);
-
-// Always play in real time; never stretch the animation to absorb slow frames
-gsap.ticker.lagSmoothing(0);
-
-// slow start, quick jump, long settle
-CustomEase.create(
-  "jump",
-  "M0,0 C0.2,0.03 0.38,0.12 0.46,0.3 C0.5,0.42 0.5,0.7 0.56,0.8 C0.66,0.93 0.8,0.98 1,1",
-);
-
-// logo and text reveal: cubic-bezier(0.35, 0, 0, 1)
-CustomEase.create("reveal", "M0,0 C0.35,0 0,1 1,1");
-
-// logo slide to corner: cubic-bezier(0.99, 0.18, 0.08, 0.82)
-CustomEase.create("logoMove", "M0,0 C0.99,0.18 0.08,0.82 1,1");
+import { heroBackdrop } from "./styles";
 
 // Playback speed of the whole loader (1 = original, lower = slower)
 const SPEED = 0.6;
 
-const backdrop = "bg-[linear-gradient(#aaa,#b4b4b4_40%)]";
 const nameColumn =
   "flex h-29.75 flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
 const subText = "sub pb-1 font-['Geist'] text-lg/none font-medium text-[#555]";
@@ -208,11 +188,11 @@ function Loader({ onComplete }) {
         <span className="count">0</span>%
       </p>
 
-      <div className={`backdrop absolute inset-0 ${backdrop}`} />
+      <div className={`backdrop absolute inset-0 ${heroBackdrop}`} />
 
       <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className={`fullscreen aspect-147/119 w-[min(100vw,calc(100vh*147/119))] shrink-0 overflow-hidden will-change-transform ${backdrop}`}
+          className={`fullscreen aspect-147/119 w-[min(100vw,calc(100vh*147/119))] shrink-0 overflow-hidden will-change-transform ${heroBackdrop}`}
         >
           <img
             src={headerImgNoBg}

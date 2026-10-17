@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { SpiralCards, cardBack } from "../Data";
 
-
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const modulo = (value, divisor) => ((value % divisor) + divisor) % divisor;
 const smoothstep = (min, max, value) => {

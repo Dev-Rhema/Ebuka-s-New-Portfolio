@@ -1,8 +1,5 @@
 import { useRef } from "react";
-import gsap from "gsap";
-import { CustomEase } from "gsap/CustomEase";
-import { SplitText } from "gsap/SplitText";
-import { useGSAP } from "@gsap/react";
+import { gsap, SplitText, useGSAP } from "./animation";
 import About from "./About";
 import CaseStudies from "./CaseStudies";
 import Skills from "./Skills";
@@ -12,14 +9,11 @@ import {
   faceRings,
   instagramThumb,
 } from "./Data";
+import { heroBackdrop } from "./styles";
 
-gsap.registerPlugin(useGSAP, CustomEase, SplitText);
-
-CustomEase.create("reveal", "0.35, 0, 0, 1");
-
+// Playback speed of the hero intro (1 = original, lower = slower)
 const SPEED = 0.6;
 
-const backdrop = "bg-[linear-gradient(#aaa,#b4b4b4_40%)]";
 const headline =
   "hero-line block font-['DM-Serif'] text-[calc(var(--u)*152)] leading-none tracking-[-0.02em] text-white";
 
@@ -84,11 +78,11 @@ function Home({ play }) {
   return (
     <main ref={container}>
       <section className="relative h-screen overflow-hidden [--u:min(calc(100vw/1440),calc(100vh/900))]">
-        <div className={`absolute inset-0 ${backdrop}`} />
+        <div className={`absolute inset-0 ${heroBackdrop}`} />
 
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className={`relative aspect-147/119 w-[min(100vw,calc(100vh*147/119))] shrink-0 overflow-hidden ${backdrop}`}
+            className={`relative aspect-147/119 w-[min(100vw,calc(100vh*147/119))] shrink-0 overflow-hidden ${heroBackdrop}`}
           >
             <img
               src={headerImgNoBg}

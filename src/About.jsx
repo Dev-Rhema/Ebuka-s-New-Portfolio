@@ -1,16 +1,13 @@
 import Spiral from "./components/Spiral";
 import { Naira, Plus } from "./components/StatSymbols";
-import { aboutStar, aboutBrands, shadowData, shadowDecisions } from "./Data";
-
-const label =
-  "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
-
-const stats = [
-  { value: "20", label: "Brands Worked With" },
-  { value: "3m", label: "New Customers Acquired" },
-  { value: "3b", naira: true, label: "Total Revenue Generated" },
-  { value: "35b", naira: true, label: "Total Inflow Attributed" },
-];
+import {
+  StatsData,
+  aboutStar,
+  aboutBrands,
+  shadowData,
+  shadowDecisions,
+} from "./Data";
+import { callButton, sectionHeading, sectionLabel } from "./styles";
 
 function Star() {
   return (
@@ -39,7 +36,9 @@ function ShadowIcon({ src, className = "" }) {
 function About() {
   return (
     <section className="relative bg-white px-[5.556vw] [--u:calc(100vw/1440)]">
-      <p className={`absolute top-[calc(var(--u)*59)] left-[5.556vw] ${label}`}>
+      <p
+        className={`absolute top-[calc(var(--u)*59)] left-[5.556vw] ${sectionLabel}`}
+      >
         About me
       </p>
 
@@ -66,30 +65,27 @@ function About() {
 
       <div className="mt-[calc(var(--u)*64)] flex min-h-screen items-start justify-between">
         <div className="w-[calc(var(--u)*360)]">
-          <p className={`mt-[calc(var(--u)*4)] ${label}`}>
+          <p className={`mt-[calc(var(--u)*4)] ${sectionLabel}`}>
             Trusted by incredible companies
           </p>
-          <h2 className="mt-[calc(var(--u)*10)] font-['DM-Serif'] text-[calc(var(--u)*40)] leading-[1] tracking-[-0.02em] text-black">
+          <h2 className={`mt-[calc(var(--u)*10)] ${sectionHeading}`}>
             Making good brands great with data
           </h2>
           <p className="mt-[calc(var(--u)*14)] font-['Geist'] text-[calc(var(--u)*20)] leading-[1.3] font-medium tracking-[-0.04em] text-[#838383]">
             The difference between good and great is in the marketing. Let us
             make your brand great together
           </p>
-          <a
-            href="#contact"
-            className="mt-[calc(var(--u)*18)] flex h-[calc(var(--u)*46)] w-[calc(var(--u)*144)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*16)] font-medium tracking-[-0.04em] text-white"
-          >
+          <a href="#contact" className={`mt-[calc(var(--u)*18)] ${callButton}`}>
             Book a Call
           </a>
         </div>
 
         <ul className="mb-[calc(var(--u)*56)] w-[calc(var(--u)*289)] self-end">
-          {stats.map((stat, index) => (
+          {StatsData.map((stat, index) => (
             <li
               key={stat.label}
               className={`flex h-[calc(var(--u)*120)] items-start pt-[calc(var(--u)*36.5)] ${
-                index < stats.length - 1
+                index < StatsData.length - 1
                   ? "bg-[repeating-linear-gradient(to_right,#d7d7d7_0_2px,transparent_2px_3px)] bg-[length:100%_1px] bg-bottom bg-no-repeat"
                   : ""
               }`}

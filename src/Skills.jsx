@@ -1,7 +1,5 @@
 import { SkillsData, skillCard } from "./Data";
-
-const label =
-  "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
+import { callButton, sectionHeading, sectionLabel } from "./styles";
 
 const CARD_W = 174;
 const CARD_H = 244;
@@ -67,13 +65,15 @@ function SkillCard({ skill, slot }) {
 function Skills() {
   return (
     <section className="bg-white px-[5.556vw] pt-[calc(var(--u)*56)] pb-[calc(var(--u)*56)] text-center [--u:calc(100vw/1440)]">
-      <p className={label}>Skills geared towards growth</p>
-      <h2 className="mx-auto mt-[calc(var(--u)*12)] max-w-[calc(var(--u)*440)] font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black">
+      <p className={sectionLabel}>Skills geared towards growth</p>
+      <h2
+        className={`mx-auto mt-[calc(var(--u)*12)] max-w-[calc(var(--u)*440)] ${sectionHeading}`}
+      >
         My core focus of services aims at growth
       </h2>
       <a
         href="#contact"
-        className="mx-auto mt-[calc(var(--u)*16)] flex h-[calc(var(--u)*46)] w-[calc(var(--u)*144)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*16)] font-medium tracking-[-0.04em] text-white"
+        className={`mx-auto mt-[calc(var(--u)*16)] ${callButton}`}
       >
         Book a Call
       </a>

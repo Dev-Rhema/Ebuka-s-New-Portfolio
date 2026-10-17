@@ -1,10 +1,7 @@
 import { CaseStudyData } from "./Data";
 import { Naira, Plus } from "./components/StatSymbols";
-import { Fabric } from "./components/Fabric";
 import { WavingFlag } from "./components/WavingFlag";
-
-const label =
-  "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
+import { sectionLabel } from "./styles";
 
 function CaseStudy({ study }) {
   const { stat, testimonial } = study;
@@ -47,15 +44,11 @@ function CaseStudy({ study }) {
       </div>
 
       <div className="mt-[calc(var(--u)*30)] grid h-[calc(var(--u)*447)] grid-cols-[calc(var(--u)*794)_1fr] gap-[calc(var(--u)*16)]">
-        {study.fabricCover ? (
-          <Fabric image={study.cover} />
-        ) : (
-          <img
-            src={study.cover}
-            alt={`${study.name} case study`}
-            className="size-full rounded-[calc(var(--u)*8)] object-cover"
-          />
-        )}
+        <img
+          src={study.cover}
+          alt={`${study.name} case study`}
+          className="size-full rounded-[calc(var(--u)*8)] object-cover"
+        />
 
         <div className="flex flex-col gap-[calc(var(--u)*16)]">
           <div className="relative flex h-[calc(var(--u)*225)] shrink-0 flex-col justify-end overflow-hidden rounded-[calc(var(--u)*8)] bg-[#d9d9d9] p-[calc(var(--u)*16)] text-white">
@@ -108,7 +101,9 @@ function CaseStudy({ study }) {
 function CaseStudies() {
   return (
     <section className="bg-white px-[5.556vw] pt-[calc(var(--u)*56)] pb-[calc(var(--u)*32)] [--u:calc(100vw/1440)]">
-      <p className={`mb-[calc(var(--u)*26)] ${label}`}>Selected case studies</p>
+      <p className={`mb-[calc(var(--u)*26)] ${sectionLabel}`}>
+        Selected case studies
+      </p>
 
       {CaseStudyData.map((study) => (
         <CaseStudy key={study.id} study={study} />

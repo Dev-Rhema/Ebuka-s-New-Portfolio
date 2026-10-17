@@ -1,4 +1,5 @@
 import headerImg from "./assets/headerImg.webp";
+// Background removed; grayscale + 85% brightness baked in
 import headerImgNoBg from "./assets/headerImgNoBg.webp";
 import piggyvestWordmark from "./assets/Brands/piggyvest.svg";
 import faceRings from "./assets/HeroImgs/faceRings.svg";
@@ -109,6 +110,14 @@ export const SkillsData = [
       rotation: 24,
     },
   },
+];
+
+// Headline numbers beside the About spiral
+export const StatsData = [
+  { value: "20", label: "Brands Worked With" },
+  { value: "3m", label: "New Customers Acquired" },
+  { value: "3b", naira: true, label: "Total Revenue Generated" },
+  { value: "35b", naira: true, label: "Total Inflow Attributed" },
 ];
 
 // Brand cards in the About spiral, in the order they come round

@@ -117,7 +117,7 @@ export const StatsData = [
   { value: "20", label: "Brands Worked With" },
   { value: "3m", label: "New Customers Acquired" },
   { value: "3b", naira: true, label: "Total Revenue Generated" },
-  { value: "35b", naira: true, label: "Total Inflow Attributed" },
+  { value: "70b", naira: true, label: "Total Inflow Attributed" },
 ];
 
 // Brand cards in the About spiral, in the order they come round

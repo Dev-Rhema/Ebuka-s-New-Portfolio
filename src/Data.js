@@ -39,7 +39,7 @@ import dataAnalysisIcon from "./assets/Skills/skillIcons/dataAnalysis.svg";
 import contentStrategyIcon from "./assets/Skills/skillIcons/contentStrategy.svg";
 import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg";
 import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
-import socialMediaIcon from "./assets/Skills/skillIcons/socialMediaManagement.svg";
+import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
 
 export {
   headerImg,
@@ -81,10 +81,11 @@ export const SkillsData = [
     },
   },
   {
-    title: "Growth Marketing",
-    description: "Driving growth and scaling numbers.",
+    title: "Advertising",
+    description:
+      "I have mastered the skill of turning zero to one with paid media.",
     icon: {
-      src: growthMarketingIcon,
+      src: advertisingIcon,
       width: 170,
       center: [84.68, 25],
       rotation: 0,
@@ -101,13 +102,13 @@ export const SkillsData = [
     },
   },
   {
-    title: "Social Media Management",
-    description: "I use my agency to manage your socials.",
+    title: "Growth Marketing",
+    description: "Driving growth and scaling numbers.",
     icon: {
-      src: socialMediaIcon,
-      width: 253,
-      center: [149.63, 26.4],
-      rotation: 24,
+      src: growthMarketingIcon,
+      width: 170,
+      center: [84.68, 25],
+      rotation: 0,
     },
   },
 ];

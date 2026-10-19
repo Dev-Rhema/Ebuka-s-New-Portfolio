@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found · Ebuka's Portfolio</title>
+  </head>
+  <body class="bg-white">
+    <main class="flex min-h-svh flex-col text-center [--u:calc(100vw/1440)]">
+      <a
+        href="/"
+        aria-label="Home"
+        class="mx-auto mt-[max(calc(var(--u)*34.5),24px)]"
+      >
+        <img src="/logo.svg" alt="" class="h-11 w-10 invert" />
+      </a>
+
+      <div class="mx-auto mt-[max(calc(var(--u)*72),40px)] px-4">
+        <h1
+          class="mt-[max(calc(var(--u)*18),14px)] font-['DM-Serif'] text-[max(calc(var(--u)*56),36px)] leading-none tracking-[-0.02em] text-black"
+        >
+          This road leads nowhere
+        </h1>
+        <p
+          class="mx-auto mt-[max(calc(var(--u)*18),14px)] max-w-[max(calc(var(--u)*380),280px)] font-['Geist'] text-[max(calc(var(--u)*20),16px)] leading-[1.25] font-medium tracking-[-0.04em] text-[#838383]"
+        >
+          But this portal leads you home
+        </p>
+        <p
+          class="mx-auto mt-[max(calc(var(--u)*18),14px)] max-w-[max(calc(var(--u)*380),280px)] font-['Geist'] text-[max(calc(var(--u)*20),16px)] leading-[1.25] font-medium tracking-[-0.04em] text-[#838383]"
+        >
+          👇🏽
+        </p>
+        <a
+          href="/"
+          class="mx-auto mt-[max(calc(var(--u)*28),22px)] flex h-[max(calc(var(--u)*46),44px)] w-[max(calc(var(--u)*144),140px)] items-center justify-center bg-black font-['Geist'] text-[max(calc(var(--u)*16),15px)] font-medium tracking-[-0.04em] text-white"
+        >
+          Back to home
+        </a>
+      </div>
+
+      <section
+        id="ride"
+        aria-label="Game: press space or tap to make the knight jump the rocks"
+        class="relative mt-auto cursor-pointer touch-manipulation select-none"
+      >
+        <p
+          class="absolute top-[max(calc(var(--u)*24),12px)] right-[max(calc(var(--u)*40),16px)] flex gap-[1.2em] font-['Geist'] text-[max(calc(var(--u)*16),13px)] leading-none font-medium tabular-nums tracking-[-0.02em] text-[#838383]"
+        >
+          <span data-best></span><span data-score class="text-black"></span>
+        </p>
+        <p
+          data-hint
+          role="status"
+          class="absolute inset-x-0 top-[max(calc(var(--u)*64),44px)] px-4 font-['Geist'] text-[max(calc(var(--u)*18),15px)] leading-none font-medium tracking-[-0.04em] text-[#838383]"
+        ></p>
+        <canvas
+          data-game
+          class="block h-[max(calc(var(--u)*340),240px)] w-full"
+        ></canvas>
+      </section>
+    </main>
+    <script type="module" src="/src/notFound/main.js"></script>
+  </body>
+</html>

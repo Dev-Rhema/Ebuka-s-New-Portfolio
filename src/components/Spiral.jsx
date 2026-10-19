@@ -9,12 +9,10 @@ const smoothstep = (min, max, value) => {
   return x * x * (3 - 2 * x);
 };
 
-// Card textures are drawn at this width, with a transparent margin that
-// gives the mipmap blur room to soften the card edges
 const TEXTURE_WIDTH = 600;
 const TEXTURE_PADDING = 96;
 
-const vertexShader = /* glsl */ `
+const vertexShader = `
   uniform float uShear;
   varying vec2 vUv;
 
@@ -26,8 +24,7 @@ const vertexShader = /* glsl */ `
   }
 `;
 
-// Blur comes from sampling smaller mip levels; textures are premultiplied
-const fragmentShader = /* glsl */ `
+const fragmentShader = `
   uniform sampler2D uFront;
   uniform sampler2D uBack;
   uniform float uBlur;
@@ -88,8 +85,6 @@ const drawCardTexture = (image, { aspect, radius, fit, anisotropy }) => {
   return texture;
 };
 
-// A card wrapped onto the helix cylinder, centred on its own origin, so every
-// card shares the spiral's curve instead of bending around its own centre
 const createCardGeometry = (width, height, radius) => {
   const geometry = new THREE.PlaneGeometry(width, height, 64, 1);
   const position = geometry.attributes.position;
@@ -105,7 +100,6 @@ const createCardGeometry = (width, height, radius) => {
 const Spiral = ({
   items = SpiralCards,
   backImage = cardBack,
-  // Copies of `items` placed on the helix so it reads as a continuous strand
   repeat = 4,
   speed = 0.5,
   direction = "down",
@@ -116,18 +110,14 @@ const Spiral = ({
   perspective = 4000,
   cardsPerTurn = 9,
   rotation = 0,
-  // Slant of cards on the far side of the helix, following the strand
   cardTilt = 25,
   cardRadius = 1,
   centerScale = 0.9,
   edgeFade = 0.5,
   edgeBlur = 10,
-  // How much cards on the far side are darkened, from 0 to 1
   depthDim = 0.5,
   imageFit = "cover",
   grayscale = 0,
-  // How much of the spiral (top to bottom, in px) fits in the box; the camera
-  // zooms out to show it. Leave it out and 1 unit is 1 screen pixel.
   viewHeight,
   className = "",
 }) => {
@@ -143,7 +133,6 @@ const Spiral = ({
     [items, repeat],
   );
 
-  // Scene, textures and geometry: rebuilt only when the cards themselves change
   useEffect(() => {
     const root = rootRef.current;
     const host = canvasHostRef.current;
@@ -231,8 +220,6 @@ const Spiral = ({
       const h = Math.max(height, 1);
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
-      // Match CSS perspective: one world unit is one pixel on the z = 0 plane,
-      // unless viewHeight asks the camera to show more (or less) of the spiral
       const visibleHeight = viewHeight ?? h;
       camera.fov =
         (2 * Math.atan(visibleHeight / 2 / perspective) * 180) / Math.PI;
@@ -276,8 +263,6 @@ const Spiral = ({
       const step = (Math.PI * 2) / turnSize;
 
       meshes.forEach((mesh, index) => {
-        // Positive offsets are still to come: they wait at the top and back,
-        // swing round the front from left to right, then sink away below
         const offset = modulo(index - progressRef.current + half, count) - half;
         const angle = -offset * step + (rotation * Math.PI) / 180;
         const cos = Math.cos(angle);
@@ -298,7 +283,6 @@ const Spiral = ({
 
         const uniforms = mesh.material.uniforms;
         uniforms.uShear.value = -shearLimit * back;
-        // Each mip level halves the texture, so blur in px maps to a log bias
         uniforms.uBlur.value = Math.log2(1 + blur * 1.6);
         uniforms.uDim.value = 1 - depthDim * smoothstep(0.2, 1, back);
         uniforms.uOpacity.value = opacity;

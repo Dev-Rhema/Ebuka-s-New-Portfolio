@@ -1,5 +1,4 @@
 import headerImg from "./assets/headerImg.webp";
-// Background removed; grayscale + 85% brightness baked in
 import headerImgNoBg from "./assets/headerImgNoBg.webp";
 import piggyvestWordmark from "./assets/Brands/piggyvest.svg";
 import faceRings from "./assets/HeroImgs/faceRings.svg";
@@ -35,17 +34,13 @@ import sendSprintCover from "./assets/CaseImgs/SendS/case3Flag.webp";
 import sendSprintReviewer from "./assets/CaseImgs/SendS/case3Reviewer.webp";
 import sendSprintStatImage from "./assets/CaseImgs/SendS/case3RHS.webp";
 import skillCard from "./assets/Skills/skillCard.svg";
-// Glass dome the skill cards sink into, reflections baked in (2x export)
 import skillDome from "./assets/Skills/skillDome.webp";
 import dataAnalysisIcon from "./assets/Skills/skillIcons/dataAnalysis.svg";
 import contentStrategyIcon from "./assets/Skills/skillIcons/contentStrategy.svg";
 import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg";
 import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
 import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
-// Knight walk cycle, flag and lance included: 32 transparent frames in an
-// 8×4 sheet (layout in KnightFigure.sprite)
 import knightSprite from "./assets/Knight/knight-sprite.webp";
-// Grass along the bottom of the footer
 import grass from "./assets/Knight/Grass.svg";
 
 export {
@@ -66,9 +61,6 @@ export {
   grass,
 };
 
-// The knight figure's box in the AI video's pixels, how high the point of
-// its spear sits in it (for placing the figure), and its sprite sheet:
-// frames of `cell` px with `gap` px between, played at `fps`
 export const KnightFigure = {
   view: { x: 91.5, y: 242, w: 534.5, h: 797.5 },
   tip: { y: 244 },
@@ -77,7 +69,6 @@ export const KnightFigure = {
 
 export const ContactEmail = "Ebuka@exodigital.org";
 
-// Footer socials, left to right around the email
 export const SocialLinks = [
   { name: "X", href: "https://x.com/Daevee007" },
   { name: "Instagram", href: "#" },
@@ -85,9 +76,6 @@ export const SocialLinks = [
   { name: "LinkedIn", href: "https://www.linkedin.com/in/ebuka-chidube" },
 ];
 
-// Skill cards, fanned left to right. Each icon was exported tilted with its
-// card, shadow included: `width` is the file's width, `center` the circle's
-// centre in it and `rotation` the tilt it carries (all in design pixels).
 export const SkillsData = [
   {
     title: "Data Analysis",
@@ -142,7 +130,6 @@ export const SkillsData = [
   },
 ];
 
-// Headline numbers beside the About spiral
 export const StatsData = [
   { value: "20", label: "Brands Worked With" },
   { value: "3m", label: "New Customers Acquired" },
@@ -150,7 +137,6 @@ export const StatsData = [
   { value: "70b", naira: true, label: "Total Inflow Attributed" },
 ];
 
-// Brand cards in the About spiral, in the order they come round
 export const SpiralCards = [
   { src: ace, alt: "Piggyvest" },
   { src: spade, alt: "Lenco" },

@@ -12,7 +12,6 @@ import {
 } from "./Data";
 import { heroBackdrop } from "./styles";
 
-// Playback speed of the hero intro (1 = original, lower = slower)
 const SPEED = 0.6;
 
 const headline =

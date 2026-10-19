@@ -61,7 +61,6 @@ function CaseStudy({ study }) {
                 className="absolute inset-0 size-full object-cover"
               />
             )}
-            {/* Dims the photo so the figures read */}
             <div className="absolute inset-0 bg-black/35" />
             <span className="relative flex font-['DM-Serif'] text-[calc(var(--u)*64)] leading-[0.75] tracking-[-0.02em] whitespace-nowrap">
               {stat.naira && <Naira />}

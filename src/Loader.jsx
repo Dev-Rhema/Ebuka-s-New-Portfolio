@@ -3,7 +3,6 @@ import { gsap, useGSAP } from "./animation";
 import { headerImg, headerImgNoBg } from "./Data";
 import { heroBackdrop } from "./styles";
 
-// Playback speed of the whole loader (1 = original, lower = slower)
 const SPEED = 0.6;
 
 const nameColumn =
@@ -17,7 +16,6 @@ function Loader({ onComplete }) {
     () => {
       gsap.set(".logo", { xPercent: -50 });
 
-      // The B&W frame starts exactly on top of the colour photo, then grows
       const photo = container.current
         .querySelector(".photo")
         .getBoundingClientRect();
@@ -39,7 +37,6 @@ function Loader({ onComplete }) {
           },
         })
         .timeScale(SPEED)
-        // Intro
         .from(
           ".name",
           {
@@ -92,8 +89,6 @@ function Loader({ onComplete }) {
           },
           0.2,
         )
-        // Full-size photo grows over everything
-        // Colour fades to B&W in place, then the B&W photo grows
         .from(
           ".fullscreen",
           { opacity: 0, duration: 0.22, ease: "sine.inOut" },
@@ -109,7 +104,6 @@ function Loader({ onComplete }) {
           },
           1.1,
         )
-        // Person eases into the larger, lower full-view framing
         .fromTo(
           ".fullscreen img",
           { scale: 1, y: 0 },
@@ -123,7 +117,6 @@ function Loader({ onComplete }) {
           1.1,
         )
         .from(".backdrop", { opacity: 0, duration: 0.35 }, 1.47)
-        // Logo slides from top centre to 80px (at 1440 wide) from the left edge
         .to(
           ".logo",
           {
@@ -135,9 +128,6 @@ function Loader({ onComplete }) {
           1.58,
         );
 
-      // Start only once the whole page has loaded, the loader's images are
-      // decoded, the fonts are in and the tab is actually on screen, then
-      // wait two frames so the loader has been painted before it moves
       const pageLoaded = new Promise((resolve) => {
         if (document.readyState === "complete") resolve();
         else window.addEventListener("load", resolve, { once: true });

@@ -6,8 +6,6 @@ import { shadowButton } from "./styles";
 
 const u = (value) => `calc(var(--u) * ${value})`;
 
-// The knight's size (design px per video px), and how high his spear's point
-// sits in the figure, so it can reach up to the row of links
 const KNIGHT_SCALE = 0.53;
 const { view, tip } = KnightFigure;
 const KNIGHT_W = view.w * KNIGHT_SCALE;
@@ -124,7 +122,6 @@ function EmailPill() {
   );
 }
 
-// The grass along the bottom, through the same dither as the knight
 function Grass() {
   const imgRef = useRef(null);
   const { canvasRef, active } = useDither(imgRef);
@@ -154,7 +151,6 @@ function Footer() {
   const footerRef = useRef(null);
   const [inView, setInView] = useState(false);
 
-  // The knight only rides while the footer is on screen
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) =>
       setInView(entry.isIntersecting),
@@ -169,7 +165,6 @@ function Footer() {
       id="contact"
       className="relative overflow-hidden bg-white pt-[calc(var(--u)*80)] text-center [--u:calc(100vw/1440)]"
     >
-      {/* Soft glow behind the links and the knight */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.075),transparent)]"
@@ -194,9 +189,6 @@ function Footer() {
         <SocialButton {...linkedin} />
       </div>
 
-      {/* The knight rides across on the grass, his spear's point up by the
-          links (he lets clicks through to them). He waits mid-way until the
-          footer is in view, and pauses whenever it isn't */}
       <Knight
         className="pointer-events-none relative z-20 mx-auto motion-safe:animate-knight-ride"
         style={{

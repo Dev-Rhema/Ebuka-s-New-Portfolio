@@ -3,8 +3,6 @@ import { callButton, sectionHeading, sectionLabel } from "./styles";
 
 const CARD_W = 174;
 const CARD_H = 244;
-// Where each card's centre sits relative to the middle card's top centre,
-// and its tilt, left to right
 const FAN = [
   { x: -408, y: 110, angle: -24 },
   { x: -208, y: 33, angle: -12 },
@@ -12,10 +10,7 @@ const FAN = [
   { x: 208, y: 33, angle: 12 },
   { x: 408, y: 110, angle: 24 },
 ];
-// The icon circle's centre on the card
 const ICON_Y = 62;
-// The glass dome's size, and how far its top sits below the middle card's
-// top. The fan ends where the dome image does
 const DOME_W = 1268;
 const DOME_H = 239;
 const DOME_TOP = 196;
@@ -38,7 +33,6 @@ function SkillCard({ skill, slot }) {
     >
       <img loading="lazy" src={skillCard} alt="" className="absolute inset-0 size-full" />
 
-      {/* Undo the tilt baked into the icon so it lines up with the card */}
       <div
         className="absolute left-1/2"
         style={{ top: u(ICON_Y), transform: `rotate(${-icon.rotation}deg)` }}
@@ -94,7 +88,6 @@ function Skills() {
           ))}
         </ul>
 
-        {/* The bottom of the fan sinks into the glass */}
         <img
           loading="lazy"
           src={skillDome}

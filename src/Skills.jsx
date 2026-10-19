@@ -36,7 +36,7 @@ function SkillCard({ skill, slot }) {
         transform: `translate(-50%, -50%) rotate(${slot.angle}deg)`,
       }}
     >
-      <img src={skillCard} alt="" className="absolute inset-0 size-full" />
+      <img loading="lazy" src={skillCard} alt="" className="absolute inset-0 size-full" />
 
       {/* Undo the tilt baked into the icon so it lines up with the card */}
       <div
@@ -44,6 +44,7 @@ function SkillCard({ skill, slot }) {
         style={{ top: u(ICON_Y), transform: `rotate(${-icon.rotation}deg)` }}
       >
         <img
+          loading="lazy"
           src={icon.src}
           alt=""
           className="absolute max-w-none"
@@ -95,6 +96,7 @@ function Skills() {
 
         {/* The bottom of the fan sinks into the glass */}
         <img
+          loading="lazy"
           src={skillDome}
           alt=""
           className="absolute left-1/2 max-w-none -translate-x-1/2"

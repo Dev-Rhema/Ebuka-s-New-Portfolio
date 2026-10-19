@@ -23,17 +23,17 @@ import diamonds1 from "./assets/Brands/Card - Front/Diamonds-1.svg";
 import diamonds2 from "./assets/Brands/Card - Front/Diamonds-2.svg";
 import flagStaff from "./assets/CaseImgs/flagStaff.svg";
 import piggyLogo from "./assets/CaseImgs/piggy/case1Logo.svg";
-import piggyCover from "./assets/CaseImgs/piggy/case1Flag.svg";
-import piggyReviewer from "./assets/CaseImgs/piggy/case1Reviewer.svg";
-import piggyStatImage from "./assets/CaseImgs/piggy/case1RHS.svg";
+import piggyCover from "./assets/CaseImgs/piggy/case1Flag.webp";
+import piggyReviewer from "./assets/CaseImgs/piggy/case1Reviewer.webp";
+import piggyStatImage from "./assets/CaseImgs/piggy/case1RHS.webp";
 import dangLogo from "./assets/CaseImgs/Dang/case2Logo.svg";
-import dangCover from "./assets/CaseImgs/Dang/case2Flag.svg";
-import dangReviewer from "./assets/CaseImgs/Dang/case2Reviewer.svg";
-import dangStatImage from "./assets/CaseImgs/Dang/case2RHS.svg";
+import dangCover from "./assets/CaseImgs/Dang/case2Flag.webp";
+import dangReviewer from "./assets/CaseImgs/Dang/case2Reviewer.webp";
+import dangStatImage from "./assets/CaseImgs/Dang/case2RHS.webp";
 import sendSprintLogo from "./assets/CaseImgs/SendS/case3Logo.svg";
-import sendSprintCover from "./assets/CaseImgs/SendS/case3Flag.svg";
-import sendSprintReviewer from "./assets/CaseImgs/SendS/case3Reviewer.svg";
-import sendSprintStatImage from "./assets/CaseImgs/SendS/case3RHS.svg";
+import sendSprintCover from "./assets/CaseImgs/SendS/case3Flag.webp";
+import sendSprintReviewer from "./assets/CaseImgs/SendS/case3Reviewer.webp";
+import sendSprintStatImage from "./assets/CaseImgs/SendS/case3RHS.webp";
 import skillCard from "./assets/Skills/skillCard.svg";
 // Glass dome the skill cards sink into, reflections baked in (2x export)
 import skillDome from "./assets/Skills/skillDome.webp";
@@ -42,6 +42,11 @@ import contentStrategyIcon from "./assets/Skills/skillIcons/contentStrategy.svg"
 import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg";
 import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
 import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
+// Knight walk cycle, flag and lance included: 32 transparent frames in an
+// 8×4 sheet (layout in KnightFigure.sprite)
+import knightSprite from "./assets/Knight/knight-sprite.webp";
+// Grass along the bottom of the footer
+import grass from "./assets/Knight/Grass.svg";
 
 export {
   headerImg,
@@ -57,7 +62,28 @@ export {
   flagStaff,
   skillCard,
   skillDome,
+  knightSprite,
+  grass,
 };
+
+// The knight figure's box in the AI video's pixels, how high the point of
+// its spear sits in it (for placing the figure), and its sprite sheet:
+// frames of `cell` px with `gap` px between, played at `fps`
+export const KnightFigure = {
+  view: { x: 91.5, y: 242, w: 534.5, h: 797.5 },
+  tip: { y: 244 },
+  sprite: { cols: 8, rows: 4, count: 32, fps: 24, cell: [425, 634], gap: 2 },
+};
+
+export const ContactEmail = "Ebuka@exodigital.org";
+
+// Footer socials, left to right around the email
+export const SocialLinks = [
+  { name: "X", href: "https://x.com/Daevee007" },
+  { name: "Instagram", href: "#" },
+  { name: "YouTube", href: "https://www.youtube.com/@theexodigital" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/in/ebuka-chidube" },
+];
 
 // Skill cards, fanned left to right. Each icon was exported tilted with its
 // card, shadow included: `width` is the file's width, `center` the circle's

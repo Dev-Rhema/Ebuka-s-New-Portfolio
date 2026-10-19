@@ -45,6 +45,7 @@ function CaseStudy({ study }) {
 
       <div className="mt-[calc(var(--u)*30)] grid h-[calc(var(--u)*447)] grid-cols-[calc(var(--u)*794)_1fr] gap-[calc(var(--u)*16)]">
         <img
+          loading="lazy"
           src={study.cover}
           alt={`${study.name} case study`}
           className="size-full rounded-[calc(var(--u)*8)] object-cover"
@@ -54,6 +55,7 @@ function CaseStudy({ study }) {
           <div className="relative flex h-[calc(var(--u)*225)] shrink-0 flex-col justify-end overflow-hidden rounded-[calc(var(--u)*8)] bg-[#d9d9d9] p-[calc(var(--u)*16)] text-white">
             {stat.image && (
               <img
+                loading="lazy"
                 src={stat.image}
                 alt=""
                 className="absolute inset-0 size-full object-cover"
@@ -80,6 +82,7 @@ function CaseStudy({ study }) {
             </blockquote>
             <figcaption className="mt-[calc(var(--u)*14)] flex items-center gap-[calc(var(--u)*16)]">
               <img
+                loading="lazy"
                 src={testimonial.avatar}
                 alt=""
                 className="m-[calc(-2*var(--u))] size-[calc(var(--u)*52)] max-w-none"

@@ -12,6 +12,7 @@ import { callButton, sectionHeading, sectionLabel } from "./styles";
 function Star() {
   return (
     <img
+      loading="lazy"
       src={aboutStar}
       alt=""
       className="mr-[calc(var(--u)*2.5)] ml-[calc(var(--u)*3.5)] inline-block size-[calc(var(--u)*48)] align-[calc(var(--u)*-4)]"
@@ -25,6 +26,7 @@ function ShadowIcon({ src, className = "" }) {
       className={`relative inline-block size-[calc(var(--u)*40)] align-baseline ${className}`}
     >
       <img
+        loading="lazy"
         src={src}
         alt=""
         className="pointer-events-none absolute top-[calc(var(--u)*-5)] left-[calc(var(--u)*-232)] size-[calc(var(--u)*504)] max-w-none"
@@ -46,6 +48,7 @@ function About() {
         With <Star /> <span className="text-black">7 years of experience</span>{" "}
         <Star /> I have helped brands{" "}
         <img
+          loading="lazy"
           src={aboutBrands}
           alt="piggyvest, SendSprint and Lenco"
           className="mr-[calc(var(--u)*-5)] ml-[calc(var(--u)*-3)] inline-block h-[calc(var(--u)*46)] w-auto align-[calc(var(--u)*-3)]"

@@ -201,6 +201,7 @@ export const WavingFlag = ({
       </div>
       {/* Staff drawn over the cloth's edge, as in the original logo */}
       <img
+        loading="lazy"
         src={staff}
         alt=""
         className="pointer-events-none relative size-full"

@@ -8,6 +8,18 @@
       transform: translateX(-50%);
     }
   }
+
+  /* Across the page from its centre: in at the left edge, out at the right */
+  --animate-knight-ride: knight-ride linear infinite;
+
+  @keyframes knight-ride {
+    from {
+      transform: translateX(calc(-50vw - 50%));
+    }
+    to {
+      transform: translateX(calc(50vw + 50%));
+    }
+  }
 }
 
 @font-face {

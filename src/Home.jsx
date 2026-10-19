@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { gsap, SplitText, useGSAP } from "./animation";
 import About from "./About";
 import CaseStudies from "./CaseStudies";
+import Footer from "./Footer";
 import Skills from "./Skills";
 import {
   headerImgNoBg,
@@ -194,6 +195,7 @@ function Home({ play }) {
       <About />
       <CaseStudies />
       <Skills />
+      <Footer />
     </main>
   );
 }

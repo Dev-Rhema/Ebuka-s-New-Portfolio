@@ -6,8 +6,10 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, CustomEase, SplitText);
 
-// Always play in real time; never stretch the animation to absorb slow frames
-gsap.ticker.lagSmoothing(0);
+// Play in real time through ordinary slow frames, but when the browser
+// freezes (≥250ms, e.g. while the page is still being built, or the tab was
+// hidden) carry on from where it was instead of jumping ahead unseen
+gsap.ticker.lagSmoothing(250, 33);
 
 // Logo and text reveal: cubic-bezier(0.35, 0, 0, 1)
 CustomEase.create("reveal", "M0,0 C0.35,0 0,1 1,1");

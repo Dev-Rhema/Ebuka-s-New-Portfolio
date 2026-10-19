@@ -135,15 +135,46 @@ function Loader({ onComplete }) {
           1.58,
         );
 
-      // Start once images are decoded and fonts are in, so nothing pops in mid-animation
+      // Start only once the whole page has loaded, the loader's images are
+      // decoded, the fonts are in and the tab is actually on screen, then
+      // wait two frames so the loader has been painted before it moves
+      const pageLoaded = new Promise((resolve) => {
+        if (document.readyState === "complete") resolve();
+        else window.addEventListener("load", resolve, { once: true });
+      });
+      const pageVisible = new Promise((resolve) => {
+        if (document.visibilityState === "visible") return resolve();
+        const onChange = () => {
+          if (document.visibilityState !== "visible") return;
+          document.removeEventListener("visibilitychange", onChange);
+          resolve();
+        };
+        document.addEventListener("visibilitychange", onChange);
+      });
       const images = container.current.querySelectorAll("img");
+
+      let cancelled = false;
+      let frameId;
       Promise.all([
+        pageLoaded,
         ...[...images].map((img) => img.decode().catch(() => {})),
         document.fonts.ready,
-      ]).then(() => {
-        startedAt = performance.now();
-        tl.play();
-      });
+      ])
+        .then(() => pageVisible)
+        .then(() => {
+          frameId = requestAnimationFrame(() => {
+            frameId = requestAnimationFrame(() => {
+              if (cancelled) return;
+              startedAt = performance.now();
+              tl.play();
+            });
+          });
+        });
+
+      return () => {
+        cancelled = true;
+        cancelAnimationFrame(frameId);
+      };
     },
     { scope: container },
   );

@@ -1,4 +1,4 @@
-import { SkillsData, skillCard } from "./Data";
+import { SkillsData, skillCard, skillDome } from "./Data";
 import { callButton, sectionHeading, sectionLabel } from "./styles";
 
 const CARD_W = 174;
@@ -14,6 +14,11 @@ const FAN = [
 ];
 // The icon circle's centre on the card
 const ICON_Y = 62;
+// The glass dome's size, and how far its top sits below the middle card's
+// top. The fan ends where the dome image does
+const DOME_W = 1268;
+const DOME_H = 239;
+const DOME_TOP = 196;
 
 const u = (value) => `calc(var(--u) * ${value})`;
 
@@ -64,7 +69,7 @@ function SkillCard({ skill, slot }) {
 
 function Skills() {
   return (
-    <section className="bg-white px-[5.556vw] pt-[calc(var(--u)*56)] pb-[calc(var(--u)*56)] text-center [--u:calc(100vw/1440)]">
+    <section className="bg-white px-[5.556vw] pt-[calc(var(--u)*56)] text-center [--u:calc(100vw/1440)]">
       <p className={sectionLabel}>Skills geared towards growth</p>
       <h2
         className={`mx-auto mt-[calc(var(--u)*12)] max-w-[calc(var(--u)*440)] ${sectionHeading}`}
@@ -78,12 +83,24 @@ function Skills() {
         Book a Call
       </a>
 
-      {/* The fade curves with the fan, so the outer cards fade out lower */}
-      <ul className="relative mt-[calc(var(--u)*40)] h-[calc(var(--u)*300)] mask-[radial-gradient(circle_at_50%_calc(var(--u)*3102),transparent_calc(var(--u)*2857),black_calc(var(--u)*2937))]">
-        {SkillsData.map((skill, index) => (
-          <SkillCard key={skill.title} skill={skill} slot={FAN[index]} />
-        ))}
-      </ul>
+      <div
+        className="relative mt-[calc(var(--u)*40)]"
+        style={{ height: u(DOME_TOP + DOME_H) }}
+      >
+        <ul>
+          {SkillsData.map((skill, index) => (
+            <SkillCard key={skill.title} skill={skill} slot={FAN[index]} />
+          ))}
+        </ul>
+
+        {/* The bottom of the fan sinks into the glass */}
+        <img
+          src={skillDome}
+          alt=""
+          className="absolute left-1/2 max-w-none -translate-x-1/2"
+          style={{ top: u(DOME_TOP), width: u(DOME_W), height: u(DOME_H) }}
+        />
+      </div>
     </section>
   );
 }

@@ -35,6 +35,8 @@ import sendSprintCover from "./assets/CaseImgs/SendS/case3Flag.svg";
 import sendSprintReviewer from "./assets/CaseImgs/SendS/case3Reviewer.svg";
 import sendSprintStatImage from "./assets/CaseImgs/SendS/case3RHS.svg";
 import skillCard from "./assets/Skills/skillCard.svg";
+// Glass dome the skill cards sink into, reflections baked in (2x export)
+import skillDome from "./assets/Skills/skillDome.webp";
 import dataAnalysisIcon from "./assets/Skills/skillIcons/dataAnalysis.svg";
 import contentStrategyIcon from "./assets/Skills/skillIcons/contentStrategy.svg";
 import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg";
@@ -54,6 +56,7 @@ export {
   cardBack,
   flagStaff,
   skillCard,
+  skillDome,
 };
 
 // Skill cards, fanned left to right. Each icon was exported tilted with its

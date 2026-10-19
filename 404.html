@@ -8,59 +8,72 @@
     <title>Page not found · Ebuka's Portfolio</title>
   </head>
   <body class="bg-white">
-    <main class="flex min-h-svh flex-col text-center [--u:calc(100vw/1440)]">
+    <main
+      id="ride"
+      class="relative h-svh touch-manipulation overflow-hidden text-center select-none [--u:min(calc(100vw/1440),calc(100svh/900))]"
+    >
+      <canvas
+        data-game
+        class="absolute bottom-0 left-0 h-[calc(var(--u)*680)] w-full"
+      ></canvas>
+
       <a
         href="/"
         aria-label="Home"
-        class="mx-auto mt-[max(calc(var(--u)*34.5),24px)]"
+        class="absolute top-[calc(var(--u)*34.5)] left-[calc(var(--u)*80)]"
       >
-        <img src="/logo.svg" alt="" class="h-11 w-10 invert" />
+        <img
+          src="/logo.svg"
+          alt=""
+          class="h-[calc(var(--u)*44)] w-[calc(var(--u)*40)] invert"
+        />
+      </a>
+      <a
+        href="/"
+        class="absolute top-[calc(var(--u)*32)] right-[calc(var(--u)*80)] flex h-[calc(var(--u)*46)] w-[calc(var(--u)*144)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*16)] font-medium tracking-[-0.04em] text-white"
+      >
+        Home
       </a>
 
-      <div class="mx-auto mt-[max(calc(var(--u)*72),40px)] px-4">
+      <div class="relative pt-[calc(var(--u)*170)]">
         <h1
-          class="mt-[max(calc(var(--u)*18),14px)] font-['DM-Serif'] text-[max(calc(var(--u)*56),36px)] leading-none tracking-[-0.02em] text-black"
+          class="font-['DM-Serif'] text-[calc(var(--u)*56)] leading-none tracking-[-0.02em] text-black"
         >
-          This road leads nowhere
+          You have strayed, warlock
         </h1>
         <p
-          class="mx-auto mt-[max(calc(var(--u)*18),14px)] max-w-[max(calc(var(--u)*380),280px)] font-['Geist'] text-[max(calc(var(--u)*20),16px)] leading-[1.25] font-medium tracking-[-0.04em] text-[#838383]"
+          class="mx-auto mt-[calc(var(--u)*25)] max-w-[calc(var(--u)*640)] font-['Geist'] text-[calc(var(--u)*28)] leading-[calc(var(--u)*28)] font-medium tracking-[-0.02em] text-[#8a8a8a]"
         >
-          But this portal leads you home
+          That which you seek is not here. Go Home, or en garde if your valor is
+          as legends say
         </p>
-        <p
-          class="mx-auto mt-[max(calc(var(--u)*18),14px)] max-w-[max(calc(var(--u)*380),280px)] font-['Geist'] text-[max(calc(var(--u)*20),16px)] leading-[1.25] font-medium tracking-[-0.04em] text-[#838383]"
+        <div
+          data-prompt
+          class="mt-[calc(var(--u)*56)] flex items-center justify-center gap-[calc(var(--u)*16)]"
         >
-          👇🏽
-        </p>
-        <a
-          href="/"
-          class="mx-auto mt-[max(calc(var(--u)*28),22px)] flex h-[max(calc(var(--u)*46),44px)] w-[max(calc(var(--u)*144),140px)] items-center justify-center bg-black font-['Geist'] text-[max(calc(var(--u)*16),15px)] font-medium tracking-[-0.04em] text-white"
-        >
-          Back to home
-        </a>
-      </div>
-
-      <section
-        id="ride"
-        aria-label="Game: press space or tap to make the knight jump the rocks"
-        class="relative mt-auto cursor-pointer touch-manipulation select-none"
-      >
+          <span
+            class="flex size-[calc(var(--u)*36)] shrink-0 rounded-[calc(var(--u)*8)] bg-[#4A4A4A] text-white shadow-[0_calc(var(--u)*10.28)_calc(var(--u)*10.5)_rgba(0,0,0,0.19),0_calc(var(--u)*28.42)_calc(var(--u)*29.05)_rgba(0,0,0,0.27),0_calc(var(--u)*68.43)_calc(var(--u)*69.94)_rgba(0,0,0,0.35),0_calc(var(--u)*227)_calc(var(--u)*232)_rgba(0,0,0,0.54),inset_0_calc(var(--u)*-3)_calc(var(--u)*2)_rgba(0,0,0,0.25),inset_0_calc(var(--u)*2)_calc(var(--u)*2)_rgba(179,179,179,0.25)]"
+          >
+            <svg viewBox="0 0 36 36" fill="none" class="size-full">
+              <path
+                d="M12 15.67V18.33A1 1 0 0 0 13 19.33H23A1 1 0 0 0 24 18.33V15.67"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+          </span>
+          <span
+            data-hint
+            role="status"
+            class="font-['Geist-Mono'] text-[calc(var(--u)*16)] leading-none tracking-[0.1em] text-[#8a8a8a]"
+            >Press Spacebar to test yourself</span
+          >
+        </div>
         <p
-          class="absolute top-[max(calc(var(--u)*24),12px)] right-[max(calc(var(--u)*40),16px)] flex gap-[1.2em] font-['Geist'] text-[max(calc(var(--u)*16),13px)] leading-none font-medium tabular-nums tracking-[-0.02em] text-[#838383]"
-        >
-          <span data-best></span><span data-score class="text-black"></span>
-        </p>
-        <p
-          data-hint
-          role="status"
-          class="absolute inset-x-0 top-[max(calc(var(--u)*64),44px)] px-4 font-['Geist'] text-[max(calc(var(--u)*18),15px)] leading-none font-medium tracking-[-0.04em] text-[#838383]"
+          data-score
+          class="mt-[calc(var(--u)*20)] h-[calc(var(--u)*16)] font-['Geist-Mono'] text-[calc(var(--u)*14)] leading-none tracking-[0.1em] whitespace-pre text-[#8a8a8a]"
         ></p>
-        <canvas
-          data-game
-          class="block h-[max(calc(var(--u)*340),240px)] w-full"
-        ></canvas>
-      </section>
+      </div>
     </main>
     <script type="module" src="/src/notFound/main.js"></script>
   </body>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-// Figma's effects on the footer knight and grass, drawn live in WebGL so the
-// dots stay crisp at screen resolution:
+// Figma's effects on the footer knight and grass, drawn live in WebGL
+// (matched against a Figma export of the design):
 // - Monotone noise: black, 25%, size 1.5
 // - Dither: Bayer 16×16, size 1, 2 levels, brightness 100%, contrast 0.9
 const CONTRAST = 0.9;
@@ -170,14 +170,14 @@ export function useDither(imageRef, sprite) {
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
-      // Dot sizes are in the 1440-wide design's px, so they scale with the
-      // page like everything else, but never below a device pixel
-      const px = (document.documentElement.clientWidth / 1440) * dpr;
-      gl.uniform1f(uniform("dotSize"), Math.max(1, DOT * px));
-      gl.uniform1f(uniform("grain"), Math.max(1, GRAIN * px));
+      // Like Figma, the effect is worked out at the design's resolution (the
+      // 1440-wide layout's px) and the browser scales the canvas up
+      // smoothly, which softens the dots into Figma's texture
+      const scale = 1440 / document.documentElement.clientWidth;
+      canvas.width = Math.max(1, Math.round(canvas.clientWidth * scale));
+      canvas.height = Math.max(1, Math.round(canvas.clientHeight * scale));
+      gl.uniform1f(uniform("dotSize"), DOT);
+      gl.uniform1f(uniform("grain"), GRAIN);
       if (!sprite) uploaded = false;
       upload();
       draw();

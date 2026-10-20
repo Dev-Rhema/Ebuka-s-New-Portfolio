@@ -35,20 +35,21 @@
         Home
       </a>
 
-      <div class="relative pt-[calc(var(--u)*170)]">
+      <div data-intro class="relative pt-[calc(var(--u)*170)]">
         <h1
+          data-title
           class="font-['DM-Serif'] text-[calc(var(--u)*56)] leading-none tracking-[-0.02em] text-black"
         >
           You have strayed, warlock
         </h1>
         <p
+          data-subtitle
           class="mx-auto mt-[calc(var(--u)*25)] max-w-[calc(var(--u)*640)] font-['Geist'] text-[calc(var(--u)*28)] leading-[calc(var(--u)*28)] font-medium tracking-[-0.02em] text-[#8a8a8a]"
         >
           That which you seek is not here. Go Home, or en garde if your valor is
           as legends say
         </p>
         <div
-          data-prompt
           class="mt-[calc(var(--u)*56)] flex items-center justify-center gap-[calc(var(--u)*16)]"
         >
           <span
@@ -69,10 +70,33 @@
             >Press Spacebar to test yourself</span
           >
         </div>
-        <p
-          data-score
-          class="mt-[calc(var(--u)*20)] h-[calc(var(--u)*16)] font-['Geist-Mono'] text-[calc(var(--u)*14)] leading-none tracking-[0.1em] whitespace-pre text-[#8a8a8a]"
-        ></p>
+      </div>
+
+      <div data-hud class="invisible">
+        <div
+          class="absolute top-[calc(var(--u)*118.5)] left-[calc(var(--u)*80)] text-left"
+        >
+          <p
+            data-score
+            class="font-['Geist'] text-[calc(var(--u)*30)] leading-none font-medium tabular-nums text-[#404040]"
+          >
+            0000
+          </p>
+          <p
+            data-best
+            class="mt-[calc(var(--u)*12)] font-['Geist-Mono'] text-[calc(var(--u)*16)] leading-none tracking-[0.1em] text-[#8a8a8a]"
+          ></p>
+        </div>
+        <div
+          class="absolute top-[calc(var(--u)*118)] right-[calc(var(--u)*80)] w-[calc(var(--u)*271)] text-left"
+        >
+          <h2
+            class="font-['DM-Serif'] text-[calc(var(--u)*21)] leading-none tracking-[-0.02em] text-[#8a8a8a]"
+          >
+            Legends Unnamed
+          </h2>
+          <ol data-leaders class="mt-[calc(var(--u)*6)]"></ol>
+        </div>
       </div>
     </main>
     <script type="module" src="/src/notFound/main.js"></script>

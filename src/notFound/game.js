@@ -29,9 +29,11 @@ const ROCKS = [
 const SCORE_PER_PX = 1 / (40 * UNIT);
 const BEST_KEY = "knight-best";
 const TOUCH = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-const HINT = {
-  ready: TOUCH ? "Tap to test yourself" : "Press Spacebar to test yourself",
-  over: "You don try, dey go your house!",
+const PRESS = TOUCH ? "Tap" : "Press Spacebar";
+const OVER = {
+  title: "You fell, warlock",
+  subtitle: "It is in falling we learn to rise",
+  hint: `${PRESS} to restart`,
 };
 
 const loadImage = (url) =>
@@ -77,15 +79,19 @@ const saveBest = (score) => {
   }
 };
 
-const pad = (n) => String(n).padStart(5, "0");
+const pad = (n) => String(n).padStart(4, "0");
 const ease = (t) => 1 - (1 - t) ** 3;
 
 export async function startGame(root) {
   const canvas = root.querySelector("[data-game]");
-  const promptEl = root.querySelector("[data-prompt]");
+  const introEl = root.querySelector("[data-intro]");
+  const titleEl = root.querySelector("[data-title]");
+  const subtitleEl = root.querySelector("[data-subtitle]");
   const hintEl = root.querySelector("[data-hint]");
+  const hudEl = root.querySelector("[data-hud]");
   const scoreEl = root.querySelector("[data-score]");
-  hintEl.textContent = HINT.ready;
+  const bestEl = root.querySelector("[data-best]");
+  hintEl.textContent = `${PRESS} to test yourself`;
 
   const [knightImage, grassImage, ...rockImages] = await Promise.all([
     loadImage(knightUrl),
@@ -246,12 +252,8 @@ export async function startGame(root) {
   };
 
   const showScore = () => {
-    const parts = [];
-    if (best) parts.push(`HI ${pad(best)}`);
-    if (state.status === "running" || state.status === "over") {
-      parts.push(pad(score()));
-    }
-    scoreEl.textContent = parts.join("  ");
+    scoreEl.textContent = pad(score());
+    bestEl.textContent = `${pad(best)} Highest Score`;
   };
 
   const step = (dt) => {
@@ -323,7 +325,8 @@ export async function startGame(root) {
   const start = () => {
     reset();
     state.status = "rearing";
-    promptEl.style.visibility = "hidden";
+    introEl.style.visibility = "hidden";
+    hudEl.style.visibility = "visible";
     last = 0;
     requestAnimationFrame(tick);
   };
@@ -335,8 +338,11 @@ export async function startGame(root) {
       best = score();
       saveBest(best);
     }
-    hintEl.textContent = HINT.over;
-    promptEl.style.visibility = "";
+    titleEl.textContent = OVER.title;
+    subtitleEl.textContent = OVER.subtitle;
+    hintEl.textContent = OVER.hint;
+    hudEl.style.visibility = "";
+    introEl.style.visibility = "";
   };
 
   const jump = () => {

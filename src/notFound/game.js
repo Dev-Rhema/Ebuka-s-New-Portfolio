@@ -13,8 +13,8 @@ const GROUND = 4;
 const GRASS = { w: 1439, h: 40 };
 const PLAY_X = 80;
 const RIDE_IN = 0.8;
-const JUMP_TIME = 0.9;
-const JUMP_LIFT = 70 * UNIT;
+const JUMP = { from: 2, gather: 0.1, air: 0.75, land: 0.3, lift: 165 };
+const JUMP_TIME = JUMP.gather + JUMP.air + JUMP.land;
 const SPEED = { start: 320 * UNIT, max: 760 * UNIT, gain: 9 * UNIT };
 const ROCKS = [
   { url: bigRockUrl, w: 100 * UNIT },
@@ -106,6 +106,14 @@ export async function startGame(root) {
   const knightW = cellW * KNIGHT;
   const knightH = cellH * KNIGHT;
   const bin = sheet.bin * KNIGHT;
+  const hoofHeight = (i) =>
+    cellH - Math.max(...sheet.under[sheet.jump.start + i]);
+  const takeoff = Array.from({ length: sheet.jump.count }, (_, i) => i).find(
+    (i) => hoofHeight(i) > hoofHeight(0) + 3,
+  );
+  const touchdown = Array.from({ length: sheet.jump.count }, (_, i) => i).find(
+    (i) => i > takeoff && hoofHeight(i) <= hoofHeight(0) + 1,
+  );
   let width = 0;
   let height = 0;
   let groundY = 0;
@@ -132,15 +140,30 @@ export async function startGame(root) {
   const knightX = () =>
     Math.round(homeX + (Math.min(PLAY_X, homeX) - homeX) * ease(slide));
 
-  const frame = () => {
-    if (state.jump !== null) {
-      const { start, count } = sheet.jump;
-      return start + Math.min(count - 1, Math.floor(state.jump * count));
+  const jumpPose = () => {
+    const t = state.jump;
+    const along = (from, to, u) =>
+      from + Math.min(to - from - 1, Math.floor(u * (to - from)));
+    if (t < JUMP.gather) {
+      return { i: along(JUMP.from, takeoff, t / JUMP.gather), lift: 0 };
     }
-    return sheet.walk.start + (Math.floor(state.run) % sheet.walk.count);
+    if (t < JUMP.gather + JUMP.air) {
+      const u = (t - JUMP.gather) / JUMP.air;
+      return {
+        i: along(takeoff, touchdown, u),
+        lift: JUMP.lift * 4 * u * (1 - u),
+      };
+    }
+    const u = (t - JUMP.gather - JUMP.air) / JUMP.land;
+    return { i: along(touchdown, sheet.jump.count, u), lift: 0 };
   };
-  const lift = () =>
-    state.jump === null ? 0 : JUMP_LIFT * 4 * state.jump * (1 - state.jump);
+  const frame = () =>
+    state.jump === null
+      ? sheet.walk.start + (Math.floor(state.run) % sheet.walk.count)
+      : sheet.jump.start + jumpPose().i;
+  const lift = () => (state.jump === null ? 0 : jumpPose().lift);
+  const landing = () =>
+    state.jump !== null && state.jump >= JUMP.gather + JUMP.air;
 
   const hits = () => {
     const under = sheet.under[frame()];
@@ -154,7 +177,10 @@ export async function startGame(root) {
         if (under[b] < 0) continue;
         const y = top + under[b] * KNIGHT;
         const x0 = Math.max(0, Math.floor(left + b * bin - rock.x));
-        const x1 = Math.min(art.width, Math.ceil(left + (b + 1) * bin - rock.x));
+        const x1 = Math.min(
+          art.width,
+          Math.ceil(left + (b + 1) * bin - rock.x),
+        );
         for (let x = x0; x < x1; x++) {
           if (y > rockTop + edge[x] + 1.5 * UNIT) return true;
         }
@@ -188,7 +214,14 @@ export async function startGame(root) {
       ctx.drawImage(grass, x, height - GRASS.h);
     }
     if (dither) {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, scene);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        scene,
+      );
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -214,11 +247,13 @@ export async function startGame(root) {
     state.run += dt * 24 * (1.8 + 1.2 * pace);
 
     if (state.jump !== null) {
-      state.jump += dt / JUMP_TIME;
-      if (state.jump >= 1) {
-        state.jump = state.queued ? 0 : null;
-        state.queued = false;
+      state.jump += dt;
+      if (state.jump >= JUMP_TIME) {
+        state.jump = null;
         state.run = sheet.jump.resume;
+      } else if (state.queued && landing()) {
+        state.jump = 0;
+        state.queued = false;
       }
     }
 
@@ -229,7 +264,7 @@ export async function startGame(root) {
     state.nextRock -= travel;
     if (state.nextRock <= 0) {
       state.rocks.push({ kind: Math.random() < 0.45 ? 0 : 1, x: width + 20 });
-      const room = state.speed * (JUMP_TIME + 0.35) + 120 * UNIT;
+      const room = state.speed * (JUMP.gather + JUMP.air + 0.35) + 120 * UNIT;
       state.nextRock = room * (1 + Math.random() * 1.2);
     }
   };
@@ -275,8 +310,8 @@ export async function startGame(root) {
       if (performance.now() - state.endedAt > 500) start();
       return;
     }
-    if (state.jump === null) state.jump = 0;
-    else if (state.jump > 1 - 0.15 / JUMP_TIME) state.queued = true;
+    if (state.jump === null || landing()) state.jump = 0;
+    else if (state.jump > JUMP.gather + JUMP.air - 0.15) state.queued = true;
   };
 
   const resize = () => {

@@ -9,13 +9,17 @@ const SIZE = 0.53;
 const KNIGHT = SIZE / sheet.scale;
 const UNIT = SIZE / 0.26;
 const VIEW_H = 680;
-const GROUND = 4;
-const GRASS = { w: 1439, h: 40 };
+const GROUND = 3;
+const GRASS = { w: 1439, h: 40, scale: 0.7 };
 const PLAY_X = 80;
 const RIDE_IN = 0.8;
+const REAR_FPS = 16;
+const GALLOP_FPS = 24;
 const JUMP = { from: 2, gather: 0.1, air: 0.75, land: 0.3, lift: 165 };
 const JUMP_TIME = JUMP.gather + JUMP.air + JUMP.land;
 const SPEED = { start: 320 * UNIT, max: 760 * UNIT, gain: 9 * UNIT };
+const SPEED_UP = { after: 20, factor: 2 };
+const ROCK_GAPS = { spread: 1.2, tightest: 0.25, over: 60 };
 const ROCKS = [
   { url: bigRockUrl, w: 100 * UNIT },
   { url: smallRockUrl, w: 44 * UNIT },
@@ -86,7 +90,11 @@ export async function startGame(root) {
     loadImage(grassUrl),
     ...ROCKS.map((rock) => loadImage(rock.url)),
   ]);
-  const grass = raster(grassImage, GRASS.w, GRASS.h);
+  const grass = raster(
+    grassImage,
+    GRASS.w * GRASS.scale,
+    GRASS.h * GRASS.scale,
+  );
   const rockKinds = ROCKS.map((rock, i) => {
     const image = rockImages[i];
     const art = raster(image, rock.w, (rock.w * image.height) / image.width);
@@ -102,12 +110,14 @@ export async function startGame(root) {
     canvas.replaceWith(scene);
   }
 
-  const [cellW, cellH] = sheet.cell;
-  const knightW = cellW * KNIGHT;
-  const knightH = cellH * KNIGHT;
+  const [canvasW, canvasH] = sheet.canvas;
+  const knightW = canvasW * KNIGHT;
+  const knightH = canvasH * KNIGHT;
   const bin = sheet.bin * KNIGHT;
+  const footGap =
+    (canvasH - Math.max(...sheet.under[sheet.intro.start])) * KNIGHT;
   const hoofHeight = (i) =>
-    cellH - Math.max(...sheet.under[sheet.jump.start + i]);
+    canvasH - Math.max(...sheet.under[sheet.jump.start + i]);
   const takeoff = Array.from({ length: sheet.jump.count }, (_, i) => i).find(
     (i) => hoofHeight(i) > hoofHeight(0) + 3,
   );
@@ -126,9 +136,11 @@ export async function startGame(root) {
     state = {
       status: "ready",
       speed: SPEED.start,
+      time: 0,
       distance: 0,
       rocks: [],
       nextRock: 0,
+      rear: 0,
       run: 0,
       jump: null,
       queued: false,
@@ -157,17 +169,21 @@ export async function startGame(root) {
     const u = (t - JUMP.gather - JUMP.air) / JUMP.land;
     return { i: along(touchdown, sheet.jump.count, u), lift: 0 };
   };
-  const frame = () =>
-    state.jump === null
-      ? sheet.walk.start + (Math.floor(state.run) % sheet.walk.count)
-      : sheet.jump.start + jumpPose().i;
+  const frame = () => {
+    if (state.status === "ready") return sheet.intro.start;
+    if (state.status === "rearing") {
+      return sheet.intro.start + Math.floor(state.rear * REAR_FPS);
+    }
+    if (state.jump !== null) return sheet.jump.start + jumpPose().i;
+    return sheet.gallop.start + (Math.floor(state.run) % sheet.gallop.count);
+  };
   const lift = () => (state.jump === null ? 0 : jumpPose().lift);
   const landing = () =>
     state.jump !== null && state.jump >= JUMP.gather + JUMP.air;
 
   const hits = () => {
     const under = sheet.under[frame()];
-    const top = groundY - knightH - lift();
+    const top = groundY - knightH + footGap - lift();
     const left = knightX();
     for (const rock of state.rocks) {
       const { art, top: edge } = rockKinds[rock.kind];
@@ -195,23 +211,21 @@ export async function startGame(root) {
       const { art } = rockKinds[rock.kind];
       ctx.drawImage(art, Math.round(rock.x), groundY - art.height);
     }
-    const i = frame();
-    const col = i % sheet.cols;
-    const row = Math.floor(i / sheet.cols);
+    const [x, y, w, h, offsetX, offsetY] = sheet.frames[frame()];
     ctx.drawImage(
       knightImage,
-      col * (cellW + sheet.gap),
-      row * (cellH + sheet.gap),
-      cellW,
-      cellH,
-      knightX(),
-      Math.round(groundY - knightH - lift()),
-      knightW,
-      knightH,
+      x,
+      y,
+      w,
+      h,
+      knightX() + offsetX * KNIGHT,
+      Math.round(groundY - knightH + footGap - lift() + offsetY * KNIGHT),
+      w * KNIGHT,
+      h * KNIGHT,
     );
-    const offset = state.distance % GRASS.w;
-    for (let x = -Math.round(offset); x < width; x += GRASS.w) {
-      ctx.drawImage(grass, x, height - GRASS.h);
+    const offset = state.distance % grass.width;
+    for (let x = -Math.round(offset); x < width; x += grass.width) {
+      ctx.drawImage(grass, x, height - grass.height);
     }
     if (dither) {
       gl.texImage2D(
@@ -233,18 +247,31 @@ export async function startGame(root) {
     const score = Math.floor(state.distance * SCORE_PER_PX);
     const parts = [];
     if (best) parts.push(`HI ${pad(best)}`);
-    if (state.status !== "ready") parts.push(pad(score));
+    if (state.status === "running" || state.status === "over") {
+      parts.push(pad(score));
+    }
     scoreEl.textContent = parts.join("  ");
   };
 
   const step = (dt) => {
+    if (state.status === "rearing") {
+      state.rear += dt;
+      if (state.rear * REAR_FPS >= sheet.intro.count) {
+        state.status = "running";
+        state.nextRock = width * 0.6;
+      }
+      return;
+    }
     slide = Math.min(1, slide + dt / RIDE_IN);
-    state.speed = Math.min(SPEED.max, state.speed + SPEED.gain * dt);
+    state.time += dt;
+    const gain =
+      SPEED.gain * (state.time > SPEED_UP.after ? SPEED_UP.factor : 1);
+    state.speed = Math.min(SPEED.max, state.speed + gain * dt);
     const travel = state.speed * dt;
     state.distance += travel;
 
     const pace = (state.speed - SPEED.start) / (SPEED.max - SPEED.start);
-    state.run += dt * 24 * (1.8 + 1.2 * pace);
+    state.run += dt * GALLOP_FPS * (1 + 0.4 * pace);
 
     if (state.jump !== null) {
       state.jump += dt;
@@ -265,7 +292,10 @@ export async function startGame(root) {
     if (state.nextRock <= 0) {
       state.rocks.push({ kind: Math.random() < 0.45 ? 0 : 1, x: width + 20 });
       const room = state.speed * (JUMP.gather + JUMP.air + 0.35) + 120 * UNIT;
-      state.nextRock = room * (1 + Math.random() * 1.2);
+      const tighten = Math.min(1, state.time / ROCK_GAPS.over);
+      const spread =
+        ROCK_GAPS.spread - (ROCK_GAPS.spread - ROCK_GAPS.tightest) * tighten;
+      state.nextRock = room * (1 + Math.random() * spread);
     }
   };
 
@@ -285,8 +315,7 @@ export async function startGame(root) {
 
   const start = () => {
     reset();
-    state.status = "running";
-    state.nextRock = width * 0.6;
+    state.status = "rearing";
     promptEl.style.visibility = "hidden";
     last = 0;
     requestAnimationFrame(tick);
@@ -310,6 +339,7 @@ export async function startGame(root) {
       if (performance.now() - state.endedAt > 500) start();
       return;
     }
+    if (state.status === "rearing") return;
     if (state.jump === null || landing()) state.jump = 0;
     else if (state.jump > JUMP.gather + JUMP.air - 0.15) state.queued = true;
   };

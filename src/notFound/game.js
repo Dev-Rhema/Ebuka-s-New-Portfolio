@@ -15,8 +15,9 @@ const PLAY_X = 80;
 const RIDE_IN = 0.8;
 const REAR_FPS = 16;
 const GALLOP_FPS = 24;
-const JUMP = { from: 2, gather: 0.1, air: 0.75, land: 0.3, lift: 165 };
-const JUMP_TIME = JUMP.gather + JUMP.air + JUMP.land;
+const JUMP = { from: 2, gather: 0.1, air: 0.75, land: 0.08, lift: 165 };
+const LANDS_AT = JUMP.gather + JUMP.air;
+const JUMP_TIME = LANDS_AT + JUMP.land;
 const SPEED = { start: 320 * UNIT, max: 760 * UNIT, gain: 9 * UNIT };
 const SPEED_UP = { after: 20, factor: 2 };
 const ROCK_GAPS = { spread: 1.2, tightest: 0.25, over: 60 };
@@ -118,10 +119,9 @@ export async function startGame(root) {
     (canvasH - Math.max(...sheet.under[sheet.intro.start])) * KNIGHT;
   const hoofHeight = (i) =>
     canvasH - Math.max(...sheet.under[sheet.jump.start + i]);
-  const takeoff = Array.from({ length: sheet.jump.count }, (_, i) => i).find(
-    (i) => hoofHeight(i) > hoofHeight(0) + 3,
-  );
-  const touchdown = Array.from({ length: sheet.jump.count }, (_, i) => i).find(
+  const jumpFrames = [...Array(sheet.jump.count).keys()];
+  const takeoff = jumpFrames.find((i) => hoofHeight(i) > hoofHeight(0) + 3);
+  const touchdown = jumpFrames.find(
     (i) => i > takeoff && hoofHeight(i) <= hoofHeight(0) + 1,
   );
   let width = 0;
@@ -159,15 +159,14 @@ export async function startGame(root) {
     if (t < JUMP.gather) {
       return { i: along(JUMP.from, takeoff, t / JUMP.gather), lift: 0 };
     }
-    if (t < JUMP.gather + JUMP.air) {
+    if (t < LANDS_AT) {
       const u = (t - JUMP.gather) / JUMP.air;
       return {
         i: along(takeoff, touchdown, u),
         lift: JUMP.lift * 4 * u * (1 - u),
       };
     }
-    const u = (t - JUMP.gather - JUMP.air) / JUMP.land;
-    return { i: along(touchdown, sheet.jump.count, u), lift: 0 };
+    return { i: touchdown, lift: 0 };
   };
   const frame = () => {
     if (state.status === "ready") return sheet.intro.start;
@@ -178,12 +177,13 @@ export async function startGame(root) {
     return sheet.gallop.start + (Math.floor(state.run) % sheet.gallop.count);
   };
   const lift = () => (state.jump === null ? 0 : jumpPose().lift);
-  const landing = () =>
-    state.jump !== null && state.jump >= JUMP.gather + JUMP.air;
+  const landing = () => state.jump !== null && state.jump >= LANDS_AT;
+  const knightTop = () => groundY - knightH + footGap - lift();
+  const score = () => Math.floor(state.distance * SCORE_PER_PX);
 
   const hits = () => {
     const under = sheet.under[frame()];
-    const top = groundY - knightH + footGap - lift();
+    const top = knightTop();
     const left = knightX();
     for (const rock of state.rocks) {
       const { art, top: edge } = rockKinds[rock.kind];
@@ -219,7 +219,7 @@ export async function startGame(root) {
       w,
       h,
       knightX() + offsetX * KNIGHT,
-      Math.round(groundY - knightH + footGap - lift() + offsetY * KNIGHT),
+      Math.round(knightTop() + offsetY * KNIGHT),
       w * KNIGHT,
       h * KNIGHT,
     );
@@ -244,11 +244,10 @@ export async function startGame(root) {
   };
 
   const showScore = () => {
-    const score = Math.floor(state.distance * SCORE_PER_PX);
     const parts = [];
     if (best) parts.push(`HI ${pad(best)}`);
     if (state.status === "running" || state.status === "over") {
-      parts.push(pad(score));
+      parts.push(pad(score()));
     }
     scoreEl.textContent = parts.join("  ");
   };
@@ -291,7 +290,7 @@ export async function startGame(root) {
     state.nextRock -= travel;
     if (state.nextRock <= 0) {
       state.rocks.push({ kind: Math.random() < 0.45 ? 0 : 1, x: width + 20 });
-      const room = state.speed * (JUMP.gather + JUMP.air + 0.35) + 120 * UNIT;
+      const room = state.speed * (LANDS_AT + 0.35) + 120 * UNIT;
       const tighten = Math.min(1, state.time / ROCK_GAPS.over);
       const spread =
         ROCK_GAPS.spread - (ROCK_GAPS.spread - ROCK_GAPS.tightest) * tighten;
@@ -324,9 +323,8 @@ export async function startGame(root) {
   const end = () => {
     state.status = "over";
     state.endedAt = performance.now();
-    const score = Math.floor(state.distance * SCORE_PER_PX);
-    if (score > best) {
-      best = score;
+    if (score() > best) {
+      best = score();
       saveBest(best);
     }
     hintEl.textContent = HINT.over;
@@ -341,7 +339,7 @@ export async function startGame(root) {
     }
     if (state.status === "rearing") return;
     if (state.jump === null || landing()) state.jump = 0;
-    else if (state.jump > JUMP.gather + JUMP.air - 0.15) state.queued = true;
+    else if (state.jump > LANDS_AT - 0.15) state.queued = true;
   };
 
   const resize = () => {

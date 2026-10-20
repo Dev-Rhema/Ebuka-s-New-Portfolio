@@ -20,10 +20,11 @@ const LANDS_AT = JUMP.gather + JUMP.air;
 const JUMP_TIME = LANDS_AT + JUMP.land;
 const SPEED = { start: 320 * UNIT, max: 760 * UNIT, gain: 9 * UNIT };
 const SPEED_UP = { after: 20, factor: 2 };
+const SPEED_STEP = { every: 100, by: 0.1 };
 const ROCK_GAPS = { spread: 1.2, tightest: 0.25, over: 60 };
 const ROCKS = [
-  { url: bigRockUrl, w: 100 * UNIT },
-  { url: smallRockUrl, w: 44 * UNIT },
+  { url: bigRockUrl, w: 120 * UNIT, sink: 22 },
+  { url: smallRockUrl, w: 62 * UNIT, sink: 26 },
 ];
 const SCORE_PER_PX = 1 / (40 * UNIT);
 const BEST_KEY = "knight-best";
@@ -99,7 +100,7 @@ export async function startGame(root) {
   const rockKinds = ROCKS.map((rock, i) => {
     const image = rockImages[i];
     const art = raster(image, rock.w, (rock.w * image.height) / image.width);
-    return { art, top: topEdge(art) };
+    return { art, top: topEdge(art), sink: rock.sink };
   });
 
   const scene = document.createElement("canvas");
@@ -135,6 +136,7 @@ export async function startGame(root) {
   const reset = () => {
     state = {
       status: "ready",
+      cruise: SPEED.start,
       speed: SPEED.start,
       time: 0,
       distance: 0,
@@ -186,8 +188,8 @@ export async function startGame(root) {
     const top = knightTop();
     const left = knightX();
     for (const rock of state.rocks) {
-      const { art, top: edge } = rockKinds[rock.kind];
-      const rockTop = groundY - art.height;
+      const { art, top: edge, sink } = rockKinds[rock.kind];
+      const rockTop = groundY - art.height + sink;
       if (rock.x > left + knightW || rock.x + art.width < left) continue;
       for (let b = 0; b < under.length; b++) {
         if (under[b] < 0) continue;
@@ -208,8 +210,8 @@ export async function startGame(root) {
   const draw = () => {
     ctx.clearRect(0, 0, width, height);
     for (const rock of state.rocks) {
-      const { art } = rockKinds[rock.kind];
-      ctx.drawImage(art, Math.round(rock.x), groundY - art.height);
+      const { art, sink } = rockKinds[rock.kind];
+      ctx.drawImage(art, Math.round(rock.x), groundY - art.height + sink);
     }
     const [x, y, w, h, offsetX, offsetY] = sheet.frames[frame()];
     ctx.drawImage(
@@ -257,6 +259,7 @@ export async function startGame(root) {
       state.rear += dt;
       if (state.rear * REAR_FPS >= sheet.intro.count) {
         state.status = "running";
+        state.run = sheet.intro.next;
         state.nextRock = width * 0.6;
       }
       return;
@@ -265,11 +268,16 @@ export async function startGame(root) {
     state.time += dt;
     const gain =
       SPEED.gain * (state.time > SPEED_UP.after ? SPEED_UP.factor : 1);
-    state.speed = Math.min(SPEED.max, state.speed + gain * dt);
+    state.cruise = Math.min(SPEED.max, state.cruise + gain * dt);
+    const steps = Math.floor(score() / SPEED_STEP.every);
+    state.speed = state.cruise * (1 + SPEED_STEP.by * steps);
     const travel = state.speed * dt;
     state.distance += travel;
 
-    const pace = (state.speed - SPEED.start) / (SPEED.max - SPEED.start);
+    const pace = Math.min(
+      1.5,
+      (state.speed - SPEED.start) / (SPEED.max - SPEED.start),
+    );
     state.run += dt * GALLOP_FPS * (1 + 0.4 * pace);
 
     if (state.jump !== null) {

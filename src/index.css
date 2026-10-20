@@ -13,10 +13,10 @@
 
   @keyframes knight-ride {
     from {
-      transform: translateX(calc(-50vw - 50%));
+      transform: translateX(0);
     }
     to {
-      transform: translateX(calc(50vw + 50%));
+      transform: translateX(100%);
     }
   }
 }

@@ -12,7 +12,7 @@ const KNIGHT_W = view.w * KNIGHT_SCALE;
 const TIP_Y = (tip.y - view.y) * KNIGHT_SCALE;
 const TIP_OVERLAP = 13;
 const RIDE_SPEED = 7.05 * 24 * KNIGHT_SCALE;
-const RIDE_TIME = (1440 + KNIGHT_W) / RIDE_SPEED;
+const RIDE_TIME = 1440 / RIDE_SPEED;
 
 const GLYPHS = {
   X: (
@@ -189,16 +189,23 @@ function Footer() {
         <SocialButton {...linkedin} />
       </div>
 
-      <Knight
-        className="pointer-events-none relative z-20 mx-auto motion-safe:animate-knight-ride"
+      <div
+        className="pointer-events-none relative z-20 motion-safe:animate-knight-ride"
         style={{
-          width: u(KNIGHT_W),
           marginTop: u(-TIP_Y - TIP_OVERLAP),
           animationDuration: `${RIDE_TIME}s`,
-          animationDelay: `${-RIDE_TIME / 2}s`,
           animationPlayState: inView ? "running" : "paused",
         }}
-      />
+      >
+        <Knight className="relative mx-auto" style={{ width: u(KNIGHT_W) }} />
+        <Knight
+          className="absolute top-0 motion-reduce:hidden"
+          style={{
+            width: u(KNIGHT_W),
+            left: `calc(-50% - ${u(KNIGHT_W / 2)})`,
+          }}
+        />
+      </div>
       <Grass />
     </footer>
   );

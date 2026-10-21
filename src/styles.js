@@ -1,11 +1,11 @@
 export const sectionLabel =
-  "font-['Geist'] text-[calc(var(--u)*16)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
+  "font-['Geist'] text-[calc(var(--u)*14)] leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase md:text-[calc(var(--u)*16)]";
 
 export const sectionHeading =
-  "font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black";
+  "font-['DM-Serif'] text-[calc(var(--u)*28)] leading-none tracking-[-0.02em] text-black md:text-[calc(var(--u)*40)]";
 
 export const callButton =
-  "flex h-[calc(var(--u)*46)] w-[calc(var(--u)*144)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*16)] font-medium tracking-[-0.04em] text-white";
+  "flex h-[calc(var(--u)*32)] w-[calc(var(--u)*112)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*14)] font-medium tracking-[-0.04em] text-white md:h-[calc(var(--u)*46)] md:w-[calc(var(--u)*144)] md:text-[calc(var(--u)*16)]";
 
 export const heroBackdrop = "bg-[linear-gradient(#aaa,#b4b4b4_40%)]";
 

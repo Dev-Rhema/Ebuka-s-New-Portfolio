@@ -11,8 +11,12 @@ const { view, tip } = KnightFigure;
 const KNIGHT_W = view.w * KNIGHT_SCALE;
 const TIP_Y = (tip.y - view.y) * KNIGHT_SCALE;
 const TIP_OVERLAP = 13;
+const MOBILE_SCALE = 0.72;
 const RIDE_SPEED = 7.05 * 24 * KNIGHT_SCALE;
 const RIDE_TIME = 1440 / RIDE_SPEED;
+const MOBILE_RIDE_TIME = 440 / (RIDE_SPEED * MOBILE_SCALE);
+const knightWidth = (scale = 1) =>
+  `calc(var(--u) * ${KNIGHT_W * scale} * var(--knight-scale))`;
 
 const GLYPHS = {
   X: (
@@ -56,17 +60,20 @@ const GLYPHS = {
   ),
 };
 
-function SocialButton({ name, href }) {
+function SocialButton({ name, href, className = "" }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
       aria-label={name}
-      className={`flex shrink-0 items-center justify-center ${shadowButton}`}
-      style={{ width: u(30), height: u(30) }}
+      className={`flex size-[calc(var(--u)*32)] shrink-0 items-center justify-center md:size-[calc(var(--u)*30)] ${shadowButton} ${className}`}
     >
-      <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: u(15) }}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-[calc(var(--u)*18)] md:w-[calc(var(--u)*15)]"
+      >
         {GLYPHS[name]}
       </svg>
     </a>
@@ -88,7 +95,7 @@ function EmailPill() {
 
   return (
     <div
-      className="flex shrink-0 items-center rounded-full border-[calc(var(--u)*2)] border-[#d9d9d9] bg-[#ededed] font-['Geist'] font-medium tracking-[-0.03em] text-[#838383]"
+      className="order-first mx-[calc((100%-var(--u)*311)/2)] flex shrink-0 items-center rounded-full border-[calc(var(--u)*2)] border-[#d9d9d9] bg-[#ededed] font-['Geist'] font-medium tracking-[-0.03em] text-[#838383] md:order-none md:mx-0"
       style={{ width: u(311), height: u(50), paddingInline: u(7) }}
     >
       <a
@@ -129,7 +136,7 @@ function Grass() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute bottom-0 left-0 z-10 aspect-[1439/40] w-full"
+      className="pointer-events-none absolute bottom-0 left-1/2 z-10 aspect-[1439/40] w-[calc(var(--u)*1439)] -translate-x-1/2 md:w-full"
     >
       <img
         ref={imgRef}
@@ -163,7 +170,7 @@ function Footer() {
     <footer
       ref={footerRef}
       id="contact"
-      className="relative overflow-hidden bg-white pt-[calc(var(--u)*80)] text-center [--u:calc(100vw/1440)]"
+      className="relative overflow-hidden bg-white pt-[calc(var(--u)*80)] pb-[calc(var(--u)*17)] text-center md:pb-0 [--u:calc(100vw/440)] md:[--u:calc(100vw/1440)]"
     >
       <div
         aria-hidden="true"
@@ -171,38 +178,38 @@ function Footer() {
         style={{ top: u(170), width: u(860), height: u(520) }}
       />
 
-      <h2 className="relative font-['DM-Serif'] text-[calc(var(--u)*44)] leading-none tracking-[-0.02em] text-black">
+      <h2 className="relative font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black md:text-[calc(var(--u)*44)]">
         Ebuka Chidube
       </h2>
-      <p className="relative mx-auto mt-[calc(var(--u)*18)] max-w-[calc(var(--u)*290)] font-['Geist'] text-[calc(var(--u)*20)] leading-[calc(var(--u)*25)] font-medium tracking-[-0.04em] text-[#838383]">
+      <p className="relative mx-auto mt-[calc(var(--u)*16)] md:max-w-[calc(var(--u)*290)] font-['Geist'] text-[calc(var(--u)*19)] leading-[calc(var(--u)*25)] font-medium tracking-[-0.04em] text-[#838383] md:mt-[calc(var(--u)*18)] md:text-[calc(var(--u)*20)]">
         Helping your brand become more through intentional marketing
       </p>
 
-      <div
-        className="relative z-10 mt-[calc(var(--u)*34)] flex items-center justify-center"
-        style={{ gap: u(16) }}
-      >
-        <SocialButton {...x} />
-        <SocialButton {...instagram} />
+      <div className="relative z-10 mt-[calc(var(--u)*32)] flex flex-wrap items-center justify-center gap-x-[calc(var(--u)*16)] gap-y-[calc(var(--u)*17)] md:mt-[calc(var(--u)*34)] md:flex-nowrap">
+        <SocialButton {...x} className="order-2 md:order-none" />
+        <SocialButton {...instagram} className="order-3 md:order-none" />
         <EmailPill />
-        <SocialButton {...youtube} />
-        <SocialButton {...linkedin} />
+        <SocialButton {...youtube} className="order-4 md:order-none" />
+        <SocialButton {...linkedin} className="order-1 md:order-none" />
       </div>
 
       <div
-        className="pointer-events-none relative z-20 motion-safe:animate-knight-ride"
+        className="pointer-events-none relative z-20 mt-[calc(var(--u)*93)] [--knight-scale:var(--mobile-scale)] [--ride-time:var(--ride-mobile)] motion-safe:animate-knight-ride md:mt-[calc(var(--u)*var(--knight-top))] md:[--knight-scale:1] md:[--ride-time:var(--ride-desktop)]"
         style={{
-          marginTop: u(-TIP_Y - TIP_OVERLAP),
-          animationDuration: `${RIDE_TIME}s`,
+          "--knight-top": -TIP_Y - TIP_OVERLAP,
+          "--mobile-scale": MOBILE_SCALE,
+          "--ride-mobile": `${MOBILE_RIDE_TIME}s`,
+          "--ride-desktop": `${RIDE_TIME}s`,
+          animationDuration: "var(--ride-time)",
           animationPlayState: inView ? "running" : "paused",
         }}
       >
-        <Knight className="relative mx-auto" style={{ width: u(KNIGHT_W) }} />
+        <Knight className="relative mx-auto" style={{ width: knightWidth() }} />
         <Knight
           className="absolute top-0 motion-reduce:hidden"
           style={{
-            width: u(KNIGHT_W),
-            left: `calc(-50% - ${u(KNIGHT_W / 2)})`,
+            width: knightWidth(),
+            left: `calc(-50% - ${knightWidth(0.5)})`,
           }}
         />
       </div>

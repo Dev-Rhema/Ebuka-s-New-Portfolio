@@ -7,7 +7,23 @@ const SPEED = 0.6;
 
 const nameColumn =
   "flex h-29.75 flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
-const subText = "sub pb-1 font-['Geist'] text-lg/none font-medium text-[#555]";
+const subText = "sub pb-1 whitespace-nowrap font-['Geist'] text-lg/none font-medium text-[#555]";
+
+function MobileHero({ className = "" }) {
+  return (
+    <div
+      className={`flex items-start justify-center overflow-hidden ${heroBackdrop} ${className}`}
+    >
+      <div className="relative mt-[calc(var(--u)*93)] aspect-147/119 w-[calc(var(--u)*515)] shrink-0">
+        <img
+          src={headerImgNoBg}
+          alt=""
+          className="relative h-full w-full object-cover"
+        />
+      </div>
+    </div>
+  );
+}
 
 function Loader({ onComplete }) {
   const container = useRef(null);
@@ -16,12 +32,18 @@ function Loader({ onComplete }) {
     () => {
       gsap.set(".logo", { xPercent: -50 });
 
+      const desktop = window.matchMedia("(min-width: 1280px)").matches;
+      const tablet = window.matchMedia("(min-width: 768px)").matches;
+      const unit = Math.min(window.innerWidth / 1440, window.innerHeight / 900);
+      const logoLeft = desktop ? 80 / 1440 : tablet ? 32 / 1024 : 24 / 440;
+
       const photo = container.current
         .querySelector(".photo")
         .getBoundingClientRect();
       const full = container.current
-        .querySelector(".fullscreen")
+        .querySelector(tablet ? ".fullscreen" : ".frame")
         .getBoundingClientRect();
+      const grow = photo.width / full.width;
 
       let startedAt = 0;
       const tl = gsap
@@ -69,7 +91,7 @@ function Loader({ onComplete }) {
           0.09,
         )
         .from(
-          ".photo img",
+          ".photo > *",
           { scale: 0.5, duration: 0.3, ease: "power2.out" },
           0.09,
         )
@@ -90,26 +112,53 @@ function Loader({ onComplete }) {
           0.2,
         )
         .from(
-          ".fullscreen",
+          tablet ? ".fullscreen" : ".frame",
           { opacity: 0, duration: 0.22, ease: "sine.inOut" },
           0.88,
-        )
-        .from(
+        );
+
+      if (tablet) {
+        tl.from(
           ".fullscreen",
           {
-            scale: photo.width / full.width,
+            scale: grow,
             y: photo.top + photo.height / 2 - (full.top + full.height / 2),
             duration: 0.77,
             ease: "jump",
           },
           1.1,
+        );
+      } else {
+        tl.from(
+          ".frame",
+          {
+            scale: grow,
+            y: photo.top + photo.height / 2 - (full.bottom - (full.height * grow) / 2),
+            transformOrigin: "50% 100%",
+            duration: 0.77,
+            ease: "jump",
+          },
+          1.1,
         )
-        .fromTo(
+          .fromTo(
+            ".wipe",
+            { clipPath: "circle(0% at 50% 100%)" },
+            {
+              clipPath: "circle(150% at 50% 100%)",
+              duration: 0.6,
+              ease: "power2.inOut",
+            },
+            1.72,
+          )
+          .from(".fade", { opacity: 0, duration: 0.4 }, 1.92);
+      }
+
+      tl.fromTo(
           ".fullscreen img",
           { scale: 1, y: 0 },
           {
-            scale: 1.1,
-            y: 60,
+            scale: desktop ? 1.1 : 1,
+            y: desktop ? 60 * unit : 0,
             transformOrigin: "top",
             duration: 0.77,
             ease: "jump",
@@ -121,7 +170,7 @@ function Loader({ onComplete }) {
           ".logo",
           {
             x: (_, el) =>
-              window.innerWidth * (80 / 1440 - 0.5) + el.offsetWidth / 2,
+              window.innerWidth * (logoLeft - 0.5) + el.offsetWidth / 2,
             duration: 0.8,
             ease: "logoMove",
           },
@@ -172,26 +221,27 @@ function Loader({ onComplete }) {
   return (
     <div
       ref={container}
-      className="fixed inset-0 z-50 overflow-hidden bg-black"
+      className="fixed inset-0 z-50 overflow-hidden bg-black [--u:calc(100vw/440)] md:[--u:calc(100vw/1024)] xl:[--s:var(--u)] xl:[--u:min(calc(100vw/1440),calc(100vh/900))]"
     >
       <div className="line absolute top-[calc(50%-9px)] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
 
-      <div className="absolute inset-0 grid -translate-y-2.25 grid-cols-[1fr_auto_1fr] items-center max-sm:scale-[0.55]">
+      <div className="absolute inset-y-0 -inset-x-[41%] grid -translate-y-2.25 scale-[0.55] grid-cols-[1fr_auto_1fr] items-center sm:inset-x-0 sm:scale-100">
         <div className={`${nameColumn} items-end`}>
           <div className="overflow-hidden pt-1.5">
             <p className="name">EBUKA</p>
           </div>
-          <div className="-mb-1.75 overflow-hidden">
+          <div className="-mb-1.75 overflow-hidden max-sm:-translate-y-[23.5px]">
             <p className={subText}>Nihil Sine Deo</p>
           </div>
         </div>
 
-        <div className="photo mx-4.5 h-29.75 w-36.75 overflow-hidden">
+        <div className="photo mx-4.5 h-29.75 w-[calc(119px*440/510)] overflow-hidden md:w-36.75">
+          <MobileHero className="h-[calc(var(--u)*510)] w-[calc(var(--u)*440)] [--u:calc(119px/510)] md:hidden" />
           <img
             src={headerImg}
             alt=""
             fetchPriority="high"
-            className="h-full w-full object-cover"
+            className="hidden h-full w-full object-cover md:block"
           />
         </div>
 
@@ -199,7 +249,7 @@ function Loader({ onComplete }) {
           <div className="mt-6.5 overflow-hidden">
             <p className={subText}>Senior Digital Marketer</p>
           </div>
-          <div className="-mb-1.5 overflow-hidden pt-1.5">
+          <div className="-mb-1.5 overflow-hidden pt-1.5 max-sm:-translate-y-[16.5px]">
             <p className="name">CHIDUBE</p>
           </div>
         </div>
@@ -209,11 +259,18 @@ function Loader({ onComplete }) {
         <span className="count">0</span>%
       </p>
 
-      <div className={`backdrop absolute inset-0 ${heroBackdrop}`} />
+      <div
+        className={`backdrop absolute inset-x-0 top-0 hidden md:block md:h-[calc(var(--u)*640)] xl:h-[min(100vh,62.5vw)] ${heroBackdrop}`}
+      />
 
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="wipe absolute inset-x-0 top-[calc(var(--u)*478)] bottom-0 bg-white md:hidden" />
+
+      <MobileHero className="frame absolute inset-x-0 top-0 h-[calc(var(--u)*510)] will-change-transform md:hidden" />
+      <div className="fade absolute inset-x-0 top-[calc(var(--u)*478)] h-[calc(var(--u)*32)] bg-linear-to-b from-transparent to-white md:hidden" />
+
+      <div className="absolute inset-x-0 top-0 hidden md:flex md:h-[calc(var(--u)*640)] md:items-start md:justify-center xl:h-[min(100vh,62.5vw)] xl:items-center">
         <div
-          className={`fullscreen aspect-147/119 w-[min(100vw,calc(100vh*147/119))] shrink-0 overflow-hidden will-change-transform ${heroBackdrop}`}
+          className={`fullscreen aspect-147/119 shrink-0 overflow-hidden will-change-transform md:mt-[calc(var(--u)*28)] md:w-[calc(var(--u)*1016)] xl:mt-0 xl:w-[calc(var(--u)*900*147/119)] ${heroBackdrop}`}
         >
           <img
             src={headerImgNoBg}
@@ -224,10 +281,12 @@ function Loader({ onComplete }) {
         </div>
       </div>
 
+      <div className="backdrop absolute inset-x-0 hidden md:block md:top-[calc(var(--u)*574)] md:bottom-0 md:bg-transparent md:bg-[linear-gradient(transparent,white_calc(var(--u)*66))] xl:top-[calc(min(100vh,62.5vw)*0.705)] xl:bg-[linear-gradient(transparent,white_calc(min(100vh,62.5vw)*0.295))]" />
+
       <img
         src="/logo.svg"
         alt="Logo"
-        className="logo absolute top-[34.5px] left-1/2 h-11 w-10"
+        className="logo absolute top-[calc(var(--u)*32.5)] left-1/2 h-[calc(var(--u)*34.5)] w-auto md:top-[calc(var(--u)*35.5)] md:h-[calc(var(--u)*36.6)] xl:top-[calc(var(--s)*34.5)] xl:h-[calc(var(--s)*44)] xl:w-[calc(var(--s)*40)]"
       />
     </div>
   );

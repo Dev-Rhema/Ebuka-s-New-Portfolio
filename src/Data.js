@@ -1,9 +1,6 @@
 import headerImg from "./assets/headerImg.webp";
 import headerImgNoBg from "./assets/headerImgNoBg.webp";
 import piggyvestWordmark from "./assets/Brands/piggyvest.svg";
-import faceRings from "./assets/HeroImgs/faceRings.svg";
-import faceRingsMobile from "./assets/HeroImgs/faceRingsMobile.svg";
-import faceRingsTablet from "./assets/HeroImgs/faceRingsTablet.svg";
 import instagramThumb from "./assets/HeroImgs/instagramThumb.jpg";
 import aboutStar from "./assets/AboutImgs/aboutStar.png";
 import aboutBrands from "./assets/AboutImgs/aboutBrands.svg";
@@ -49,9 +46,6 @@ export {
   headerImg,
   headerImgNoBg,
   piggyvestWordmark,
-  faceRings,
-  faceRingsMobile,
-  faceRingsTablet,
   instagramThumb,
   aboutStar,
   aboutBrands,

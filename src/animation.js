@@ -16,4 +16,6 @@ CustomEase.create(
 
 CustomEase.create("logoMove", "M0,0 C0.99,0.18 0.08,0.82 1,1");
 
+CustomEase.create("heroText", "M0,0 C0.83,0.27 0.02,1 1,1");
+
 export { gsap, SplitText, useGSAP };

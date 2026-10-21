@@ -3,13 +3,11 @@ import { gsap, SplitText, useGSAP } from "./animation";
 import About from "./About";
 import CaseStudies from "./CaseStudies";
 import Footer from "./Footer";
+import FaceRings from "./components/FaceRings";
 import Skills from "./Skills";
 import {
   headerImgNoBg,
   piggyvestWordmark,
-  faceRings,
-  faceRingsMobile,
-  faceRingsTablet,
   instagramThumb,
 } from "./Data";
 import { heroBackdrop } from "./styles";
@@ -32,10 +30,13 @@ function Home({ play }) {
   useGSAP(
     () => {
       gsap.set(".hero-line", { yPercent: 100, autoAlpha: 0 });
-      gsap.set(".hero-button", { scaleX: 0, transformOrigin: "right" });
-      gsap.set(".hero-button-content", { autoAlpha: 0 });
-      gsap.set(".hero-wordmark", { clipPath: "inset(0% 100% 0% 0%)" });
-      gsap.set(".hero-card", { clipPath: "inset(0% 0% 100% 100%)" });
+      gsap.set(".hero-button, .hero-menu-line", {
+        scaleX: 0,
+        transformOrigin: "right",
+      });
+      gsap.set(".hero-chat-text, .hero-chat-arrow", { yPercent: 110 });
+      gsap.set(".hero-wordmark", { clipPath: "inset(0% 81% 0% 0%)" });
+      gsap.set(".hero-card", { clipPath: "inset(0% 0% 100% 0%)" });
       gsap.set(".hero-paragraph, .hero-rings", { autoAlpha: 0 });
     },
     { scope: container },
@@ -59,56 +60,52 @@ function Home({ play }) {
         ".hero-button",
         container.current,
       );
+      const rise = { yPercent: 0, autoAlpha: 1, duration: 1, ease: "heroText" };
+      const bar = { scaleX: 1, ease: "logoMove" };
 
       gsap
-        .timeline({ defaults: { duration: 0.35, ease: "reveal" } })
+        .timeline()
+        .to(menu, { ...bar, duration: 1 }, 0)
         .fromTo(
           ".hero-rings",
-          { scale: 0.3, autoAlpha: 0 },
-          { scale: 1, autoAlpha: 1, duration: 0.55, ease: "power3.out" },
-          0.05,
+          { scale: 0.05, autoAlpha: 1 },
+          { scale: 1, duration: 0.6, ease: "logoMove" },
+          0.2,
         )
-        .to(menu, { scaleX: 1, duration: 0.2 }, 0)
-        .to(ebuka, { yPercent: 0, autoAlpha: 1 }, 0.05)
-        .to(subtitle, { yPercent: 0, autoAlpha: 1 }, 0.3)
-        .to(chidube, { yPercent: 0, autoAlpha: 1 }, 0.45)
+        .to(ebuka, rise, 0)
+        .to(subtitle, rise, 0.2)
+        .to(chidube, rise, 0.4)
         .fromTo(
           paragraph.lines,
           { yPercent: 100 },
-          { yPercent: 0, stagger: 0.08 },
-          0.55,
+          { yPercent: 0, duration: 1, stagger: 0.1, ease: "heroText" },
+          0.4,
         )
+        .to(".hero-menu-line", { ...bar, duration: 1, stagger: 0.2 }, 0.6)
+        .to(chat, { ...bar, duration: 1 }, 1)
         .to(
           ".hero-wordmark",
           {
             clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.65,
-            ease: "power1.inOut",
+            duration: 1,
+            ease: "logoMove",
           },
-          0.4,
-        )
-        .to(
-          menu.querySelectorAll(".hero-button-content"),
-          { autoAlpha: 1, duration: 0.2 },
           0.6,
-        )
-        .to(chat, { scaleX: 1, duration: 0.4 }, 0.65)
-        .to(
-          chat.querySelectorAll(".hero-button-content"),
-          { autoAlpha: 1, duration: 0.2 },
-          1.0,
         )
         .to(
           ".hero-card",
-          {
-            keyframes: [
-              { clipPath: "inset(0% 0% 99% 0%)", duration: 0.25 },
-              { clipPath: "inset(0% 0% 89% 0%)", duration: 0.15 },
-              { clipPath: "inset(0% 0% 0% 0%)", duration: 0.45 },
-            ],
-            ease: "power2.inOut",
-          },
-          0.6,
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "logoMove" },
+          1.1,
+        )
+        .to(
+          ".hero-chat-text",
+          { yPercent: 0, duration: 1, ease: "heroText" },
+          1.38,
+        )
+        .to(
+          ".hero-chat-arrow",
+          { yPercent: 0, duration: 0.58, ease: "heroText" },
+          2.42,
         );
     },
     { dependencies: [play], scope: container },
@@ -128,15 +125,7 @@ function Home({ play }) {
               alt="Ebuka Chidube"
               className="h-full w-full origin-top object-cover xl:transform-[translate(0px,calc(var(--u)*60))_scale(1.1)]"
             />
-            <picture>
-              <source media="(min-width: 1280px)" srcSet={faceRings} />
-              <source media="(min-width: 768px)" srcSet={faceRingsTablet} />
-              <img
-                src={faceRingsMobile}
-                alt=""
-                className="hero-rings absolute top-[calc(var(--u)*129)] left-1/2 w-[calc(var(--u)*434)] -translate-1/2 md:top-[35.19%] md:w-[55.9%] xl:top-[49.28%] xl:w-[60.65%]"
-              />
-            </picture>
+            <FaceRings className="hero-rings absolute top-[calc(var(--u)*129)] left-1/2 w-[calc(var(--u)*434)] -translate-1/2 md:top-[35.19%] md:w-[55.9%] xl:top-[49.28%] xl:w-[60.65%]" />
           </div>
         </div>
 
@@ -153,27 +142,31 @@ function Home({ play }) {
             href="#contact"
             className="hero-button flex h-[calc(var(--u)*32)] items-center gap-[calc(var(--u)*12)] bg-black pr-[calc(var(--u)*16)] pl-[calc(var(--u)*14)] text-[calc(var(--u)*14)] tracking-[-0.04em] text-white md:h-[calc(var(--u)*40)] md:gap-[calc(var(--u)*12.5)] md:pr-[calc(var(--u)*17.5)] md:pl-[calc(var(--u)*16)] md:text-[calc(var(--u)*16)] xl:h-[calc(var(--s)*46)] xl:gap-[calc(var(--s)*12)] xl:px-[calc(var(--s)*18)] xl:text-[calc(var(--s)*16)]"
           >
-            <span className="hero-button-content">Let’s Chat</span>
-            <svg
-              viewBox="0 0 12 12"
-              className="hero-button-content size-[calc(var(--u)*10)] md:size-[calc(var(--u)*11)] xl:size-[calc(var(--s)*11)]"
-              fill="none"
-            >
-              <path
-                d="M1 11 11 1M3 1h8v8"
-                stroke="currentColor"
-                strokeWidth="1.4"
-              />
-            </svg>
+            <span className="overflow-hidden py-[0.1em]">
+              <span className="hero-chat-text block">Let’s Chat</span>
+            </span>
+            <span className="overflow-hidden">
+              <svg
+                viewBox="0 0 12 12"
+                className="hero-chat-arrow block size-[calc(var(--u)*10)] md:size-[calc(var(--u)*11)] xl:size-[calc(var(--s)*11)]"
+                fill="none"
+              >
+                <path
+                  d="M1 11 11 1M3 1h8v8"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                />
+              </svg>
+            </span>
           </a>
           <button
             type="button"
             aria-label="Open menu"
             className="hero-button flex size-[calc(var(--u)*32)] flex-col items-center justify-center gap-[calc(var(--u)*4)] bg-black md:size-[calc(var(--u)*40)] md:gap-[calc(var(--u)*5)] xl:size-[calc(var(--s)*46)] xl:gap-[calc(var(--s)*7)]"
           >
-            <span className="hero-button-content h-0.5 w-[calc(var(--u)*20)] bg-white md:w-[calc(var(--u)*24)] xl:h-[calc(var(--s)*2)] xl:w-[calc(var(--s)*24)]" />
-            <span className="hero-button-content h-0.5 w-[calc(var(--u)*20)] bg-white md:w-[calc(var(--u)*24)] xl:h-[calc(var(--s)*2)] xl:w-[calc(var(--s)*24)]" />
-            <span className="hero-button-content h-0.5 w-[calc(var(--u)*20)] bg-white md:w-[calc(var(--u)*24)] xl:h-[calc(var(--s)*2)] xl:w-[calc(var(--s)*24)]" />
+            <span className="hero-menu-line h-0.5 w-[calc(var(--u)*20)] bg-white md:w-[calc(var(--u)*24)] xl:h-[calc(var(--s)*2)] xl:w-[calc(var(--s)*24)]" />
+            <span className="hero-menu-line h-0.5 w-[calc(var(--u)*20)] bg-white md:w-[calc(var(--u)*24)] xl:h-[calc(var(--s)*2)] xl:w-[calc(var(--s)*24)]" />
+            <span className="hero-menu-line h-0.5 w-[calc(var(--u)*20)] bg-white md:w-[calc(var(--u)*24)] xl:h-[calc(var(--s)*2)] xl:w-[calc(var(--s)*24)]" />
           </button>
         </nav>
 

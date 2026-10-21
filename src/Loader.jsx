@@ -25,7 +25,7 @@ function MobileHero({ className = "" }) {
   );
 }
 
-function Loader({ onComplete }) {
+function Loader({ onReveal, onComplete }) {
   const container = useRef(null);
 
   useGSAP(
@@ -181,6 +181,22 @@ function Loader({ onComplete }) {
             ease: "logoMove",
           },
           1.58,
+        )
+        .call(
+          () => {
+            const loader = container.current;
+            gsap.set(loader, {
+              backgroundColor: "transparent",
+              pointerEvents: "none",
+            });
+            gsap.set(
+              [...loader.children].filter((el) => !el.matches(".logo")),
+              { autoAlpha: 0 },
+            );
+            onReveal?.();
+          },
+          null,
+          2.2,
         );
 
       const pageLoaded = new Promise((resolve) => {
@@ -272,7 +288,7 @@ function Loader({ onComplete }) {
       <div className="wipe absolute inset-x-0 top-[calc(var(--u)*478)] bottom-0 bg-white md:hidden" />
 
       <MobileHero className="frame absolute inset-x-0 top-0 h-[calc(var(--u)*510)] will-change-transform md:hidden" />
-      <div className="fade absolute inset-x-0 top-[calc(var(--u)*478)] h-[calc(var(--u)*32)] bg-linear-to-b from-transparent to-white md:hidden" />
+      <div className="fade absolute inset-x-0 top-[calc(var(--u)*478)] h-[calc(var(--u)*32)] bg-fade-white md:hidden" />
 
       <div className="absolute inset-x-0 top-0 hidden md:flex md:h-[calc(var(--u)*640)] md:items-start md:justify-center xl:h-[min(100vh,62.5vw)] xl:items-center">
         <div
@@ -287,7 +303,8 @@ function Loader({ onComplete }) {
         </div>
       </div>
 
-      <div className="backdrop absolute inset-x-0 hidden md:block md:top-[calc(var(--u)*574)] md:bottom-0 md:bg-transparent md:bg-[linear-gradient(transparent,white_calc(var(--u)*66))] xl:top-[calc(min(100vh,62.5vw)*0.705)] xl:bg-[linear-gradient(transparent,white_calc(min(100vh,62.5vw)*0.295))]" />
+      <div className="backdrop absolute inset-x-0 hidden md:top-[calc(var(--u)*600)] md:block md:h-[calc(var(--u)*40)] md:bg-fade-white xl:top-[calc(min(100vh,62.5vw)*0.85)] xl:h-[calc(min(100vh,62.5vw)*0.15)]" />
+      <div className="backdrop absolute inset-x-0 bottom-0 hidden bg-white md:top-[calc(var(--u)*640)] md:block xl:top-[min(100vh,62.5vw)]" />
 
       <img
         src="/logo.svg"

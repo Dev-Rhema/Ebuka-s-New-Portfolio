@@ -5,11 +5,7 @@ import CaseStudies from "./CaseStudies";
 import Footer from "./Footer";
 import FaceRings from "./components/FaceRings";
 import Skills from "./Skills";
-import {
-  headerImgNoBg,
-  piggyvestWordmark,
-  instagramThumb,
-} from "./Data";
+import { headerImgNoBg, piggyvestWordmark, instagramThumb } from "./Data";
 import { heroBackdrop } from "./styles";
 
 const headline =
@@ -24,7 +20,7 @@ function MarqueeItems() {
   ));
 }
 
-function Home({ play }) {
+function Home({ play, showLogo }) {
   const container = useRef(null);
 
   useGSAP(
@@ -65,6 +61,7 @@ function Home({ play }) {
 
       gsap
         .timeline()
+        .timeScale(0.85)
         .to(menu, { ...bar, duration: 1 }, 0)
         .fromTo(
           ".hero-rings",
@@ -129,12 +126,12 @@ function Home({ play }) {
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 z-10 h-[calc(var(--u)*32)] bg-linear-to-b from-transparent to-white md:z-0 md:h-[calc(var(--u)*66)] xl:h-[29.5%]" />
+        <div className="absolute inset-x-0 bottom-0 z-10 h-[calc(var(--u)*32)] bg-fade-white md:z-0 md:h-[calc(var(--u)*40)] xl:h-[15%]" />
 
         <img
           src="/logo.svg"
           alt="Logo"
-          className="absolute top-[calc(var(--u)*32.5)] left-[calc(var(--u)*24)] h-[calc(var(--u)*34.5)] w-auto md:top-[calc(var(--u)*35.5)] md:left-[calc(var(--u)*32)] md:h-[calc(var(--u)*36.6)] xl:top-[calc(var(--s)*34.5)] xl:left-[5.556vw] xl:h-[calc(var(--s)*44)] xl:w-[calc(var(--s)*40)]"
+          className={`absolute ${showLogo ? "" : "invisible"} top-[calc(var(--u)*32.5)] left-[calc(var(--u)*24)] h-[calc(var(--u)*34.5)] w-auto md:top-[calc(var(--u)*35.5)] md:left-[calc(var(--u)*32)] md:h-[calc(var(--u)*36.6)] xl:top-[calc(var(--s)*34.5)] xl:left-[5.556vw] xl:h-[calc(var(--s)*44)] xl:w-[calc(var(--s)*40)]`}
         />
 
         <nav className="absolute top-[calc(var(--u)*32)] right-[calc(var(--u)*24)] flex gap-[calc(var(--u)*16)] font-['Geist'] font-medium md:right-[calc(var(--u)*32)] xl:top-[calc(var(--s)*32)] xl:right-[5.556vw] xl:gap-[calc(var(--s)*16)]">

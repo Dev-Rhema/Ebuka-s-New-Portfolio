@@ -3,12 +3,17 @@ import Home from "./Home";
 import Loader from "./Loader";
 
 function App() {
-  const [loaded, setLoaded] = useState(false);
+  const [stage, setStage] = useState("loading");
 
   return (
     <>
-      <Home play={loaded} />
-      {!loaded && <Loader onComplete={() => setLoaded(true)} />}
+      <Home play={stage !== "loading"} showLogo={stage === "done"} />
+      {stage !== "done" && (
+        <Loader
+          onReveal={() => setStage("reveal")}
+          onComplete={() => setStage("done")}
+        />
+      )}
     </>
   );
 }

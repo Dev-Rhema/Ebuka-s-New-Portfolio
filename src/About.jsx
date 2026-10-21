@@ -91,9 +91,9 @@ function About() {
         <span className="text-black">revenue</span>
       </p>
 
-      <div className="order-last -mx-[calc(var(--u)*24)] h-[calc(var(--u)*773)] mask-[linear-gradient(transparent,black_18%,black_82%,transparent)] md:absolute md:top-[calc(var(--u)*301)] md:left-[calc(var(--u)*469)] md:mx-0 md:h-[min(100vh,calc(var(--u)*900))] md:w-[calc(var(--u)*581)]">
+      <div className="order-last -mx-[calc(var(--u)*24)] h-[calc(var(--u)*500)] mask-[linear-gradient(transparent,black_18%,black_82%,transparent)] md:absolute md:top-[calc(var(--u)*301)] md:left-[calc(var(--u)*469)] md:mx-0 md:h-[min(100vh,calc(var(--u)*900))] md:w-[calc(var(--u)*581)]">
         <Spiral
-          viewHeight={isMobile ? 1400 : 900}
+          viewHeight={isMobile ? 906 : 900}
           radius={isTablet ? 270 : 300}
           cardWidth={200}
           cardHeight={280}

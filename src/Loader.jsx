@@ -153,7 +153,13 @@ function Loader({ onComplete }) {
           .from(".fade", { opacity: 0, duration: 0.4 }, 1.92);
       }
 
-      tl.fromTo(
+      tl.set(".photo", { autoAlpha: 0 }, 1.1)
+        .to(
+          ".intro, .line, .counter",
+          { autoAlpha: 0, duration: 0.25, ease: "sine.inOut" },
+          1.1,
+        )
+        .fromTo(
           ".fullscreen img",
           { scale: 1, y: 0 },
           {
@@ -225,7 +231,7 @@ function Loader({ onComplete }) {
     >
       <div className="line absolute top-[calc(50%-9px)] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
 
-      <div className="absolute inset-y-0 -inset-x-[41%] grid -translate-y-2.25 scale-[0.55] grid-cols-[1fr_auto_1fr] items-center sm:inset-x-0 sm:scale-100">
+      <div className="intro absolute inset-y-0 -inset-x-[41%] grid -translate-y-2.25 scale-[0.55] grid-cols-[1fr_auto_1fr] items-center sm:inset-x-0 sm:scale-100">
         <div className={`${nameColumn} items-end`}>
           <div className="overflow-hidden pt-1.5">
             <p className="name">EBUKA</p>

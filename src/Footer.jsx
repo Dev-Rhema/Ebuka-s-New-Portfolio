@@ -129,14 +129,20 @@ function EmailPill() {
   );
 }
 
-function Grass() {
+const GRASS = { w: 1439, h: 40, scale: 0.7 };
+
+function GrassTile() {
   const imgRef = useRef(null);
   const { canvasRef, active } = useDither(imgRef);
 
   return (
     <div
-      aria-hidden="true"
-      className="pointer-events-none absolute bottom-0 left-1/2 z-10 aspect-[1439/40] w-[calc(var(--u)*1439)] -translate-x-1/2 md:w-full"
+      className="relative w-[calc(var(--u)*var(--grass-w)*var(--mobile-scale))] shrink-0 md:w-[calc(var(--u)*var(--grass-w))]"
+      style={{
+        "--grass-w": GRASS.w * GRASS.scale,
+        "--mobile-scale": MOBILE_SCALE,
+        aspectRatio: `${GRASS.w} / ${GRASS.h}`,
+      }}
     >
       <img
         ref={imgRef}
@@ -149,6 +155,18 @@ function Grass() {
         ref={canvasRef}
         className={`absolute inset-0 size-full ${active ? "" : "hidden"}`}
       />
+    </div>
+  );
+}
+
+function Grass() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute bottom-0 left-1/2 z-30 flex -translate-x-1/2"
+    >
+      <GrassTile />
+      <GrassTile />
     </div>
   );
 }
@@ -170,7 +188,7 @@ function Footer() {
     <footer
       ref={footerRef}
       id="contact"
-      className="relative overflow-hidden bg-white pt-[calc(var(--u)*80)] pb-[calc(var(--u)*17)] text-center md:pb-0 [--u:calc(100vw/440)] md:[--u:calc(100vw/1440)]"
+      className="relative overflow-hidden bg-white pt-[calc(var(--u)*80)] text-center [--u:calc(100vw/440)] md:[--u:calc(100vw/1440)]"
     >
       <div
         aria-hidden="true"

@@ -12,7 +12,6 @@ function CircularGallery({
   gap = 0.12,
   bend = 4.5,
   speed = 0.3,
-  fade = 0.12,
   className = "",
 }) {
   const rootRef = useRef(null);
@@ -118,15 +117,10 @@ function CircularGallery({
     };
   }, [items, gap, bend, speed]);
 
-  const edge = `${fade * 100}%`;
-
   return (
     <div
       ref={rootRef}
       className={`relative cursor-grab touch-pan-y select-none active:cursor-grabbing ${className}`}
-      style={{
-        maskImage: `linear-gradient(to right, transparent, black ${edge}, black calc(100% - ${edge}), transparent)`,
-      }}
     >
       {items.map((item, index) => (
         <div

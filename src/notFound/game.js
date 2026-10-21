@@ -11,7 +11,6 @@ const UNIT = SIZE / 0.26;
 const VIEW_H = 680;
 const GROUND = 3;
 const GRASS = { w: 1439, h: 40, scale: 0.7 };
-const PLAY_X = 80;
 const RIDE_IN = 0.8;
 const REAR_FPS = 16;
 const GALLOP_FPS = 24;
@@ -28,6 +27,7 @@ const ROCKS = [
 ];
 const SCORE_PER_PX = 1 / (40 * UNIT);
 const BEST_KEY = "knight-best";
+const NARROW = window.matchMedia("(max-width: 767px)");
 const TOUCH = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 const PRESS = TOUCH ? "Tap" : "Press Spacebar";
 const OVER = {
@@ -88,10 +88,11 @@ export async function startGame(root) {
   const titleEl = root.querySelector("[data-title]");
   const subtitleEl = root.querySelector("[data-subtitle]");
   const hintEl = root.querySelector("[data-hint]");
+  const marginEl = root.querySelector("[data-margin]");
   const hudEl = root.querySelector("[data-hud]");
   const scoreEl = root.querySelector("[data-score]");
   const bestEl = root.querySelector("[data-best]");
-  hintEl.textContent = `${PRESS} to test yourself`;
+  hintEl.textContent = TOUCH ? "Tap anywhere to begin" : `${PRESS} to test yourself`;
 
   const [knightImage, grassImage, ...rockImages] = await Promise.all([
     loadImage(knightUrl),
@@ -135,6 +136,7 @@ export async function startGame(root) {
   let height = 0;
   let groundY = 0;
   let homeX = 0;
+  let playX = 0;
   let slide = 0;
 
   let best = readBest();
@@ -158,7 +160,7 @@ export async function startGame(root) {
   reset();
 
   const knightX = () =>
-    Math.round(homeX + (Math.min(PLAY_X, homeX) - homeX) * ease(slide));
+    Math.round(homeX + (Math.min(playX, homeX) - homeX) * ease(slide));
 
   const jumpPose = () => {
     const t = state.jump;
@@ -368,7 +370,10 @@ export async function startGame(root) {
       canvas.height = height;
     }
     groundY = height - GROUND;
-    homeX = Math.round(width / 2 - sheet.home * KNIGHT);
+    playX = Math.round(marginEl.offsetLeft * scale);
+    homeX = NARROW.matches
+      ? playX
+      : Math.round(width / 2 - sheet.home * KNIGHT);
     draw();
   };
   new ResizeObserver(resize).observe(dither ? canvas : scene);

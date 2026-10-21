@@ -192,7 +192,7 @@ function Home({ play }) {
             to turn marketing spend into customer acquisition and revenue
           </p>
 
-          <div className="order-2 mt-[calc(var(--u)*-25.5)] overflow-hidden pt-[0.06em] md:absolute md:top-[calc(var(--u)*453.7)] md:right-[calc(var(--u)*32)] md:mt-0 xl:top-[calc(58.18%+var(--u)*185.73)] xl:right-[5.556vw]">
+          <div className="order-2 mt-[calc(var(--u)*-7.5)] overflow-hidden pt-[0.06em] md:absolute md:top-[calc(var(--u)*453.7)] md:right-[calc(var(--u)*32)] md:mt-0 xl:top-[calc(58.18%+var(--u)*185.73)] xl:right-[5.556vw]">
             <span
               className={`${headline} bg-linear-to-b from-[#f3f3f3] to-white bg-clip-text pr-[0.02em] text-transparent`}
             >

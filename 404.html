@@ -10,50 +10,51 @@
   <body class="bg-white">
     <main
       id="ride"
-      class="relative h-svh touch-manipulation overflow-hidden text-center select-none [--u:min(calc(100vw/1440),calc(100svh/900))]"
+      class="relative h-svh touch-manipulation overflow-hidden text-center select-none [--u:calc(100vw/440)] md:[--u:min(calc(100vw/1440),calc(100svh/900))]"
     >
       <canvas
         data-game
-        class="absolute bottom-0 left-0 h-[calc(var(--u)*680)] w-full"
+        class="absolute bottom-0 left-0 h-[calc(var(--u)*465)] w-full md:h-[calc(var(--u)*680)]"
       ></canvas>
 
       <a
         href="/"
         aria-label="Home"
-        class="absolute top-[calc(var(--u)*34.5)] left-[calc(var(--u)*80)]"
+        data-margin
+        class="absolute top-[calc(var(--u)*32.5)] left-[calc(var(--u)*24)] md:top-[calc(var(--u)*34.5)] md:left-[calc(var(--u)*80)]"
       >
         <img
           src="/logo.svg"
           alt=""
-          class="h-[calc(var(--u)*44)] w-[calc(var(--u)*40)] invert"
+          class="h-[calc(var(--u)*34)] w-[calc(var(--u)*31)] invert md:h-[calc(var(--u)*44)] md:w-[calc(var(--u)*40)]"
         />
       </a>
       <a
         href="/"
-        class="absolute top-[calc(var(--u)*32)] right-[calc(var(--u)*80)] flex h-[calc(var(--u)*46)] w-[calc(var(--u)*144)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*16)] font-medium tracking-[-0.04em] text-white"
+        class="absolute top-[calc(var(--u)*32)] right-[calc(var(--u)*24)] flex h-[calc(var(--u)*32)] w-[calc(var(--u)*112)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*14)] font-medium tracking-[-0.04em] text-white md:right-[calc(var(--u)*80)] md:h-[calc(var(--u)*46)] md:w-[calc(var(--u)*144)] md:text-[calc(var(--u)*16)]"
       >
         Home
       </a>
 
-      <div data-intro class="relative pt-[calc(var(--u)*170)]">
+      <div data-intro class="relative pt-[calc(var(--u)*98)] md:pt-[calc(var(--u)*170)]">
         <h1
           data-title
-          class="font-['DM-Serif'] text-[calc(var(--u)*56)] leading-none tracking-[-0.02em] text-black"
+          class="font-['DM-Serif'] text-[calc(var(--u)*32)] leading-none tracking-[-0.02em] text-black md:text-[calc(var(--u)*56)]"
         >
           You have strayed, warlock
         </h1>
         <p
           data-subtitle
-          class="mx-auto mt-[calc(var(--u)*25)] max-w-[calc(var(--u)*640)] font-['Geist'] text-[calc(var(--u)*28)] leading-[calc(var(--u)*28)] font-medium tracking-[-0.02em] text-[#8a8a8a]"
+          class="mx-auto mt-[calc(var(--u)*20)] max-w-[calc(var(--u)*262)] font-['Geist'] text-[calc(var(--u)*16)] leading-[calc(var(--u)*16.3)] font-medium tracking-[-0.02em] text-[#8a8a8a] md:mt-[calc(var(--u)*25)] md:max-w-[calc(var(--u)*640)] md:text-[calc(var(--u)*28)] md:leading-[calc(var(--u)*28)]"
         >
           That which you seek is not here. Go Home, or en garde if your valor is
           as legends say
         </p>
         <div
-          class="mt-[calc(var(--u)*56)] flex items-center justify-center gap-[calc(var(--u)*16)]"
+          class="mt-[calc(var(--u)*28)] flex items-center justify-center gap-[calc(var(--u)*16)] md:mt-[calc(var(--u)*56)]"
         >
           <span
-            class="flex size-[calc(var(--u)*36)] shrink-0 rounded-[calc(var(--u)*8)] bg-[#4A4A4A] text-white shadow-[0_calc(var(--u)*10.28)_calc(var(--u)*10.5)_rgba(0,0,0,0.19),0_calc(var(--u)*28.42)_calc(var(--u)*29.05)_rgba(0,0,0,0.27),0_calc(var(--u)*68.43)_calc(var(--u)*69.94)_rgba(0,0,0,0.35),0_calc(var(--u)*227)_calc(var(--u)*232)_rgba(0,0,0,0.54),inset_0_calc(var(--u)*-3)_calc(var(--u)*2)_rgba(0,0,0,0.25),inset_0_calc(var(--u)*2)_calc(var(--u)*2)_rgba(179,179,179,0.25)]"
+            class="flex size-[calc(var(--u)*36)] shrink-0 pointer-coarse:hidden rounded-[calc(var(--u)*8)] bg-[#4A4A4A] text-white shadow-[0_calc(var(--u)*10.28)_calc(var(--u)*10.5)_rgba(0,0,0,0.19),0_calc(var(--u)*28.42)_calc(var(--u)*29.05)_rgba(0,0,0,0.27),0_calc(var(--u)*68.43)_calc(var(--u)*69.94)_rgba(0,0,0,0.35),0_calc(var(--u)*227)_calc(var(--u)*232)_rgba(0,0,0,0.54),inset_0_calc(var(--u)*-3)_calc(var(--u)*2)_rgba(0,0,0,0.25),inset_0_calc(var(--u)*2)_calc(var(--u)*2)_rgba(179,179,179,0.25)]"
           >
             <svg viewBox="0 0 36 36" fill="none" class="size-full">
               <path
@@ -74,28 +75,28 @@
 
       <div data-hud class="invisible">
         <div
-          class="absolute top-[calc(var(--u)*118.5)] left-[calc(var(--u)*80)] text-left"
+          class="absolute top-[calc(var(--u)*98)] left-[calc(var(--u)*24)] text-left md:top-[calc(var(--u)*118.5)] md:left-[calc(var(--u)*80)]"
         >
           <p
             data-score
-            class="font-['Geist'] text-[calc(var(--u)*30)] leading-none font-medium tabular-nums text-[#404040]"
+            class="font-['Geist'] text-[calc(var(--u)*24)] leading-none font-medium tabular-nums text-[#404040] md:text-[calc(var(--u)*30)]"
           >
             0000
           </p>
           <p
             data-best
-            class="mt-[calc(var(--u)*12)] font-['Geist-Mono'] text-[calc(var(--u)*16)] leading-none tracking-[0.1em] text-[#8a8a8a]"
+            class="mt-[calc(var(--u)*14)] font-['Geist-Mono'] text-[calc(var(--u)*14)] leading-none tracking-[0.1em] text-[#8a8a8a] md:mt-[calc(var(--u)*12)] md:text-[calc(var(--u)*16)]"
           ></p>
         </div>
         <div
-          class="absolute top-[calc(var(--u)*118)] right-[calc(var(--u)*80)] w-[calc(var(--u)*271)] text-left"
+          class="absolute top-[calc(var(--u)*196)] right-[calc(var(--u)*24)] left-[calc(var(--u)*24)] text-left md:top-[calc(var(--u)*118)] md:right-[calc(var(--u)*80)] md:left-auto md:w-[calc(var(--u)*271)]"
         >
           <h2
-            class="font-['DM-Serif'] text-[calc(var(--u)*21)] leading-none tracking-[-0.02em] text-[#8a8a8a]"
+            class="font-['DM-Serif'] text-[calc(var(--u)*16)] leading-none tracking-[-0.02em] text-[#8a8a8a] md:text-[calc(var(--u)*21)]"
           >
             Legends Unnamed
           </h2>
-          <ol data-leaders class="mt-[calc(var(--u)*6)]"></ol>
+          <ol data-leaders class="mt-[calc(var(--u)*7)] md:mt-[calc(var(--u)*6)]"></ol>
         </div>
       </div>
     </main>

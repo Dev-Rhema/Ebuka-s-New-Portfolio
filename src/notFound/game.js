@@ -1,5 +1,6 @@
 import grassUrl from "../assets/Knight/Grass.svg";
 import knightUrl from "../assets/Knight/knight-game.webp";
+import knightIdleUrl from "../assets/Knight/knight-idle.webp";
 import bigRockUrl from "../assets/gameImages/bigRock.webp";
 import smallRockUrl from "../assets/gameImages/smallRock.webp";
 import { ditherProgram } from "../components/Dither";
@@ -94,11 +95,14 @@ export async function startGame(root) {
   const bestEl = root.querySelector("[data-best]");
   hintEl.textContent = TOUCH ? "Tap anywhere to begin" : `${PRESS} to test yourself`;
 
-  const [knightImage, grassImage, ...rockImages] = await Promise.all([
-    loadImage(knightUrl),
-    loadImage(grassUrl),
-    ...ROCKS.map((rock) => loadImage(rock.url)),
-  ]);
+  const [knightImage, idleImage, grassImage, ...rockImages] = await Promise.all(
+    [
+      loadImage(knightUrl),
+      loadImage(knightIdleUrl),
+      loadImage(grassUrl),
+      ...ROCKS.map((rock) => loadImage(rock.url)),
+    ],
+  );
   const grass = raster(
     grassImage,
     GRASS.w * GRASS.scale,
@@ -138,6 +142,8 @@ export async function startGame(root) {
   let homeX = 0;
   let playX = 0;
   let slide = 0;
+  let idleFrame = 0;
+  let idleFrom = 0;
 
   let best = readBest();
   let state;
@@ -186,6 +192,10 @@ export async function startGame(root) {
     if (state.jump !== null) return sheet.jump.start + jumpPose().i;
     return sheet.gallop.start + (Math.floor(state.run) % sheet.gallop.count);
   };
+  const sprite = () =>
+    state.status === "ready"
+      ? [idleImage, sheet.idle.frames[idleFrame]]
+      : [knightImage, sheet.frames[frame()]];
   const lift = () => (state.jump === null ? 0 : jumpPose().lift);
   const landing = () => state.jump !== null && state.jump >= LANDS_AT;
   const knightTop = () => groundY - knightH + footGap - lift();
@@ -221,9 +231,9 @@ export async function startGame(root) {
       const { art, sink } = rockKinds[rock.kind];
       ctx.drawImage(art, Math.round(rock.x), groundY - art.height + sink);
     }
-    const [x, y, w, h, offsetX, offsetY] = sheet.frames[frame()];
+    const [image, [x, y, w, h, offsetX, offsetY]] = sprite();
     ctx.drawImage(
-      knightImage,
+      image,
       x,
       y,
       w,
@@ -310,6 +320,19 @@ export async function startGame(root) {
     }
   };
 
+  const idle = (now) => {
+    if (state.status !== "ready") return;
+    idleFrom ||= now;
+    const i =
+      Math.floor(((now - idleFrom) / 1000) * sheet.idle.fps) %
+      sheet.idle.frames.length;
+    if (i !== idleFrame) {
+      idleFrame = i;
+      draw();
+    }
+    requestAnimationFrame(idle);
+  };
+
   let last = 0;
   const tick = (now) => {
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
@@ -390,4 +413,5 @@ export async function startGame(root) {
   });
 
   showScore();
+  requestAnimationFrame(idle);
 }

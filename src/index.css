@@ -3,6 +3,7 @@
 @theme inline {
   --spacing: var(--u);
   --radius-8: calc(var(--u) * 8);
+  --radius-16: calc(var(--u) * 16);
   --text-19\.7: calc(var(--u) * 19.7);
   --text-28\.8: calc(var(--u) * 28.8);
   --spacing-view: min(100vh, calc(var(--u) * 900));
@@ -46,6 +47,17 @@
 
 @utility -align-* {
   vertical-align: calc(var(--u) * --value(number) * -1);
+}
+
+@utility underline-dashes {
+  background-image: repeating-linear-gradient(
+    to right,
+    currentColor 0 calc(var(--u) * 2),
+    transparent calc(var(--u) * 2) calc(var(--u) * 4)
+  );
+  background-size: 100% 1px;
+  background-position: bottom;
+  background-repeat: no-repeat;
 }
 
 @utility bg-dashes {

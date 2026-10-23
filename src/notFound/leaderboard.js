@@ -7,12 +7,11 @@ export const leaders = [
   { name: "122.140.201.66", score: 4130 },
 ];
 
-export function renderLeaderboard(list, entries) {
+export function renderLeaderboard(list, entries, spacing = "pt-16 pb-16") {
   list.replaceChildren(
     ...entries.map(({ name, score }) => {
       const row = document.createElement("li");
-      row.className =
-        "flex items-center pt-16 pb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat";
+      row.className = `flex items-center ${spacing} not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat`;
       row.innerHTML = `
         <span class="flex size-32 shrink-0 md:size-42 items-center justify-center ${shadowButton}">
           <img src="${globe}" alt="" class="size-16 md:size-20" />

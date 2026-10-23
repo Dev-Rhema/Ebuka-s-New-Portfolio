@@ -122,7 +122,7 @@ function Home({ play, showLogo }) {
               alt="Ebuka Chidube"
               className="h-full w-full origin-top object-cover xl:translate-y-60 xl:scale-110"
             />
-            <FaceRings className="hero-rings absolute top-129 left-1/2 w-434 -translate-1/2 md:top-[35.19%] md:w-[55.9%] xl:top-[49.28%] xl:w-[60.65%]" />
+            <FaceRings className="hero-rings absolute top-129 left-1/2 w-434 -translate-1/2 md:top-[35.19%] md:w-[55.9%] xl:top-[49.28%] xl:w-872" />
           </div>
         </div>
 

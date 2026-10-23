@@ -115,6 +115,7 @@ export async function startGame(root) {
   const bannerEl = root.querySelector("[data-banner]");
   const factEl = root.querySelector("[data-fact]");
   const expiresEl = root.querySelector("[data-expires]");
+  const sheetEl = root.querySelector("[data-sheet]");
   hintEl.textContent = TOUCH ? "Tap anywhere to begin" : `${PRESS} to test yourself`;
 
   const [knightImage, idleImage, grassImage, ...rockImages] = await Promise.all(
@@ -414,6 +415,10 @@ export async function startGame(root) {
   const tick = (now) => {
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
     last = now;
+    if (sheetEl.open) {
+      requestAnimationFrame(tick);
+      return;
+    }
     step(dt);
     if (!state.shield && hits()) {
       end();
@@ -449,6 +454,7 @@ export async function startGame(root) {
   };
 
   const jump = () => {
+    if (sheetEl.open) return;
     if (state.status === "ready") return start();
     if (state.status === "over") {
       if (performance.now() - state.endedAt > 500) start();

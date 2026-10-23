@@ -1,5 +1,61 @@
 @import "tailwindcss";
 
+@theme inline {
+  --spacing: var(--u);
+  --radius-8: calc(var(--u) * 8);
+  --text-19\.7: calc(var(--u) * 19.7);
+  --text-28\.8: calc(var(--u) * 28.8);
+  --spacing-view: min(100vh, calc(var(--u) * 900));
+  --spacing-hero: min(100vh, 62.5vw);
+  --shadow-button:
+    0 calc(var(--u) * 10.28) calc(var(--u) * 10.5) rgba(0, 0, 0, 0.19),
+    0 calc(var(--u) * 28.42) calc(var(--u) * 29.05) rgba(0, 0, 0, 0.27),
+    0 calc(var(--u) * 68.43) calc(var(--u) * 69.94) rgba(0, 0, 0, 0.35),
+    0 calc(var(--u) * 227) calc(var(--u) * 232) rgba(0, 0, 0, 0.54);
+  --inset-shadow-bevel:
+    inset 0 calc(var(--u) * -3) calc(var(--u) * 2) rgba(0, 0, 0, 0.25),
+    inset 0 calc(var(--u) * 2) calc(var(--u) * 2) rgba(179, 179, 179, 0.25);
+  --border-width-pill: calc(var(--u) * 2);
+  --grid-template-columns-headline: calc(var(--u) * 759) 1fr;
+  --grid-template-columns-media: calc(var(--u) * 794) 1fr;
+}
+
+@utility unit-* {
+  --u: calc(100vw / --value(integer));
+}
+
+@utility unit-fit {
+  --u: min(calc(100vw / 1440), calc(100vh / 900));
+}
+
+@utility unit-fit-svh {
+  --u: min(calc(100vw / 1440), calc(100svh / 900));
+}
+
+@utility unit-photo {
+  --u: calc(119px / 510);
+}
+
+@utility text-* {
+  font-size: calc(var(--u) * --value(number));
+}
+
+@utility align-* {
+  vertical-align: calc(var(--u) * --value(number));
+}
+
+@utility -align-* {
+  vertical-align: calc(var(--u) * --value(number) * -1);
+}
+
+@utility bg-dashes {
+  background-image: repeating-linear-gradient(
+    to right,
+    #d8d8d8 0 calc(var(--u) * 4),
+    transparent calc(var(--u) * 4) calc(var(--u) * 5.25)
+  );
+}
+
 @theme {
   --animate-marquee: marquee 8s linear infinite;
 

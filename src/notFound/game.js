@@ -4,6 +4,7 @@ import knightIdleUrl from "../assets/Knight/knight-idle.webp";
 import bigRockUrl from "../assets/gameImages/bigRock.webp";
 import smallRockUrl from "../assets/gameImages/smallRock.webp";
 import { ditherProgram } from "../components/Dither";
+import { facts } from "./facts";
 import sheet from "./knightGame.json";
 
 const SIZE = 0.53;
@@ -27,6 +28,15 @@ const ROCKS = [
   { url: smallRockUrl, w: 62 * UNIT, sink: 26 },
 ];
 const SCORE_PER_PX = 1 / (40 * UNIT);
+const CHECKPOINT = { every: 1000, shield: 4, clear: 2 };
+const SHIELD = {
+  r: 278,
+  rise: 184,
+  open: 0.35,
+  rim: 4,
+  fill: "#ecfeff",
+  edge: "#3f97a6",
+};
 const BEST_KEY = "knight-best";
 const NARROW = window.matchMedia("(max-width: 767px)");
 const TOUCH = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
@@ -83,6 +93,15 @@ const saveBest = (score) => {
 const pad = (n) => String(n).padStart(4, "0");
 const ease = (t) => 1 - (1 - t) ** 3;
 
+const shuffle = (items) => {
+  const deck = [...items];
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
+};
+
 export async function startGame(root) {
   const canvas = root.querySelector("[data-game]");
   const introEl = root.querySelector("[data-intro]");
@@ -93,6 +112,9 @@ export async function startGame(root) {
   const hudEl = root.querySelector("[data-hud]");
   const scoreEl = root.querySelector("[data-score]");
   const bestEl = root.querySelector("[data-best]");
+  const bannerEl = root.querySelector("[data-banner]");
+  const factEl = root.querySelector("[data-fact]");
+  const expiresEl = root.querySelector("[data-expires]");
   hintEl.textContent = TOUCH ? "Tap anywhere to begin" : `${PRESS} to test yourself`;
 
   const [knightImage, idleImage, grassImage, ...rockImages] = await Promise.all(
@@ -161,6 +183,9 @@ export async function startGame(root) {
       jump: null,
       queued: false,
       endedAt: 0,
+      facts: shuffle(facts),
+      nextCheckpoint: CHECKPOINT.every,
+      shield: 0,
     };
   };
   reset();
@@ -225,8 +250,29 @@ export async function startGame(root) {
     return false;
   };
 
+  const drawShield = () => {
+    const age = CHECKPOINT.shield - state.shield;
+    const r =
+      SHIELD.r *
+      ease(Math.min(1, age / SHIELD.open, state.shield / SHIELD.open));
+    const x = knightX() + sheet.home * KNIGHT;
+    const y = groundY - SHIELD.rise;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = SHIELD.edge;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    ctx.fillStyle = SHIELD.fill;
+    ctx.beginPath();
+    ctx.arc(x - SHIELD.rim, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
   const draw = () => {
     ctx.clearRect(0, 0, width, height);
+    if (state.shield > 0) drawShield();
     for (const rock of state.rocks) {
       const { art, sink } = rockKinds[rock.kind];
       ctx.drawImage(art, Math.round(rock.x), groundY - art.height + sink);
@@ -266,6 +312,28 @@ export async function startGame(root) {
   const showScore = () => {
     scoreEl.textContent = pad(score());
     bestEl.textContent = `${pad(best)} Highest Score`;
+    if (state.shield > 0) {
+      const left = Math.ceil(state.shield);
+      expiresEl.textContent = `Expires in ${left} second${left === 1 ? "" : "s"}`;
+    }
+  };
+
+  const checkpoint = () => {
+    const fact = state.facts.pop();
+    factEl.textContent = fact ?? "";
+    bannerEl.hidden = !fact;
+    state.shield = CHECKPOINT.shield;
+    root.dataset.checkpoint = "";
+  };
+
+  const dropShield = () => {
+    const left = knightX();
+    state.rocks = state.rocks.filter(
+      (rock) =>
+        rock.x > left + knightW ||
+        rock.x + rockKinds[rock.kind].art.width < left,
+    );
+    delete root.dataset.checkpoint;
   };
 
   const step = (dt) => {
@@ -287,6 +355,14 @@ export async function startGame(root) {
     state.speed = state.cruise * (1 + SPEED_STEP.by * steps);
     const travel = state.speed * dt;
     state.distance += travel;
+
+    if (score() >= state.nextCheckpoint) {
+      state.nextCheckpoint += CHECKPOINT.every;
+      checkpoint();
+    } else if (state.shield > 0) {
+      state.shield = Math.max(0, state.shield - dt);
+      if (!state.shield) dropShield();
+    }
 
     const pace = Math.min(
       1.5,
@@ -310,7 +386,8 @@ export async function startGame(root) {
       (rock) => rock.x + rockKinds[rock.kind].art.width > -10,
     );
     state.nextRock -= travel;
-    if (state.nextRock <= 0) {
+    const clearing = state.shield > 0 && state.shield < CHECKPOINT.clear;
+    if (state.nextRock <= 0 && !clearing) {
       state.rocks.push({ kind: Math.random() < 0.45 ? 0 : 1, x: width + 20 });
       const room = state.speed * (LANDS_AT + 0.35) + 120 * UNIT;
       const tighten = Math.min(1, state.time / ROCK_GAPS.over);
@@ -338,7 +415,7 @@ export async function startGame(root) {
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
     last = now;
     step(dt);
-    if (hits()) {
+    if (!state.shield && hits()) {
       end();
     } else {
       requestAnimationFrame(tick);
@@ -349,6 +426,7 @@ export async function startGame(root) {
 
   const start = () => {
     reset();
+    delete root.dataset.checkpoint;
     state.status = "rearing";
     introEl.style.visibility = "hidden";
     hudEl.style.visibility = "visible";

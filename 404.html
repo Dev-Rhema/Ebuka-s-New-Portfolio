@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/svg+xml" href="/Favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Page not found · Ebuka's Portfolio</title>
@@ -10,51 +10,51 @@
   <body class="bg-white">
     <main
       id="ride"
-      class="relative h-svh touch-manipulation overflow-hidden text-center select-none [--u:calc(100vw/440)] md:[--u:min(calc(100vw/1440),calc(100svh/900))]"
+      class="group relative h-svh touch-manipulation overflow-hidden text-center select-none unit-440 md:unit-fit-svh"
     >
       <canvas
         data-game
-        class="absolute bottom-0 left-0 h-[calc(var(--u)*302)] w-full md:h-[calc(var(--u)*680)]"
+        class="absolute bottom-0 left-0 h-302 w-full md:h-680"
       ></canvas>
 
       <a
         href="/"
         aria-label="Home"
         data-margin
-        class="absolute top-[calc(var(--u)*32.5)] left-[calc(var(--u)*24)] md:top-[calc(var(--u)*34.5)] md:left-[calc(var(--u)*80)]"
+        class="absolute top-32.5 left-24 md:top-34.5 md:left-80"
       >
         <img
           src="/logo.svg"
           alt=""
-          class="h-[calc(var(--u)*34)] w-[calc(var(--u)*31)] invert md:h-[calc(var(--u)*44)] md:w-[calc(var(--u)*40)]"
+          class="h-34 w-31 invert md:h-44 md:w-40"
         />
       </a>
       <a
         href="/"
-        class="absolute top-[calc(var(--u)*32)] right-[calc(var(--u)*24)] flex h-[calc(var(--u)*32)] w-[calc(var(--u)*112)] items-center justify-center bg-black font-['Geist'] text-[calc(var(--u)*14)] font-medium tracking-[-0.04em] text-white md:right-[calc(var(--u)*80)] md:h-[calc(var(--u)*46)] md:w-[calc(var(--u)*144)] md:text-[calc(var(--u)*16)]"
+        class="absolute top-32 right-24 flex h-32 w-112 items-center justify-center bg-black font-['Geist'] text-14 font-medium tracking-[-0.04em] text-white md:right-80 md:h-46 md:w-144 md:text-16"
       >
         Home
       </a>
 
-      <div data-intro class="relative pt-[calc(var(--u)*98)] md:pt-[calc(var(--u)*170)]">
+      <div data-intro class="relative pt-98 md:pt-170">
         <h1
           data-title
-          class="font-['DM-Serif'] text-[calc(var(--u)*32)] leading-none tracking-[-0.02em] text-black md:text-[calc(var(--u)*56)]"
+          class="font-['DM-Serif'] text-32 leading-none tracking-[-0.02em] text-black md:text-56"
         >
           You have strayed, warlock
         </h1>
         <p
           data-subtitle
-          class="mx-auto mt-[calc(var(--u)*20)] max-w-[calc(var(--u)*262)] font-['Geist'] text-[calc(var(--u)*16)] leading-[calc(var(--u)*16.3)] font-medium tracking-[-0.02em] text-[#8a8a8a] md:mt-[calc(var(--u)*25)] md:max-w-[calc(var(--u)*640)] md:text-[calc(var(--u)*28)] md:leading-[calc(var(--u)*28)]"
+          class="mx-auto mt-20 max-w-262 font-['Geist'] text-16 leading-16.25 font-medium tracking-[-0.02em] text-[#8a8a8a] md:mt-25 md:max-w-640 md:text-28 md:leading-28"
         >
           That which you seek is not here. Go Home, or en garde if your valor is
           as legends say
         </p>
         <div
-          class="mt-[calc(var(--u)*28)] flex items-center justify-center gap-[calc(var(--u)*16)] md:mt-[calc(var(--u)*56)]"
+          class="mt-28 flex items-center justify-center gap-16 md:mt-56"
         >
           <span
-            class="flex size-[calc(var(--u)*36)] shrink-0 pointer-coarse:hidden rounded-[calc(var(--u)*8)] bg-[#4A4A4A] text-white shadow-[0_calc(var(--u)*10.28)_calc(var(--u)*10.5)_rgba(0,0,0,0.19),0_calc(var(--u)*28.42)_calc(var(--u)*29.05)_rgba(0,0,0,0.27),0_calc(var(--u)*68.43)_calc(var(--u)*69.94)_rgba(0,0,0,0.35),0_calc(var(--u)*227)_calc(var(--u)*232)_rgba(0,0,0,0.54),inset_0_calc(var(--u)*-3)_calc(var(--u)*2)_rgba(0,0,0,0.25),inset_0_calc(var(--u)*2)_calc(var(--u)*2)_rgba(179,179,179,0.25)]"
+            class="flex size-36 shrink-0 pointer-coarse:hidden rounded-8 bg-[#4A4A4A] text-white shadow-button inset-shadow-bevel"
           >
             <svg viewBox="0 0 36 36" fill="none" class="size-full">
               <path
@@ -67,7 +67,7 @@
           <span
             data-hint
             role="status"
-            class="font-['Geist-Mono'] text-[calc(var(--u)*16)] leading-none tracking-[0.1em] text-[#8a8a8a]"
+            class="font-['Geist-Mono'] text-16 leading-none tracking-[0.1em] text-[#8a8a8a]"
             >Press Spacebar to test yourself</span
           >
         </div>
@@ -75,28 +75,93 @@
 
       <div data-hud class="invisible">
         <div
-          class="absolute top-[calc(var(--u)*98)] left-[calc(var(--u)*24)] text-left md:top-[calc(var(--u)*118.5)] md:left-[calc(var(--u)*80)]"
+          class="absolute top-98 left-24 text-left md:top-118.5 md:left-80"
         >
           <p
             data-score
-            class="font-['Geist'] text-[calc(var(--u)*24)] leading-none font-medium tabular-nums text-[#404040] md:text-[calc(var(--u)*30)]"
+            class="font-['Geist'] text-24 leading-none font-medium tabular-nums text-[#404040] md:text-30"
           >
             0000
           </p>
           <p
             data-best
-            class="mt-[calc(var(--u)*14)] font-['Geist-Mono'] text-[calc(var(--u)*14)] leading-none tracking-[0.1em] text-[#8a8a8a] md:mt-[calc(var(--u)*12)] md:text-[calc(var(--u)*16)]"
+            class="mt-14 font-['Geist-Mono'] text-14 leading-none tracking-[0.1em] text-[#8a8a8a] md:mt-12 md:text-16"
           ></p>
         </div>
         <div
-          class="absolute top-[calc(var(--u)*196)] right-[calc(var(--u)*24)] left-[calc(var(--u)*24)] text-left md:top-[calc(var(--u)*118)] md:right-[calc(var(--u)*80)] md:left-auto md:w-[calc(var(--u)*271)]"
+          class="absolute top-196 right-24 left-24 text-left md:top-118 md:right-80 md:left-auto md:w-271"
         >
           <h2
-            class="font-['DM-Serif'] text-[calc(var(--u)*16)] leading-none tracking-[-0.02em] text-[#8a8a8a] md:text-[calc(var(--u)*21)]"
+            class="font-['DM-Serif'] text-16 leading-none tracking-[-0.02em] text-[#8a8a8a] md:text-21"
           >
             Legends Unnamed
           </h2>
-          <ol data-leaders class="mt-[calc(var(--u)*7)] md:mt-[calc(var(--u)*6)]"></ol>
+          <ol data-leaders class="mt-7 md:mt-6"></ol>
+        </div>
+      </div>
+
+      <div
+        role="status"
+        class="invisible absolute right-24 bottom-222 left-24 flex flex-col items-center opacity-0 transition-[opacity,visibility] duration-300 group-data-checkpoint:visible group-data-checkpoint:opacity-100 md:right-80 md:bottom-496.5 md:left-80"
+      >
+        <h2
+          class="font-['DM-Serif'] text-32 leading-none tracking-[-0.02em] text-black md:text-56"
+        >
+          Checkpoint reached
+        </h2>
+        <p
+          class="mt-20 font-['Geist'] text-16 leading-16.25 font-medium tracking-[-0.02em] text-[#8a8a8a] md:mt-25 md:text-28 md:leading-28"
+        >
+          Onwards, warlock
+        </p>
+        <div
+          class="relative mt-28 flex w-full justify-center md:mt-50"
+        >
+          <div
+            aria-live="off"
+            class="fixed top-98 right-24 text-right md:absolute md:top-1/2 md:right-auto md:left-0 md:-translate-y-1/2 md:text-left"
+          >
+            <p
+              class="font-['Geist'] text-18 leading-none font-medium tracking-[-0.04em] text-[#404040] md:text-24"
+            >
+              Barrier of Faith Active
+            </p>
+            <p
+              data-expires
+              class="mt-14 font-['Geist-Mono'] text-14 leading-none tracking-[0.1em] text-[#8a8a8a] md:mt-12 md:text-16"
+            ></p>
+          </div>
+          <div
+            data-banner
+            class="relative w-full max-w-478 pt-17 pb-18.5"
+          >
+            <div
+              class="relative bg-[#ebebeb] py-8 pr-5 pl-19"
+            >
+              <span
+                class="absolute top-0 left-[27.3%] h-8 w-9 -translate-x-1/2 bg-white [clip-path:polygon(0_0,100%_0,50%_100%)]"
+              ></span>
+              <span
+                class="absolute top-0 left-[67.3%] h-8 w-9 -translate-x-1/2 bg-white [clip-path:polygon(0_0,100%_0,50%_100%)]"
+              ></span>
+              <span
+                class="absolute top-0 left-[95.5%] h-8 w-9 -translate-x-1/2 bg-white [clip-path:polygon(0_0,100%_0,50%_100%)]"
+              ></span>
+              <span
+                class="absolute bottom-0 left-[16.2%] h-8 w-9 -translate-x-1/2 bg-white [clip-path:polygon(50%_0,100%_100%,0_100%)]"
+              ></span>
+              <span
+                class="absolute bottom-0 left-[86.3%] h-8 w-9 -translate-x-1/2 bg-white [clip-path:polygon(50%_0,100%_100%,0_100%)]"
+              ></span>
+              <p
+                data-fact
+                class="bg-white px-12 py-6 font-['Geist-Mono'] text-14 leading-22 tracking-[0.1em] text-balance text-[#8a8a8a] md:py-6 md:text-16 md:leading-22"
+              ></p>
+            </div>
+            <span
+              class="absolute top-0 bottom-0 left-0 w-12 rounded-full bg-[#4c4c4c]"
+            ></span>
+          </div>
         </div>
       </div>
     </main>

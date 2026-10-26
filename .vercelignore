@@ -1,0 +1,7 @@
+# Rust build output is rebuilt on Vercel; never upload local builds.
+/target
+server/target
+# Local SQLite files from development.
+*.db
+*.db-wal
+*.db-shm

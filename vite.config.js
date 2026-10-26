@@ -27,6 +27,12 @@ const notFoundPage = {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), notFoundPage],
+  server: {
+    proxy: { "/api": "http://localhost:8080" },
+  },
+  preview: {
+    proxy: { "/api": "http://localhost:8080" },
+  },
   build: {
     rolldownOptions: {
       input: { main: page("index.html"), notFound: page("404.html") },

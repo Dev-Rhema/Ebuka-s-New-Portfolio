@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "ebukaaa.vercel.app" }],
+      "destination": "https://ebuka.marketing/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/case-study/:id", "destination": "/case-study.html" }
   ],

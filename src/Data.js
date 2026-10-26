@@ -153,7 +153,7 @@ export const SpiralCards = [
   { src: diamonds2, alt: "Truckmasters" },
 ];
 
-// Placeholder answer and thumbnail until each question has its real answer and video.
+// Placeholder answer until each question has its real answer.
 const answerPlaceholder =
   "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.";
 
@@ -171,6 +171,10 @@ const piggyvestQuestions = [
     "How did you decide which channels to run and which to leave alone?",
   ],
   [
+    "Setting Up Trustworthy Attribution",
+    "How did you set up attribution so the business could trust what the ads were telling it?",
+  ],
+  [
     "Spotting Winning Ads",
     "What tells you an ad is a winner, and what do you do once you find one?",
   ],
@@ -183,13 +187,36 @@ const piggyvestQuestions = [
     "How do you keep trust when the business wants to double spend and you know efficiency will drop?",
   ],
   [
-    "Lessons Learnt from Piggyvest",
-    "What did Piggyvest teach you that you now apply to every client?",
+    "A Call I Got Wrong",
+    "What is one call you got wrong on this account, and what did it teach you?",
   ],
 ].map(([label, question]) => ({
   label,
   question,
   answer: [answerPlaceholder, answerPlaceholder],
+}));
+
+// question-N.mp4 and its poster question-N.webp answer question N.
+const piggyvestMedia = import.meta.glob("./assets/CaseImgs/piggy/videos/*", {
+  eager: true,
+  import: "default",
+});
+// In seconds, so the player can show each length before its video has loaded.
+const piggyvestDurations = [64.2, 78.6, 68.1, 63, 77.5, 66.9, 79.1, 39.6];
+
+const piggyvestVideoQuestions = piggyvestQuestions.map((item, i) => {
+  const file = `./assets/CaseImgs/piggy/videos/question-${i + 1}`;
+  return {
+    ...item,
+    video: piggyvestMedia[`${file}.mp4`],
+    poster: piggyvestMedia[`${file}.webp`],
+    duration: piggyvestDurations[i],
+  };
+});
+
+// DANG and SendSprint borrow Piggyvest's questions, with a placeholder thumbnail, until theirs are ready.
+const placeholderQuestions = piggyvestQuestions.map((item) => ({
+  ...item,
   thumbnail: videoThumb,
 }));
 
@@ -204,7 +231,7 @@ export const CaseStudyData = [
       "Four years of paid media on Meta, Google, TikTok, Snapchat, Pinterest and Appnext. Every inflow attributed in AppsFlyer. Every user tracked from first click to first deposit.",
     link: "/case-study/piggyvest",
     banner: piggyBanner,
-    questions: piggyvestQuestions,
+    questions: piggyvestVideoQuestions,
     cover: piggyCover,
     stat: {
       naira: true,
@@ -233,7 +260,7 @@ export const CaseStudyData = [
     link: "/case-study/dang",
     // Placeholder: Piggyvest's questions until DANG's are ready.
     banner: dangBanner,
-    questions: piggyvestQuestions,
+    questions: placeholderQuestions,
     cover: dangCover,
     stat: {
       value: "340%",
@@ -260,7 +287,7 @@ export const CaseStudyData = [
     link: "/case-study/sendsprint",
     // Placeholder: Piggyvest's questions until SendSprint's are ready.
     banner: sendSprintBanner,
-    questions: piggyvestQuestions,
+    questions: placeholderQuestions,
     cover: sendSprintCover,
     stat: {
       value: "1300",

@@ -9,6 +9,7 @@ import {
 } from "../animation";
 import Footer from "../Footer";
 import { callButton } from "../styles";
+import VideoPlayer from "./VideoPlayer";
 
 const label =
   "font-['Geist'] text-14 leading-none font-medium tracking-[-0.04em] text-[#838383] uppercase";
@@ -65,9 +66,14 @@ function GoBack() {
   );
 }
 
+// 9:16, the shape of the videos, so they show whole instead of being trimmed to fit.
+const videoFrame =
+  "reveal-media aspect-9/16 w-full shrink-0 md:w-[38%] xl:w-308";
+
+// Placeholder card for questions whose video hasn't arrived yet.
 function VideoThumb({ title, thumbnail }) {
   return (
-    <div className="reveal-media relative h-282 w-full shrink-0 overflow-hidden bg-black md:h-auto md:w-[38%] md:aspect-308/484 xl:w-308">
+    <div className={`relative overflow-hidden bg-black ${videoFrame}`}>
       <img
         loading="lazy"
         src={thumbnail}
@@ -155,7 +161,17 @@ function Questions({ questions }) {
             data-question
             className="flex scroll-mt-24 flex-col gap-16 not-last:mb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-16 md:scroll-mt-56 md:flex-row md:gap-20 md:not-last:mb-24 xl:gap-24 md:not-last:pb-24"
           >
-            <VideoThumb title={item.label} thumbnail={item.thumbnail} />
+            {item.video ? (
+              <VideoPlayer
+                title={item.label}
+                src={item.video}
+                poster={item.poster}
+                duration={item.duration}
+                className={videoFrame}
+              />
+            ) : (
+              <VideoThumb title={item.label} thumbnail={item.thumbnail} />
+            )}
             <div className="reveal-text md:flex-1">
               <h2
                 data-split

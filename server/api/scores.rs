@@ -1,7 +1,8 @@
 //! `GET /api/scores` and `POST /api/scores` as a Vercel Function.
 //!
 //! All the real work lives in the `server` library, shared with the local dev server.
-//! This file only translates between Vercel's request/response types and that library.
+//! This file only translates between Vercel's request/response types and that library,
+//! and adds the CORS headers the frontend needs, since it lives on a different domain.
 
 use http_body_util::{BodyExt, Limited};
 use serde_json::{Value, json};
@@ -19,11 +20,21 @@ async fn main() -> Result<(), Error> {
 }
 
 async fn handler(req: Request) -> Result<Response<String>, Error> {
-    let reply = match req.method().as_str() {
+    let origin = req
+        .headers()
+        .get("origin")
+        .and_then(|v| v.to_str().ok())
+        .map(str::to_owned);
+
+    let mut reply = match req.method().as_str() {
         "GET" => get_scores().await,
         "POST" => post_score(req).await,
+        // Browsers send this "preflight" before a cross-origin POST with a JSON body.
+        "OPTIONS" => empty_reply(204),
         _ => json_reply(405, json!({ "error": "method not allowed" })),
     };
+
+    add_cors_headers(&mut reply, origin.as_deref());
     Ok(reply)
 }
 
@@ -77,12 +88,38 @@ async fn post_score(req: Request) -> Response<String> {
 /// The shared database handle, opened on first use. A failed open is not cached,
 /// so the next request tries again instead of the instance staying broken.
 async fn db() -> Result<&'static Db, Response<String>> {
-    DB.get_or_try_init(|| async { Db::open(scores::location_from_env()?).await })
+    DB.get_or_try_init(|| async { Db::open(scores::turso_from_env()?).await })
         .await
         .map_err(|e: anyhow::Error| {
             eprintln!("could not open database: {e:?}");
             internal_error()
         })
+}
+
+/// Tell browsers which sites may call this API.
+///
+/// With `ALLOWED_ORIGINS` unset, any site may read the leaderboard, which is fine for public
+/// data. Set it to a comma-separated list (for example `https://ebuka.dev,http://localhost:5173`)
+/// to limit browser access to those sites. This does not stop non-browser clients like curl.
+fn add_cors_headers(reply: &mut Response<String>, origin: Option<&str>) {
+    let allowed = std::env::var("ALLOWED_ORIGINS").unwrap_or_default();
+    let allow_origin = if allowed.trim().is_empty() {
+        Some("*".to_string())
+    } else {
+        origin
+            .filter(|o| allowed.split(',').any(|a| a.trim() == *o))
+            .map(str::to_owned)
+    };
+
+    let headers = reply.headers_mut();
+    if let Some(value) = allow_origin.and_then(|v| v.parse().ok()) {
+        headers.insert("Access-Control-Allow-Origin", value);
+    }
+    // The answer depends on the Origin header, so caches must not mix answers between sites.
+    headers.insert("Vary", "Origin".parse().unwrap());
+    headers.insert("Access-Control-Allow-Methods", "GET, POST, OPTIONS".parse().unwrap());
+    headers.insert("Access-Control-Allow-Headers", "Content-Type".parse().unwrap());
+    headers.insert("Access-Control-Max-Age", "86400".parse().unwrap());
 }
 
 fn json_reply(status: u16, body: Value) -> Response<String> {
@@ -93,6 +130,13 @@ fn json_reply(status: u16, body: Value) -> Response<String> {
         .header("Cache-Control", "no-store")
         .body(body.to_string())
         .expect("static status and headers are valid")
+}
+
+fn empty_reply(status: u16) -> Response<String> {
+    Response::builder()
+        .status(status)
+        .body(String::new())
+        .expect("static status is valid")
 }
 
 fn internal_error() -> Response<String> {

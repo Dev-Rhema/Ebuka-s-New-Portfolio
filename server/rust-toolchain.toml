@@ -1,0 +1,5 @@
+# vercel_runtime needs Rust 1.88 or newer. Pinning a version keeps local builds
+# and Vercel builds on the same compiler; rustup installs it automatically.
+[toolchain]
+channel = "1.90.0"
+components = ["rustfmt", "clippy"]

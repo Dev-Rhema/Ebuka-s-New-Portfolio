@@ -1,5 +1,4 @@
 import globe from "./globe.svg";
-import { shadowButton } from "../styles";
 import { flag } from "../scoresApi";
 
 /** Renders score rows, or a single muted note when `entries` is a string. */
@@ -16,7 +15,7 @@ export function renderLeaderboard(list, entries, spacing = "pt-16 pb-16") {
       const row = document.createElement("li");
       row.className = `flex items-center ${spacing} not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat`;
       row.innerHTML = `
-        <span class="flex size-32 shrink-0 md:size-42 items-center justify-center ${shadowButton}">
+        <span class="flex size-32 shrink-0 md:size-42 items-center justify-center rounded-full bg-[#4A4A4A] inset-shadow-bevel">
           <img src="${globe}" alt="" class="size-16 md:size-20" />
         </span>
         <span class="ml-8 font-['Geist'] text-16 md:ml-9 md:text-19.7 leading-none font-medium tracking-[-0.04em] text-[#404040]"></span>

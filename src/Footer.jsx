@@ -221,7 +221,7 @@ function Footer({ play }) {
     <footer
       ref={footerRef}
       id="contact"
-      className="relative overflow-hidden bg-white pt-80 text-center unit-440 md:unit-1440"
+      className="relative overflow-hidden bg-white pt-80 text-center unit-440 md:unit-tablet xl:unit-1440"
     >
       <div
         aria-hidden="true"
@@ -232,7 +232,7 @@ function Footer({ play }) {
         <h2 className="footer-name relative font-['DM-Serif'] text-40 leading-none tracking-[-0.02em] text-black md:text-44">
           Ebuka Chidube
         </h2>
-        <p className="footer-copy relative mx-auto mt-16 md:max-w-290 font-['Geist'] text-19 leading-25 font-medium tracking-[-0.04em] text-[#838383] md:mt-18 md:text-20">
+        <p className="footer-copy relative mx-auto mt-16 max-w-290 font-['Geist'] text-19 leading-25 font-medium tracking-[-0.04em] text-[#838383] md:mt-18 md:text-20">
           Helping your brand become more through intentional marketing
         </p>
 

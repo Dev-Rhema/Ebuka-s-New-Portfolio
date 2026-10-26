@@ -72,7 +72,7 @@ function GoBack() {
 
 function VideoThumb({ title, thumbnail }) {
   return (
-    <div className="reveal-media relative h-282 w-full shrink-0 overflow-hidden bg-black md:h-484 md:w-308">
+    <div className="reveal-media relative h-282 w-full shrink-0 overflow-hidden bg-black md:h-auto md:w-[38%] md:aspect-308/484 xl:w-308">
       <img
         loading="lazy"
         src={thumbnail}
@@ -115,7 +115,7 @@ function Questions({ questions }) {
     >
       <nav
         aria-label="Questions"
-        className="hidden md:sticky md:top-32 md:block md:w-400 md:shrink-0"
+        className="hidden md:sticky md:top-32 md:block md:w-[26%] md:shrink-0 md:pr-20 xl:w-400 xl:pr-0"
       >
         <p className={`flex items-center gap-8.5 ${label}`}>
           <span
@@ -132,7 +132,7 @@ function Questions({ questions }) {
               <a
                 href={`#question-${index + 1}`}
                 aria-current={active === index ? "true" : undefined}
-                className={`relative block w-fit py-10.5 font-['Geist'] text-16 leading-none font-medium tracking-[-0.04em] transition-colors duration-300 ${
+                className={`relative block w-fit py-8 font-['Geist'] text-15 leading-18 font-medium xl:py-10.5 xl:text-16 xl:leading-none tracking-[-0.04em] transition-colors duration-300 ${
                   active === index
                     ? "text-[#404040]"
                     : "text-[#838383] hover:text-[#404040]"
@@ -156,22 +156,22 @@ function Questions({ questions }) {
             key={item.label}
             id={`question-${index + 1}`}
             data-question
-            className="flex scroll-mt-24 flex-col gap-16 not-last:mb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-16 md:scroll-mt-56 md:flex-row md:gap-24 md:not-last:mb-24 md:not-last:pb-24"
+            className="flex scroll-mt-24 flex-col gap-16 not-last:mb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-16 md:scroll-mt-56 md:flex-row md:gap-20 md:not-last:mb-24 xl:gap-24 md:not-last:pb-24"
           >
             <VideoThumb title={item.label} thumbnail={item.thumbnail} />
             <div className="reveal-text md:flex-1">
               <h2
                 data-split
-                className="font-['Geist'] text-20 leading-20 font-medium tracking-[-0.02em] text-black md:text-28 md:leading-28"
+                className="font-['Geist'] text-20 leading-20 font-medium tracking-[-0.02em] text-black md:text-22 md:leading-24 xl:text-28 xl:leading-28"
               >
                 {item.question}
               </h2>
-              <div className="mt-16 space-y-16 md:mt-20 md:space-y-24">
+              <div className="mt-16 space-y-16 md:space-y-20 xl:mt-20 xl:space-y-24">
                 {item.answer.map((paragraph, i) => (
                   <p
                     key={i}
                     data-split
-                    className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26"
+                    className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-16 md:leading-21 xl:text-20 xl:leading-26"
                   >
                     {paragraph}
                   </p>
@@ -195,7 +195,7 @@ function NextCaseStudy({ study }) {
         <div className="mt-18 flex flex-col gap-24 md:mt-24 md:flex-row md:items-end md:justify-between">
           <h2
             data-split
-            className="font-['Geist'] text-18 leading-18 font-medium tracking-[-0.02em] text-black md:max-w-840 md:text-32 md:leading-32"
+            className="font-['Geist'] text-18 leading-18 font-medium tracking-[-0.02em] text-black md:max-w-840 md:text-28 md:leading-28 xl:text-32 xl:leading-32"
           >
             {study.headline}
           </h2>
@@ -294,13 +294,13 @@ function CaseStudyPage({ study, next }) {
     <>
       <main
         ref={container}
-        className="bg-white px-24 unit-440 md:px-80 md:unit-1440"
+        className="bg-white px-24 unit-440 md:px-40 md:unit-tablet xl:px-80 xl:unit-1440"
       >
         <Header />
         <GoBack />
         <h1
           data-split
-          className="reveal-text mt-18 font-['Geist'] text-28 leading-28 font-medium tracking-[-0.02em] text-black md:mt-24 md:text-40 md:leading-40"
+          className="reveal-text mt-18 font-['Geist'] text-28 leading-28 font-medium tracking-[-0.02em] text-black md:mt-24 md:text-36 md:leading-36 xl:text-40 xl:leading-40"
         >
           {study.headline}
         </h1>

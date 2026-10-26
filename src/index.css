@@ -33,6 +33,11 @@
   --u: min(calc(100vw / 1440), calc(100svh / 900));
 }
 
+/* Tablets: an 880-wide canvas that stops growing at 1px, so text holds its size. */
+@utility unit-tablet {
+  --u: min(calc(100vw / 880), 1px);
+}
+
 @utility unit-photo {
   --u: calc(119px / 510);
 }

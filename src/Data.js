@@ -43,6 +43,8 @@ import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
 import knightSprite from "./assets/Knight/knight-sprite.webp";
 import grass from "./assets/Knight/Grass.webp";
 import piggyBanner from "./assets/CaseImgs/CasePageBanners/piggyBanner.svg";
+import dangBanner from "./assets/CaseImgs/CasePageBanners/dangBanner.svg";
+import sendSprintBanner from "./assets/CaseImgs/CasePageBanners/sendSprintBanner.svg";
 import videoThumb from "./assets/CaseImgs/videoThumb.jpg";
 
 const aboutBrands = [aboutBrand1, aboutBrand2, aboutBrand3];
@@ -206,8 +208,8 @@ export const CaseStudyData = [
     summary:
       "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.",
     link: "/case-study/dang",
-    // Placeholder: Piggyvest's banner and questions until DANG's are ready.
-    banner: piggyBanner,
+    // Placeholder: Piggyvest's questions until DANG's are ready.
+    banner: dangBanner,
     questions: piggyvestQuestions,
     cover: dangCover,
     stat: {
@@ -233,8 +235,8 @@ export const CaseStudyData = [
     summary:
       "I ran paid acquisition on Meta and Google for the new product from August 2025 to January 2026, then oversaw creation of the assets that carried leads into the pipeline.",
     link: "/case-study/sendsprint",
-    // Placeholder: Piggyvest's banner and questions until SendSprint's are ready.
-    banner: piggyBanner,
+    // Placeholder: Piggyvest's questions until SendSprint's are ready.
+    banner: sendSprintBanner,
     questions: piggyvestQuestions,
     cover: sendSprintCover,
     stat: {

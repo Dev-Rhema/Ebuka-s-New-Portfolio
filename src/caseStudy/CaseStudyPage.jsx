@@ -1,5 +1,12 @@
-import { useRef, useState } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "../animation";
+import { useEffect, useRef, useState } from "react";
+import {
+  gsap,
+  revealButton,
+  revealOnScroll,
+  ScrollTrigger,
+  splitLines,
+  useGSAP,
+} from "../animation";
 import Footer from "../Footer";
 import { callButton } from "../styles";
 
@@ -65,7 +72,7 @@ function GoBack() {
 
 function VideoThumb({ title, thumbnail }) {
   return (
-    <div className="relative mx-auto h-484 w-308 shrink-0 overflow-hidden bg-black md:mx-0">
+    <div className="reveal-media relative h-282 w-full shrink-0 overflow-hidden bg-black md:h-484 md:w-308">
       <img
         loading="lazy"
         src={thumbnail}
@@ -104,7 +111,7 @@ function Questions({ questions }) {
   return (
     <section
       ref={container}
-      className="mt-40 md:mt-26 md:flex md:items-start"
+      className="mt-24 md:mt-26 md:flex md:items-start"
     >
       <nav
         aria-label="Questions"
@@ -149,18 +156,22 @@ function Questions({ questions }) {
             key={item.label}
             id={`question-${index + 1}`}
             data-question
-            className="flex scroll-mt-24 flex-col gap-24 not-last:mb-24 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-24 md:scroll-mt-56 md:flex-row"
+            className="flex scroll-mt-24 flex-col gap-16 not-last:mb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-16 md:scroll-mt-56 md:flex-row md:gap-24 md:not-last:mb-24 md:not-last:pb-24"
           >
             <VideoThumb title={item.label} thumbnail={item.thumbnail} />
-            <div className="md:flex-1">
-              <h2 className="font-['Geist'] text-24 leading-26 font-medium tracking-[-0.02em] text-black md:text-28 md:leading-28">
+            <div className="reveal-text md:flex-1">
+              <h2
+                data-split
+                className="font-['Geist'] text-20 leading-20 font-medium tracking-[-0.02em] text-black md:text-28 md:leading-28"
+              >
                 {item.question}
               </h2>
-              <div className="mt-20 space-y-24">
+              <div className="mt-16 space-y-16 md:mt-20 md:space-y-24">
                 {item.answer.map((paragraph, i) => (
                   <p
                     key={i}
-                    className="font-['Geist'] text-16 leading-20 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26"
+                    data-split
+                    className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26"
                   >
                     {paragraph}
                   </p>
@@ -176,41 +187,127 @@ function Questions({ questions }) {
 
 function NextCaseStudy({ study }) {
   return (
-    <section className="mt-80 md:mt-90">
-      <p className={label}>Next case study</p>
-      <div className="mt-24 flex flex-col gap-24 md:flex-row md:items-end md:justify-between">
-        <h2 className="font-['Geist'] text-24 leading-26 font-medium tracking-[-0.02em] text-black md:max-w-840 md:text-32 md:leading-32">
-          {study.headline}
-        </h2>
-        <a href={study.link} className={`shrink-0 ${callButton}`}>
-          Next Case Study
-        </a>
+    <section className="mt-66 md:mt-90">
+      <div className="next-intro">
+        <p data-split className={label}>
+          Next case study
+        </p>
+        <div className="mt-18 flex flex-col gap-24 md:mt-24 md:flex-row md:items-end md:justify-between">
+          <h2
+            data-split
+            className="font-['Geist'] text-18 leading-18 font-medium tracking-[-0.02em] text-black md:max-w-840 md:text-32 md:leading-32"
+          >
+            {study.headline}
+          </h2>
+          {/* The banner below is the link on mobile. */}
+          <a
+            href={study.link}
+            className={`next-button shrink-0 max-md:hidden ${callButton}`}
+          >
+            <span className="block">Next Case Study</span>
+          </a>
+        </div>
       </div>
-      <a href={study.link} aria-label={`${study.name} case study`}>
+      <a
+        href={study.link}
+        aria-label={`${study.name} case study`}
+        className="reveal-media mt-16 block md:mt-24"
+      >
         <img
           loading="lazy"
           src={study.banner}
           alt=""
-          className="mt-24 aspect-16/5 w-full object-cover"
+          className="h-160 w-full object-cover md:h-auto md:aspect-16/5"
         />
       </a>
     </section>
   );
 }
 
+// The home page's reveals: text lines rise out of their masks, media wipes in from the left.
+const revealLines = (tl, block, at = 0) => {
+  const targets = block.matches("[data-split]")
+    ? [block]
+    : gsap.utils.toArray("[data-split]", block);
+  const splits = targets.map((target) => splitLines(target));
+  const lines = splits.flatMap((split) => split.lines);
+  tl.from(lines, { yPercent: 100, stagger: 0.1 }, at);
+  return { lines, revert: () => splits.forEach((split) => split.revert()) };
+};
+
 function CaseStudyPage({ study, next }) {
+  const container = useRef(null);
+  // Lines are split by measured width, so wait for the web fonts first.
+  const [fontsReady, setFontsReady] = useState(false);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => setFontsReady(true));
+  }, []);
+
+  useGSAP(
+    () => {
+      gsap.set(".reveal-text, .reveal-media, .next-intro", { autoAlpha: 0 });
+    },
+    { scope: container },
+  );
+
+  useGSAP(
+    () => {
+      if (!fontsReady) return;
+      const page = container.current;
+
+      gsap.utils.toArray(".reveal-text", page).forEach((block) => {
+        revealOnScroll(block, (tl) => revealLines(tl, block).revert);
+      });
+
+      gsap.utils.toArray(".reveal-media", page).forEach((media) => {
+        revealOnScroll(media, (tl) => {
+          tl.fromTo(
+            media,
+            { clipPath: "inset(0% 100% 0% 0%)" },
+            {
+              clipPath: "inset(0% 0% 0% 0%)",
+              ease: "logoMove",
+              clearProps: "clipPath",
+            },
+          );
+        });
+      });
+
+      const nextIntro = page.querySelector(".next-intro");
+      if (nextIntro) {
+        revealOnScroll(nextIntro, (tl) => {
+          const { lines, revert } = revealLines(tl, nextIntro);
+          revealButton(
+            tl,
+            nextIntro.querySelector(".next-button"),
+            0.1 + lines.length * 0.1,
+          );
+          return revert;
+        });
+      }
+    },
+    { dependencies: [fontsReady], scope: container },
+  );
+
   return (
     <>
-      <main className="bg-white px-24 unit-440 md:px-80 md:unit-1440">
+      <main
+        ref={container}
+        className="bg-white px-24 unit-440 md:px-80 md:unit-1440"
+      >
         <Header />
         <GoBack />
-        <h1 className="mt-24 font-['Geist'] text-28 leading-28 font-medium tracking-[-0.02em] text-black md:text-40 md:leading-40">
+        <h1
+          data-split
+          className="reveal-text mt-18 font-['Geist'] text-28 leading-28 font-medium tracking-[-0.02em] text-black md:mt-24 md:text-40 md:leading-40"
+        >
           {study.headline}
         </h1>
         <img
           src={study.banner}
           alt={`${study.name} banner`}
-          className="mt-24 aspect-16/5 w-full object-cover md:mt-28"
+          className="reveal-media mt-16 h-200 w-full object-cover md:mt-28 md:h-auto md:aspect-16/5"
         />
         <Questions questions={study.questions} />
         {next && <NextCaseStudy study={next} />}

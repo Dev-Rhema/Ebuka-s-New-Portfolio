@@ -29,7 +29,7 @@ function Ring({ center, ring, className }) {
       stroke="white"
       strokeWidth={ring.width}
       strokeDasharray={`${ring.dash} ${ring.dash}`}
-      className={`origin-center [transform-box:fill-box] ${className}`}
+      className={`origin-center transform-fill ${className}`}
     />
   );
 }

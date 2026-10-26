@@ -103,6 +103,9 @@ export const WavingFlag = ({
       material.map = texture;
       material.needsUpdate = true;
       flag.visible = true;
+      // Compiles the textured shader and uploads the texture now, while the
+      // page loads, instead of on the first frame the flag scrolls into view.
+      renderer.render(scene, camera);
     };
     img.src = logo;
 

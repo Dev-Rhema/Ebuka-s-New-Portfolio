@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { gsap, revealOnScroll, splitLines, useGSAP } from "./animation";
 import { CaseStudyData } from "./Data";
 import { Naira, Plus } from "./components/StatSymbols";
 import { WavingFlag } from "./components/WavingFlag";
@@ -7,44 +9,45 @@ function CaseStudy({ study }) {
   const { stat, testimonial } = study;
 
   return (
-    <article className="mb-32">
-      <WavingFlag
-        logo={study.logo}
-        className="h-48 w-94"
-      />
-      <h3 className="font-['DM-Serif'] text-28 leading-none tracking-[-0.02em] text-black md:mt-16 md:text-40">
-        {study.name}
-      </h3>
+    <article className="case-study mb-32">
+      <div className="case-header">
+        <WavingFlag logo={study.logo} className="case-flag h-48 w-94" />
+        <h3 className="case-name font-['DM-Serif'] text-28 leading-none tracking-[-0.02em] text-black md:mt-16 md:text-40">
+          {study.name}
+        </h3>
 
-      <div className="mt-8 md:grid md:grid-cols-headline">
-        <p className="font-['Geist'] text-18 leading-20 font-medium tracking-[-0.025em] text-black md:max-w-560 md:tracking-[-0.02em] md:text-28 md:leading-28">
-          {study.headline}
-        </p>
-
-        <div className="mt-15.5 md:mt-0">
-          <p className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26">
-            {study.summary}
+        <div className="mt-8 md:grid md:grid-cols-headline">
+          <p className="case-headline font-['Geist'] text-18 leading-20 font-medium tracking-[-0.025em] text-black md:max-w-560 md:tracking-[-0.02em] md:text-28 md:leading-28">
+            {study.headline}
           </p>
-          <a
-            href={study.link}
-            className="mt-19 inline-flex items-center gap-9 md:mt-20 font-['Geist'] text-16 leading-none font-medium tracking-[-0.04em] text-black md:gap-5 md:text-20"
-          >
-            Read Case Study
-            <svg
-              viewBox="0 0 20 14"
-              className="w-15 md:w-20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-            >
-              <path d="M0 7h18M12 1l6 6-6 6" />
-            </svg>
-          </a>
+
+          <div className="mt-15.5 md:mt-0">
+            <p className="case-summary font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26">
+              {study.summary}
+            </p>
+            <div className="case-link-mask">
+              <a
+                href={study.link}
+                className="case-link mt-19 inline-flex items-center gap-9 md:mt-20 font-['Geist'] text-16 leading-none font-medium tracking-[-0.04em] text-black md:gap-5 md:text-20"
+              >
+                Read Case Study
+                <svg
+                  viewBox="0 0 20 14"
+                  className="w-15 md:w-20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                >
+                  <path d="M0 7h18M12 1l6 6-6 6" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-23 flex flex-col gap-16 md:mt-30 md:grid md:h-447 md:grid-cols-media">
-        <div className="h-188 overflow-hidden rounded-8 md:h-auto">
+      <div className="case-media mt-23 flex flex-col gap-16 md:mt-30 md:grid md:h-447 md:grid-cols-media">
+        <div className="case-panel h-188 overflow-hidden rounded-8 md:h-auto">
           <img
             loading="lazy"
             src={study.cover}
@@ -54,7 +57,7 @@ function CaseStudy({ study }) {
         </div>
 
         <div className="flex flex-col gap-16">
-          <div className="relative flex h-188 shrink-0 flex-col justify-end overflow-hidden rounded-8 bg-[#d9d9d9] p-16 text-white md:h-225">
+          <div className="case-panel relative flex h-188 shrink-0 flex-col justify-end overflow-hidden rounded-8 bg-[#d9d9d9] p-16 text-white md:h-225">
             {stat.image && (
               <img
                 loading="lazy"
@@ -74,7 +77,7 @@ function CaseStudy({ study }) {
             </p>
           </div>
 
-          <figure className="flex-1 rounded-8 bg-[#e5e5e5] px-16 pt-16 pb-14 md:pb-0">
+          <figure className="case-panel flex-1 rounded-8 bg-[#e5e5e5] px-16 pt-16 pb-14 md:pb-0">
             <p className="font-['Geist'] text-18 leading-20 font-medium tracking-[-0.04em] text-black md:text-24 md:leading-26">
               {testimonial.title}
             </p>
@@ -102,10 +105,96 @@ function CaseStudy({ study }) {
   );
 }
 
-function CaseStudies() {
+// Reveals a panel from its left edge, keeping its rounded corners.
+const clipFromLeft = (panel, right) => {
+  const radius = getComputedStyle(panel).borderTopLeftRadius;
+  return `inset(0% ${right}% 0% 0% round ${radius})`;
+};
+
+function CaseStudies({ play }) {
+  const container = useRef(null);
+
+  useGSAP(
+    () => {
+      gsap.set(".case-label, .case-header, .case-media", { autoAlpha: 0 });
+    },
+    { scope: container },
+  );
+
+  useGSAP(
+    () => {
+      if (!play) return;
+
+      const label = container.current.querySelector(".case-label");
+      const studies = gsap.utils.toArray(".case-study", container.current);
+
+      studies.forEach((study, index) => {
+        revealOnScroll(study.querySelector(".case-header"), (tl) => {
+          const splits = [".case-name", ".case-headline", ".case-summary"].map(
+            (selector) => splitLines(study.querySelector(selector)),
+          );
+          const lines = splits.flatMap((split) => split.lines);
+          const link = study.querySelector(".case-link");
+          const linkMask = link.parentElement;
+          // Clips only the bottom edge so the arrow can overflow the line.
+          gsap.set(linkMask, { clipPath: "inset(-50% -50% 0% -50%)" });
+
+          if (index === 0) {
+            const labelSplit = splitLines(label);
+            splits.push(labelSplit);
+            tl.from(labelSplit.lines, { yPercent: 100 }, 0);
+            gsap.set(label, { autoAlpha: 1 });
+          }
+
+          tl.fromTo(
+            study.querySelector(".case-flag"),
+            { clipPath: "inset(100% -50% 0% -50%)" },
+            { clipPath: "inset(0% -50% 0% -50%)", clearProps: "clipPath" },
+            0.1,
+          )
+            .from(lines, { yPercent: 100, stagger: 0.1 }, 0.2)
+            .from(
+              link,
+              // From just below the mask's bottom edge.
+              {
+                y: () =>
+                  linkMask.getBoundingClientRect().bottom -
+                  link.getBoundingClientRect().top,
+              },
+              0.2 + lines.length * 0.1,
+            );
+
+          return () => {
+            splits.forEach((split) => split.revert());
+            gsap.set(linkMask, { clearProps: "clipPath" });
+          };
+        });
+
+        revealOnScroll(study.querySelector(".case-media"), (tl) => {
+          study.querySelectorAll(".case-panel").forEach((panel, i) => {
+            tl.fromTo(
+              panel,
+              { clipPath: clipFromLeft(panel, 100) },
+              {
+                clipPath: clipFromLeft(panel, 0),
+                ease: "logoMove",
+                clearProps: "clipPath",
+              },
+              i * 0.1,
+            );
+          });
+        });
+      });
+    },
+    { dependencies: [play], scope: container },
+  );
+
   return (
-    <section className="bg-white px-24 pt-56 unit-440 md:pb-32 md:px-[3.125vw] xl:px-[5.556vw] md:unit-1440">
-      <p className={`mb-26 ${sectionLabel}`}>
+    <section
+      ref={container}
+      className="bg-white px-24 pt-56 unit-440 md:pb-32 md:px-[3.125vw] xl:px-[5.556vw] md:unit-1440"
+    >
+      <p className={`case-label mb-26 ${sectionLabel}`}>
         Selected case studies
       </p>
 

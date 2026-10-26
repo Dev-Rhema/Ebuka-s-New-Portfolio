@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import FaceRings from "./components/FaceRings";
 import Skills from "./Skills";
 import { headerImgNoBg, piggyvestWordmark, instagramThumb } from "./Data";
-import { heroBackdrop } from "./styles";
+import { heroBackdrop, heroRings } from "./styles";
 
 const headline =
   "hero-line block font-['DM-Serif'] text-72 leading-none tracking-[-0.02em] text-white md:text-100 xl:text-152";
@@ -63,8 +63,10 @@ function Home({ play, showLogo }) {
         .timeline()
         .timeScale(0.85)
         .to(menu, { ...bar, duration: 1 }, 0)
+        // Also drives the loader's copy of the rings, which rides the photo
+        // until the loader hands over.
         .fromTo(
-          ".hero-rings",
+          document.querySelectorAll(".hero-rings"),
           { scale: 0.05, autoAlpha: 1 },
           { scale: 1, duration: 0.6, ease: "logoMove" },
           0.2,
@@ -122,7 +124,7 @@ function Home({ play, showLogo }) {
               alt="Ebuka Chidube"
               className="h-full w-full origin-top object-cover xl:translate-y-60 xl:scale-110"
             />
-            <FaceRings className="hero-rings absolute top-129 left-1/2 w-434 -translate-1/2 md:top-[35.19%] md:w-[55.9%] xl:top-[49.28%] xl:w-872" />
+            <FaceRings className={heroRings} />
           </div>
         </div>
 
@@ -134,7 +136,7 @@ function Home({ play, showLogo }) {
           className={`absolute ${showLogo ? "" : "invisible"} top-32.5 left-24 h-34.5 w-auto md:top-35.5 md:left-32 md:h-36.5 xl:top-34.5 xl:left-[5.556vw] xl:h-44 xl:w-40`}
         />
 
-        <nav className="absolute top-32 right-24 flex gap-16 font-['Geist'] font-medium md:right-32 xl:top-32 xl:right-[5.556vw] xl:gap-16">
+        <nav className="absolute top-32 right-24 z-60 flex gap-16 font-['Geist'] font-medium md:right-32 xl:top-32 xl:right-[5.556vw] xl:gap-16">
           <a
             href="#contact"
             className="hero-button flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-40 md:gap-12.5 md:pr-17.5 md:pl-16 md:text-16 xl:h-46 xl:gap-12 xl:px-18 xl:text-16"
@@ -167,8 +169,8 @@ function Home({ play, showLogo }) {
           </button>
         </nav>
 
-        <div className="absolute top-233.5 left-24 z-10 flex w-392 flex-col text-white md:contents">
-          <div className="contents md:absolute md:top-293 md:left-32 md:block xl:top-[58.18%] xl:-mt-156.75 xl:left-[5.556vw]">
+        <div className="absolute top-233.5 left-24 z-60 flex w-392 flex-col text-white md:contents">
+          <div className="contents md:absolute md:z-60 md:top-293 md:left-32 md:block xl:top-[58.18%] xl:-mt-156.75 xl:left-[5.556vw]">
             <h1 className="order-1 overflow-hidden pt-[0.06em]">
               <span className={headline}>EBUKA</span>
             </h1>
@@ -184,12 +186,12 @@ function Home({ play, showLogo }) {
             </p>
           </div>
 
-          <p className="hero-paragraph order-4 mt-14 font-['Geist'] text-18 leading-22 font-light tracking-[-0.04em] text-white md:absolute md:top-458.5 md:left-32 md:mt-0 md:max-w-540 md:text-24 md:leading-29 xl:top-[58.18%] xl:mt-180.25 xl:left-[5.556vw] xl:max-w-[25.5em] xl:text-28 xl:leading-[1.29] xl:font-medium">
+          <p className="hero-paragraph order-4 mt-14 font-['Geist'] text-18 leading-22 font-light tracking-[-0.04em] text-white md:absolute md:z-60 md:top-458.5 md:left-32 md:mt-0 md:max-w-540 md:text-24 md:leading-29 xl:top-[58.18%] xl:mt-180.25 xl:left-[5.556vw] xl:max-w-[25.5em] xl:text-28 xl:leading-[1.29] xl:font-medium">
             I am a commercially minded performance marketer who understands how
             to turn marketing spend into customer acquisition and revenue
           </p>
 
-          <div className="order-2 -mt-7.5 overflow-hidden pt-[0.06em] md:absolute md:top-453.75 md:right-32 md:mt-0 xl:top-[58.18%] xl:mt-185.75 xl:right-[5.556vw]">
+          <div className="order-2 -mt-7.5 overflow-hidden pt-[0.06em] md:absolute md:z-60 md:top-453.75 md:right-32 md:mt-0 xl:top-[58.18%] xl:mt-185.75 xl:right-[5.556vw]">
             <span
               className={`${headline} bg-linear-to-b from-[#f3f3f3] to-white bg-clip-text pr-[0.02em] text-transparent`}
             >
@@ -203,7 +205,7 @@ function Home({ play, showLogo }) {
           target="_blank"
           rel="noreferrer"
           aria-label="Watch the latest Instagram reel"
-          className="hero-card absolute top-141 right-32 hidden w-[14.5em] bg-black px-[0.5em] pb-[0.5em] text-16 md:block xl:top-[58.18%] xl:-mt-157.75 xl:right-[5.556vw]"
+          className="hero-card absolute z-60 top-141 right-32 hidden w-[14.5em] bg-black px-[0.5em] pb-[0.5em] text-16 md:block xl:top-[58.18%] xl:-mt-157.75 xl:right-[5.556vw]"
         >
           <div className="h-[2.667em] overflow-hidden pt-[0.417em] font-['Geist'] text-[0.75em] leading-none font-medium whitespace-nowrap text-white">
             <div className="flex w-max animate-marquee">
@@ -232,10 +234,10 @@ function Home({ play, showLogo }) {
         </a>
       </section>
 
-      <About />
-      <CaseStudies />
-      <Skills />
-      <Footer />
+      <About play={showLogo} />
+      <CaseStudies play={showLogo} />
+      <Skills play={showLogo} />
+      <Footer play={showLogo} />
     </main>
   );
 }

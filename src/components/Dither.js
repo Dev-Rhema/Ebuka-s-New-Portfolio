@@ -4,6 +4,7 @@ const CONTRAST = 0.9;
 const DOT = 1;
 const GRAIN = 1.5;
 const GRAIN_STRENGTH = 0.25;
+const SPRITE_STRIPS = 16;
 
 const VERTEX = `
 attribute vec2 p;
@@ -128,20 +129,70 @@ export function useDither(imageRef, sprite) {
       return;
     }
 
+    // CPU-backed, so uploading it to WebGL needs no GPU readback.
     const raster = document.createElement("canvas");
+    let disposed = false;
+    let decoding = false;
+    let bitmap = null;
     let uploaded = false;
+    let uploading = false;
+    // A sprite sheet is tens of megabytes as a texture; uploading it whole
+    // stalls a frame for ~100ms, so it goes up in strips over several frames.
+    const uploadSprite = () => {
+      uploading = true;
+      const { width, height } = bitmap;
+      const strip = Math.ceil(height / SPRITE_STRIPS);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      const next = (y) => {
+        const h = Math.min(strip, height - y);
+        createImageBitmap(bitmap, 0, y, width, h, { premultiplyAlpha: "none" }).then(
+          (part) => {
+            if (disposed) return part.close();
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, y, gl.RGBA, gl.UNSIGNED_BYTE, part);
+            part.close();
+            if (y + h < height) {
+              requestAnimationFrame(() => next(y + h));
+            } else {
+              uploaded = true;
+              draw();
+            }
+          },
+          () => {},
+        );
+      };
+      next(0);
+    };
     const upload = () => {
-      if (!image.complete || !image.naturalWidth || !canvas.width) return;
+      if (!bitmap || !canvas.width) return;
       if (sprite) {
-        if (uploaded) return;
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-      } else {
-        raster.width = canvas.width;
-        raster.height = canvas.height;
-        raster.getContext("2d").drawImage(image, 0, 0, raster.width, raster.height);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, raster);
+        if (!uploading) uploadSprite();
+        return;
       }
+      raster.width = canvas.width;
+      raster.height = canvas.height;
+      raster.getContext("2d", { willReadFrequently: true }).drawImage(bitmap, 0, 0, raster.width, raster.height);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, raster);
       uploaded = true;
+    };
+    // Decodes from the (cached) file off the main thread: drawing the <img>
+    // itself, or making a bitmap from it, decodes synchronously mid-scroll.
+    const decode = () => {
+      if (decoding || !image.complete || !image.naturalWidth) return;
+      decoding = true;
+      fetch(image.currentSrc)
+        .then((response) => response.blob())
+        .then((blob) =>
+          createImageBitmap(blob, sprite ? { premultiplyAlpha: "none" } : {}),
+        )
+        .then(
+          (decoded) => {
+            if (disposed) return decoded.close();
+            bitmap = decoded;
+            upload();
+            draw();
+          },
+          () => {},
+        );
     };
 
     let frame = 0;
@@ -169,13 +220,10 @@ export function useDither(imageRef, sprite) {
       upload();
       draw();
     };
-    const onLoad = () => {
-      upload();
-      draw();
-    };
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    image.addEventListener("load", onLoad);
+    image.addEventListener("load", decode);
+    decode();
 
     let frameId;
     let visible = false;
@@ -189,7 +237,8 @@ export function useDither(imageRef, sprite) {
         frameId = requestAnimationFrame(tick);
         start ??= time;
         if (!visible) return;
-        const next = Math.floor(((time - start) / 1000) * sprite.fps) % sprite.count;
+        const next =
+          Math.floor(((time - start) / 1000) * sprite.fps) % sprite.count;
         if (next === frame) return;
         frame = next;
         draw();
@@ -198,10 +247,12 @@ export function useDither(imageRef, sprite) {
     }
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(frameId);
       intersection.disconnect();
       resizeObserver.disconnect();
-      image.removeEventListener("load", onLoad);
+      image.removeEventListener("load", decode);
+      bitmap?.close();
     };
   }, [imageRef, sprite]);
 

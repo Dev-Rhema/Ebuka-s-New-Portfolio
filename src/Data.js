@@ -2,10 +2,11 @@ import headerImg from "./assets/headerImg.webp";
 import headerImgNoBg from "./assets/headerImgNoBg.webp";
 import piggyvestWordmark from "./assets/Brands/piggyvest.svg";
 import instagramThumb from "./assets/HeroImgs/instagramThumb.jpg";
-import aboutStar from "./assets/AboutImgs/aboutStar.png";
-import aboutBrands from "./assets/AboutImgs/aboutBrands.svg";
-import shadowData from "./assets/AboutImgs/shadowData.svg";
-import shadowDecisions from "./assets/AboutImgs/shadowDecisions.svg";
+import aboutBrand1 from "./assets/AboutImgs/aboutBrand1.svg";
+import aboutBrand2 from "./assets/AboutImgs/aboutBrand2.svg";
+import aboutBrand3 from "./assets/AboutImgs/aboutBrand3.svg";
+import aboutIconCircle from "./assets/AboutImgs/aboutIconCircle.svg";
+import aboutIconShadow from "./assets/AboutImgs/aboutIconShadow.png";
 import cardBack from "./assets/Brands/Card - Back.svg";
 import ace from "./assets/Brands/Card - Front/Ace.svg";
 import ace1 from "./assets/Brands/Card - Front/Ace-1.svg";
@@ -40,17 +41,20 @@ import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg"
 import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
 import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
 import knightSprite from "./assets/Knight/knight-sprite.webp";
-import grass from "./assets/Knight/Grass.svg";
+// Pre-rasterized from Grass.svg: SVGs rasterize on the main thread, which
+// stalled the scroll when the footer's dithered grass loaded.
+import grass from "./assets/Knight/Grass.webp";
+
+const aboutBrands = [aboutBrand1, aboutBrand2, aboutBrand3];
 
 export {
   headerImg,
   headerImgNoBg,
   piggyvestWordmark,
   instagramThumb,
-  aboutStar,
   aboutBrands,
-  shadowData,
-  shadowDecisions,
+  aboutIconCircle,
+  aboutIconShadow,
   cardBack,
   flagStaff,
   skillCard,

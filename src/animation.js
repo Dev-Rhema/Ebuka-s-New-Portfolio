@@ -1,9 +1,10 @@
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(useGSAP, CustomEase, SplitText);
+gsap.registerPlugin(useGSAP, CustomEase, ScrollTrigger, SplitText);
 
 gsap.ticker.lagSmoothing(250, 33);
 
@@ -18,4 +19,89 @@ CustomEase.create("logoMove", "M0,0 C0.99,0.18 0.08,0.82 1,1");
 
 CustomEase.create("heroText", "M0,0 C0.83,0.27 0.02,1 1,1");
 
-export { gsap, SplitText, useGSAP };
+CustomEase.create("textReveal", "M0,0 C0.23,0 0.02,1 1,1");
+
+CustomEase.create("fadeInOut", "M0,0 C0.5,0 0.5,1 1,1");
+
+// Masks reach 0.12em below each line so descenders aren't clipped (the fonts
+// overflow by up to ~0.11em) while risen lines still start hidden (glyph tops
+// sit at least 0.13em below the line box).
+const splitLines = (targets) => {
+  const split = SplitText.create(targets, { type: "lines", mask: "lines" });
+  gsap.set(split.masks, { paddingBottom: "0.12em", marginBottom: "-0.12em" });
+  return split;
+};
+
+// Plays a section's entrance the first time `trigger` scrolls 80% up the
+// viewport. `build` fills the timeline and may return a cleanup, called with
+// whether the entrance finished.
+//
+// The timeline is built a screen early, so splitting, measuring and image
+// decoding are done before the first frame has to animate. A width change in
+// between invalidates the split lines, so the build is redone at play time.
+const revealOnScroll = (trigger, build) => {
+  let prepared = null;
+
+  const prepare = () => {
+    if (prepared?.width === trigger.offsetWidth) return;
+    if (prepared) {
+      prepared.tl.revert();
+      prepared.cleanup?.(false);
+    }
+    trigger.querySelectorAll("img").forEach((img) => {
+      img.loading = "eager";
+      img.decode().catch(() => {});
+    });
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: { duration: 1, ease: "textReveal" },
+    });
+    const cleanup = build(tl);
+    tl.eventCallback("onComplete", () => cleanup?.(true));
+    prepared = { tl, cleanup, width: trigger.offsetWidth };
+  };
+
+  ScrollTrigger.create({
+    trigger,
+    start: "top bottom+=100%",
+    once: true,
+    onEnter: prepare,
+  });
+
+  return ScrollTrigger.create({
+    trigger,
+    start: "top 80%",
+    once: true,
+    onEnter: () => {
+      prepare();
+      prepared.tl.play();
+      gsap.set(trigger, { autoAlpha: 1 });
+    },
+  });
+};
+
+// Grows a call button from its left edge with its label rising from the
+// bottom; the button's own clip doubles as the label's mask.
+const revealButton = (tl, button, at) =>
+  tl
+    .fromTo(
+      button,
+      { clipPath: "inset(0% 100% 0% 0%)" },
+      { clipPath: "inset(0% 0% 0% 0%)", ease: "logoMove", clearProps: "clipPath" },
+      at,
+    )
+    .from(
+      button.firstElementChild,
+      { y: () => button.offsetHeight / 2, ease: "logoMove" },
+      at + 0.1,
+    );
+
+export {
+  gsap,
+  revealButton,
+  revealOnScroll,
+  ScrollTrigger,
+  splitLines,
+  SplitText,
+  useGSAP,
+};

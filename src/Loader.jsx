@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { gsap, useGSAP } from "./animation";
+import FaceRings from "./components/FaceRings";
 import { headerImg, headerImgNoBg } from "./Data";
-import { heroBackdrop } from "./styles";
+import { heroBackdrop, heroRings } from "./styles";
 
 const SPEED = 0.6;
 
@@ -9,7 +10,7 @@ const nameColumn =
   "flex h-[119px] flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
 const subText = "sub pb-[4px] whitespace-nowrap font-['Geist'] text-lg/none font-medium text-[#555]";
 
-function MobileHero({ className = "" }) {
+function MobileHero({ className = "", rings = false }) {
   return (
     <div
       className={`flex items-start justify-center overflow-hidden ${heroBackdrop} ${className}`}
@@ -20,17 +21,19 @@ function MobileHero({ className = "" }) {
           alt=""
           className="relative h-full w-full object-cover"
         />
+        {rings && <FaceRings className={heroRings} />}
       </div>
     </div>
   );
 }
 
-function Loader({ onReveal, onComplete }) {
+function Loader({ onLogoMove, onComplete }) {
   const container = useRef(null);
 
   useGSAP(
     () => {
       gsap.set(".logo", { xPercent: -50 });
+      gsap.set(".hero-rings", { autoAlpha: 0 });
 
       const desktop = window.matchMedia("(min-width: 1280px)").matches;
       const tablet = window.matchMedia("(min-width: 768px)").matches;
@@ -182,6 +185,7 @@ function Loader({ onReveal, onComplete }) {
           },
           1.58,
         )
+        .call(() => onLogoMove?.(), null, 1.58)
         .call(
           () => {
             const loader = container.current;
@@ -193,7 +197,6 @@ function Loader({ onReveal, onComplete }) {
               [...loader.children].filter((el) => !el.matches(".logo")),
               { autoAlpha: 0 },
             );
-            onReveal?.();
           },
           null,
           2.2,
@@ -287,12 +290,15 @@ function Loader({ onReveal, onComplete }) {
 
       <div className="wipe absolute inset-x-0 top-478 bottom-0 bg-white md:hidden" />
 
-      <MobileHero className="frame absolute inset-x-0 top-0 h-510 will-change-transform md:hidden" />
+      <MobileHero
+        rings
+        className="frame absolute inset-x-0 top-0 h-510 will-change-transform md:hidden"
+      />
       <div className="fade absolute inset-x-0 top-478 h-32 bg-fade-white md:hidden" />
 
       <div className="absolute inset-x-0 top-0 hidden md:flex md:h-640 md:items-start md:justify-center xl:h-hero xl:items-center">
         <div
-          className={`fullscreen aspect-147/119 shrink-0 overflow-hidden will-change-transform md:mt-28 md:w-1016 xl:mt-0 xl:w-1111.75 ${heroBackdrop}`}
+          className={`fullscreen relative aspect-147/119 shrink-0 overflow-hidden will-change-transform md:mt-28 md:w-1016 xl:mt-0 xl:w-1111.75 ${heroBackdrop}`}
         >
           <img
             src={headerImgNoBg}
@@ -300,6 +306,7 @@ function Loader({ onReveal, onComplete }) {
             fetchPriority="high"
             className="h-full w-full object-cover"
           />
+          <FaceRings className={heroRings} />
         </div>
       </div>
 

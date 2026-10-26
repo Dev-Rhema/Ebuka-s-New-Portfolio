@@ -16,11 +16,11 @@ export function Naira() {
   );
 }
 
-export function Plus() {
+export function Plus({ className = "self-center" }) {
   return (
     <svg
       viewBox="0 0 30 30"
-      className="ml-[0.0078125em] w-[0.46875em] shrink-0 self-center"
+      className={`ml-[0.0078125em] w-[0.46875em] shrink-0 ${className}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"

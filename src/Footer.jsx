@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { gsap, revealOnScroll, splitLines, useGSAP } from "./animation";
 import Knight from "./Knight";
 import { useDither } from "./components/Dither";
 import { ContactEmail, SocialLinks, grass } from "./Data";
@@ -59,13 +60,9 @@ function SocialButton({ name, href, className = "" }) {
       target="_blank"
       rel="noreferrer"
       aria-label={name}
-      className={`flex size-32 shrink-0 items-center justify-center md:size-30 ${shadowButton} ${className}`}
+      className={`footer-icon flex size-32 shrink-0 items-center justify-center md:size-30 ${shadowButton} ${className}`}
     >
-      <svg
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-18 md:w-15"
-      >
+      <svg viewBox="0 0 24 24" fill="currentColor" className="w-18 md:w-15">
         {GLYPHS[name]}
       </svg>
     </a>
@@ -87,7 +84,7 @@ function EmailPill() {
 
   return (
     <div className="order-first flex basis-full justify-center md:contents">
-      <div className="flex h-50 w-311 shrink-0 items-center rounded-full border-pill border-[#d9d9d9] bg-[#ededed] px-7 font-['Geist'] font-medium tracking-[-0.03em] text-[#838383]">
+      <div className="footer-email flex h-50 w-311 shrink-0 items-center rounded-full border-pill border-[#d9d9d9] bg-[#ededed] px-7 font-['Geist'] font-medium tracking-[-0.03em] text-[#838383]">
         <a
           href={`mailto:${ContactEmail}`}
           className="flex min-w-0 flex-1 items-center gap-10 text-18"
@@ -107,7 +104,14 @@ function EmailPill() {
         >
           <svg viewBox="0 0 24 24" fill="none" className="w-17">
             <rect x="3" y="3" width="13" height="13" rx="3" fill="#bdbdbd" />
-            <rect x="8" y="8" width="13" height="13" rx="3" fill="currentColor" />
+            <rect
+              x="8"
+              y="8"
+              width="13"
+              height="13"
+              rx="3"
+              fill="currentColor"
+            />
           </svg>
         </button>
       </div>
@@ -153,7 +157,7 @@ function Grass() {
   );
 }
 
-function Footer() {
+function Footer({ play }) {
   const [x, instagram, youtube, linkedin] = SocialLinks;
   const footerRef = useRef(null);
   const [inView, setInView] = useState(false);
@@ -166,6 +170,54 @@ function Footer() {
     return () => observer.disconnect();
   }, []);
 
+  useGSAP(
+    () => {
+      gsap.set(".footer-intro", { autoAlpha: 0 });
+    },
+    { scope: footerRef },
+  );
+
+  useGSAP(
+    () => {
+      if (!play) return;
+
+      const footer = footerRef.current;
+      const icon = (name) => footer.querySelector(`[aria-label="${name}"]`);
+
+      revealOnScroll(footer.querySelector(".footer-intro"), (tl) => {
+        const name = splitLines(footer.querySelector(".footer-name"));
+        const copy = splitLines(footer.querySelector(".footer-copy"));
+        const icons = gsap.utils.toArray(".footer-icon", footer);
+        // Keeps the large shadows from re-rasterizing at every scale step.
+        gsap.set(icons, { willChange: "transform" });
+
+        tl.from(name.lines, { yPercent: 100 }, 0)
+          .from(copy.lines, { yPercent: 100, stagger: 0.1 }, 0.1)
+          .from(
+            footer.querySelector(".footer-email"),
+            { opacity: 0, ease: "fadeInOut" },
+            0,
+          )
+          .from(
+            [icon("Instagram"), icon("YouTube")],
+            { scale: 0, ease: "logoMove" },
+            0.2,
+          )
+          .from(
+            [icon("X"), icon("LinkedIn")],
+            { scale: 0, ease: "logoMove" },
+            0.4,
+          );
+
+        return () => {
+          [name, copy].forEach((split) => split.revert());
+          gsap.set(icons, { clearProps: "willChange" });
+        };
+      });
+    },
+    { dependencies: [play], scope: footerRef },
+  );
+
   return (
     <footer
       ref={footerRef}
@@ -177,19 +229,21 @@ function Footer() {
         className="pointer-events-none absolute top-170 left-1/2 h-520 w-860 -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.075),transparent)]"
       />
 
-      <h2 className="relative font-['DM-Serif'] text-40 leading-none tracking-[-0.02em] text-black md:text-44">
-        Ebuka Chidube
-      </h2>
-      <p className="relative mx-auto mt-16 md:max-w-290 font-['Geist'] text-19 leading-25 font-medium tracking-[-0.04em] text-[#838383] md:mt-18 md:text-20">
-        Helping your brand become more through intentional marketing
-      </p>
+      <div className="footer-intro">
+        <h2 className="footer-name relative font-['DM-Serif'] text-40 leading-none tracking-[-0.02em] text-black md:text-44">
+          Ebuka Chidube
+        </h2>
+        <p className="footer-copy relative mx-auto mt-16 md:max-w-290 font-['Geist'] text-19 leading-25 font-medium tracking-[-0.04em] text-[#838383] md:mt-18 md:text-20">
+          Helping your brand become more through intentional marketing
+        </p>
 
-      <div className="relative z-10 mt-32 flex flex-wrap items-center justify-center gap-x-16 gap-y-17 md:mt-34 md:flex-nowrap">
-        <SocialButton {...x} className="order-2 md:order-none" />
-        <SocialButton {...instagram} className="order-3 md:order-none" />
-        <EmailPill />
-        <SocialButton {...youtube} className="order-4 md:order-none" />
-        <SocialButton {...linkedin} className="order-1 md:order-none" />
+        <div className="relative z-10 mt-32 flex flex-wrap items-center justify-center gap-x-16 gap-y-17 md:mt-34 md:flex-nowrap">
+          <SocialButton {...x} className="order-2 md:order-none" />
+          <SocialButton {...instagram} className="order-3 md:order-none" />
+          <EmailPill />
+          <SocialButton {...youtube} className="order-4 md:order-none" />
+          <SocialButton {...linkedin} className="order-1 md:order-none" />
+        </div>
       </div>
 
       <div

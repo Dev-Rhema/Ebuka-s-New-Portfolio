@@ -10,7 +10,7 @@ function App() {
       <Home play={stage !== "loading"} showLogo={stage === "done"} />
       {stage !== "done" && (
         <Loader
-          onReveal={() => setStage("reveal")}
+          onLogoMove={() => setStage("intro")}
           onComplete={() => setStage("done")}
         />
       )}

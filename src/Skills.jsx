@@ -1,3 +1,11 @@
+import { useRef } from "react";
+import {
+  gsap,
+  revealButton,
+  revealOnScroll,
+  splitLines,
+  useGSAP,
+} from "./animation";
 import CircularGallery from "./components/CircularGallery";
 import { SkillsData, skillCard, skillDome } from "./Data";
 import { callButton, sectionHeading, sectionLabel } from "./styles";
@@ -15,7 +23,12 @@ function SkillCardFace({ skill }) {
 
   return (
     <>
-      <img loading="lazy" src={skillCard} alt="" className="absolute inset-0 size-full" />
+      <img
+        loading="lazy"
+        src={skillCard}
+        alt=""
+        className="absolute inset-0 size-full"
+      />
 
       <div
         className="absolute top-62 left-1/2"
@@ -52,25 +65,62 @@ function SkillCard({ skill, slot }) {
   );
 }
 
-function Skills() {
-  return (
-    <section className="overflow-hidden bg-white px-24 pt-25.5 text-center unit-440 md:overflow-visible md:px-[3.125vw] xl:px-[5.556vw] md:pt-56 md:unit-1440">
-      <p className={sectionLabel}>Skills geared towards growth</p>
-      <h2
-        className={`mx-auto mt-10.5 md:mt-12 md:max-w-440 ${sectionHeading}`}
-      >
-        My core focus of services aims at growth
-      </h2>
-      <a
-        href="#contact"
-        className={`mx-auto mt-16 ${callButton}`}
-      >
-        Book a Call
-      </a>
+function Skills({ play }) {
+  const container = useRef(null);
 
-      <div
-        className="relative mt-59 h-316 md:mt-40 md:h-435"
-      >
+  useGSAP(
+    () => {
+      gsap.set(".skills-intro", { autoAlpha: 0 });
+    },
+    { scope: container },
+  );
+
+  useGSAP(
+    () => {
+      if (!play) return;
+
+      const find = (selector) => container.current.querySelector(selector);
+
+      revealOnScroll(find(".skills-intro"), (tl) => {
+        const label = splitLines(find(".skills-label"));
+        const heading = splitLines(find(".skills-heading"));
+
+        tl.from(label.lines, { yPercent: 100 }, 0).from(
+          heading.lines,
+          { yPercent: 100, stagger: 0.1 },
+          0.1,
+        );
+        revealButton(tl, find(".skills-button"), 0.6);
+
+        return () => [label, heading].forEach((split) => split.revert());
+      });
+    },
+    { dependencies: [play], scope: container },
+  );
+
+  return (
+    <section
+      ref={container}
+      className="overflow-hidden bg-white px-24 pt-25.5 text-center unit-440 md:overflow-visible md:px-[3.125vw] xl:px-[5.556vw] md:pt-56 md:unit-1440"
+    >
+      <div className="skills-intro">
+        <p className={`skills-label ${sectionLabel}`}>
+          Skills geared towards growth
+        </p>
+        <h2
+          className={`skills-heading mx-auto mt-10.5 md:mt-12 md:max-w-440 ${sectionHeading}`}
+        >
+          My core focus of services aims at growth
+        </h2>
+        <a
+          href="#contact"
+          className={`skills-button mx-auto mt-16 ${callButton}`}
+        >
+          <span className="block">Book a Call</span>
+        </a>
+      </div>
+
+      <div className="relative mt-59 h-316 md:mt-40 md:h-435">
         <ul className="hidden md:block">
           {SkillsData.map((skill, index) => (
             <SkillCard key={skill.title} skill={skill} slot={FAN[index]} />

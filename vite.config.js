@@ -8,7 +8,10 @@ const page = (file) => fileURLToPath(new URL(file, import.meta.url));
 const notFound = (req, res, next) => {
   const path = req.url.split("?")[0];
   const isPage = req.method === "GET" && req.headers.accept?.includes("text/html");
-  if (isPage && path !== "/" && !path.endsWith(".html")) {
+  // Mirrors the rewrite in vercel.json: /case-study/<id> serves the case study page.
+  if (isPage && /^\/case-study\/[^/]+\/?$/.test(path)) {
+    req.url = "/case-study.html";
+  } else if (isPage && path !== "/" && !path.endsWith(".html")) {
     req.url = "/404.html";
     res.statusCode = 404;
   }
@@ -35,7 +38,11 @@ export default defineConfig({
   },
   build: {
     rolldownOptions: {
-      input: { main: page("index.html"), notFound: page("404.html") },
+      input: {
+        main: page("index.html"),
+        notFound: page("404.html"),
+        caseStudy: page("case-study.html"),
+      },
     },
   },
 });

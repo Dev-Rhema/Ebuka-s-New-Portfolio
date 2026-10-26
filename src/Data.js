@@ -42,6 +42,8 @@ import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.s
 import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
 import knightSprite from "./assets/Knight/knight-sprite.webp";
 import grass from "./assets/Knight/Grass.webp";
+import piggyBanner from "./assets/CaseImgs/CasePageBanners/piggyBanner.svg";
+import videoThumb from "./assets/CaseImgs/videoThumb.jpg";
 
 const aboutBrands = [aboutBrand1, aboutBrand2, aboutBrand3];
 
@@ -147,6 +149,25 @@ export const SpiralCards = [
   { src: diamonds2, alt: "Truckmasters" },
 ];
 
+// Placeholder answer and thumbnail until each question has its real answer and video.
+const answerPlaceholder =
+  "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.";
+
+const piggyvestQuestions = [
+  ["Paid Acquisitions Before Me", "What did paid acquisition look like before you came in?"],
+  ["Need for Different Strategies on Different Platforms", "Why does a savings app need different strategies for iOS and Android?"],
+  ["Decision Making on Running Channels", "How did you decide which channels to run and which to leave alone?"],
+  ["Spotting Winning Ads", "What tells you an ad is a winner, and what do you do once you find one?"],
+  ["Keeping Stakeholders in the Loop", "How did you report to leadership so they understood performance without you in the room?"],
+  ["Ensuring the Business Understood the Caveats", "How do you keep trust when the business wants to double spend and you know efficiency will drop?"],
+  ["Lessons Learnt from Piggyvest", "What did Piggyvest teach you that you now apply to every client?"],
+].map(([label, question]) => ({
+  label,
+  question,
+  answer: [answerPlaceholder, answerPlaceholder],
+  thumbnail: videoThumb,
+}));
+
 export const CaseStudyData = [
   {
     id: "piggyvest",
@@ -156,7 +177,9 @@ export const CaseStudyData = [
       "Helping the Nigerian Fintech Powerhouse generate ₦50+ billion in inflow and acquired over 1 million users",
     summary:
       "Four years of paid media on Meta, Google, TikTok, Snapchat, Pinterest and Appnext. Every inflow attributed in AppsFlyer. Every user tracked from first click to first deposit.",
-    link: "#",
+    link: "/case-study/piggyvest",
+    banner: piggyBanner,
+    questions: piggyvestQuestions,
     cover: piggyCover,
     stat: {
       naira: true,
@@ -182,7 +205,10 @@ export const CaseStudyData = [
       "I helped a Nigerian skincare brand double its paid revenue in two months and grow international sales by 340%.",
     summary:
       "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.",
-    link: "#",
+    link: "/case-study/dang",
+    // Placeholder: Piggyvest's banner and questions until DANG's are ready.
+    banner: piggyBanner,
+    questions: piggyvestQuestions,
     cover: dangCover,
     stat: {
       value: "340%",
@@ -206,7 +232,10 @@ export const CaseStudyData = [
       "Helped a US remittance company launch its pivot to Remittance-as-a-Service and generate 1,300 qualified B2B leads in 6 months.",
     summary:
       "I ran paid acquisition on Meta and Google for the new product from August 2025 to January 2026, then oversaw creation of the assets that carried leads into the pipeline.",
-    link: "#",
+    link: "/case-study/sendsprint",
+    // Placeholder: Piggyvest's banner and questions until SendSprint's are ready.
+    banner: piggyBanner,
+    questions: piggyvestQuestions,
     cover: sendSprintCover,
     stat: {
       value: "1300",

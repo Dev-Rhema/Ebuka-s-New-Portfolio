@@ -23,7 +23,7 @@ function Header() {
           className="h-34.5 w-auto invert md:h-44 md:w-40"
         />
       </a>
-      <nav className="flex gap-16 font-['Geist'] font-medium">
+      <nav className="flex font-['Geist'] font-medium">
         <a
           href="#contact"
           className="flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-46 md:px-18 md:text-16"
@@ -37,15 +37,6 @@ function Header() {
             />
           </svg>
         </a>
-        <button
-          type="button"
-          aria-label="Open menu"
-          className="flex size-32 flex-col items-center justify-center gap-4 bg-black md:size-46 md:gap-7"
-        >
-          <span className="h-[2px] w-20 bg-white md:h-2 md:w-24" />
-          <span className="h-[2px] w-20 bg-white md:h-2 md:w-24" />
-          <span className="h-[2px] w-20 bg-white md:h-2 md:w-24" />
-        </button>
       </nav>
     </header>
   );

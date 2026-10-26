@@ -26,7 +26,7 @@ function Home({ play, showLogo }) {
   useGSAP(
     () => {
       gsap.set(".hero-line", { yPercent: 100, autoAlpha: 0 });
-      gsap.set(".hero-button, .hero-menu-line", {
+      gsap.set(".hero-button", {
         scaleX: 0,
         transformOrigin: "right",
       });
@@ -52,17 +52,13 @@ function Home({ play, showLogo }) {
         ".hero-line",
         container.current,
       );
-      const [chat, menu] = gsap.utils.toArray(
-        ".hero-button",
-        container.current,
-      );
+      const chat = container.current.querySelector(".hero-button");
       const rise = { yPercent: 0, autoAlpha: 1, duration: 1, ease: "heroText" };
       const bar = { scaleX: 1, ease: "logoMove" };
 
       gsap
         .timeline()
         .timeScale(0.85)
-        .to(menu, { ...bar, duration: 1 }, 0)
         .fromTo(
           document.querySelectorAll(".hero-rings"),
           { scale: 0.05, autoAlpha: 1 },
@@ -78,7 +74,6 @@ function Home({ play, showLogo }) {
           { yPercent: 0, duration: 1, stagger: 0.1, ease: "heroText" },
           0.4,
         )
-        .to(".hero-menu-line", { ...bar, duration: 1, stagger: 0.2 }, 0.6)
         .to(chat, { ...bar, duration: 1 }, 1)
         .to(
           ".hero-wordmark",
@@ -134,7 +129,7 @@ function Home({ play, showLogo }) {
           className={`absolute ${showLogo ? "" : "invisible"} top-32.5 left-24 h-34.5 w-auto md:top-35.5 md:left-32 md:h-36.5 xl:top-34.5 xl:left-[5.556vw] xl:h-44 xl:w-40`}
         />
 
-        <nav className="absolute top-32 right-24 z-60 flex gap-16 font-['Geist'] font-medium md:right-32 xl:top-32 xl:right-[5.556vw] xl:gap-16">
+        <nav className="absolute top-32 right-24 z-60 flex font-['Geist'] font-medium md:right-32 xl:top-32 xl:right-[5.556vw]">
           <a
             href="#contact"
             className="hero-button flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-40 md:gap-12.5 md:pr-17.5 md:pl-16 md:text-16 xl:h-46 xl:gap-12 xl:px-18 xl:text-16"
@@ -156,15 +151,6 @@ function Home({ play, showLogo }) {
               </svg>
             </span>
           </a>
-          <button
-            type="button"
-            aria-label="Open menu"
-            className="hero-button flex size-32 flex-col items-center justify-center gap-4 bg-black md:size-40 md:gap-5 xl:size-46 xl:gap-7"
-          >
-            <span className="hero-menu-line h-[2px] w-20 bg-white md:w-24 xl:h-2 xl:w-24" />
-            <span className="hero-menu-line h-[2px] w-20 bg-white md:w-24 xl:h-2 xl:w-24" />
-            <span className="hero-menu-line h-[2px] w-20 bg-white md:w-24 xl:h-2 xl:w-24" />
-          </button>
         </nav>
 
         <div className="absolute top-233.5 left-24 z-60 flex w-392 flex-col text-white md:contents">

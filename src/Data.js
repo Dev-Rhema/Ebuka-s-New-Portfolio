@@ -216,7 +216,7 @@ export const CaseStudyData = [
     testimonial: {
       title: "Ebuka exhibits a great combination of speed and judgment",
       quote:
-        "Ebuka brings data to disagreements and that is one of his characteristics that sets him apart",
+        "Ebuka brings data to disagreements and that is one of his characteristics that sets him apart.",
       name: "Joshua Chibueze",
       role: "Co-Founder/CMO PiggyVest",
       avatar: piggyReviewer,
@@ -243,7 +243,7 @@ export const CaseStudyData = [
     testimonial: {
       title: "Insights from Ebuka to grow the business have been commendable",
       quote:
-        "Our ads performed better due to Ebuka’s insights on the type of ads we used",
+        "Our ads performed better due to Ebuka’s insights on the type of ads we used.",
       name: "Ifedayo Agoro",
       role: "CEO at Dang! Lifestyle",
       avatar: dangReviewer,
@@ -270,7 +270,7 @@ export const CaseStudyData = [
     testimonial: {
       title: "Ebuka helped craft, refine and document our channel strategies",
       quote:
-        "I look forward to my meetings with Ebuka because he shows up prepared, has a clear view of what’s working and what isn’t,",
+        "I look forward to my meetings with Ebuka because he shows up prepared, has a clear view of what’s working and what isn’t.",
       name: "Damisi (Dammy) Busari",
       role: "Founder & CEO of Sendsprint",
       avatar: sendSprintReviewer,

@@ -88,7 +88,7 @@
             <input
               id="player-name"
               name="name"
-              maxlength="20"
+              maxlength="14"
               class="h-32 w-176 border border-[#d8d8d8] bg-white px-12 font-['Geist'] text-14 font-medium tracking-[-0.04em] text-[#404040] outline-none focus:border-black md:h-46 md:w-240 md:text-16"
             />
             <button
@@ -103,6 +103,26 @@
             class="mt-12 font-['Geist-Mono'] text-14 leading-none tracking-[0.1em] text-[#b42318] empty:hidden md:text-16"
           ></p>
         </form>
+        <button
+          type="button"
+          data-open-leaders
+          data-over-leaders
+          hidden
+          class="mx-auto mt-24 block pb-2 font-['Geist-Mono'] text-16 leading-none tracking-[0.1em] text-[#8a8a8a] underline-dashes md:hidden"
+        >
+          View Leaderboard
+        </button>
+      </div>
+
+      <div data-board class="invisible">
+        <div class="absolute top-118 right-80 hidden w-271 text-left md:block">
+          <h2
+            class="font-['DM-Serif'] text-16 leading-none tracking-[-0.02em] text-[#8a8a8a] md:text-21"
+          >
+            Legends Unnamed
+          </h2>
+          <ol data-leaders class="mt-6"></ol>
+        </div>
       </div>
 
       <div data-hud class="invisible">
@@ -119,14 +139,6 @@
             data-best
             class="mt-14 font-['Geist-Mono'] text-14 leading-none tracking-[0.1em] text-[#8a8a8a] md:mt-12 md:text-16"
           ></p>
-        </div>
-        <div class="absolute top-118 right-80 hidden w-271 text-left md:block">
-          <h2
-            class="font-['DM-Serif'] text-16 leading-none tracking-[-0.02em] text-[#8a8a8a] md:text-21"
-          >
-            Legends Unnamed
-          </h2>
-          <ol data-leaders class="mt-6"></ol>
         </div>
         <button
           type="button"

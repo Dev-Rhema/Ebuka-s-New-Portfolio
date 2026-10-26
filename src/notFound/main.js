@@ -23,8 +23,8 @@ refreshLeaders();
 
 const sheet = document.querySelector("[data-sheet]");
 document
-  .querySelector("[data-open-leaders]")
-  .addEventListener("click", () => sheet.showModal());
+  .querySelectorAll("[data-open-leaders]")
+  .forEach((button) => button.addEventListener("click", () => sheet.showModal()));
 sheet.addEventListener("click", (event) => {
   if (event.target === sheet || event.target.closest("[data-close]")) {
     sheet.close();
@@ -63,15 +63,21 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
+// The leaderboard appears with the first run and stays up on the fail screen.
+const boardEl = document.querySelector("[data-board]");
+const overLeadersButton = document.querySelector("[data-over-leaders]");
+
 startGame(document.getElementById("ride"), {
   onStart() {
     finalScore = null;
     form.hidden = true;
+    boardEl.classList.remove("invisible");
   },
   onEnd(score) {
     finalScore = score;
     saveError.textContent = "";
     form.hidden = false;
+    overLeadersButton.hidden = false;
     syncSave();
   },
 });

@@ -20,6 +20,7 @@ pub struct Response<S: AsyncRead + Unpin> {
 pub enum Status {
     Ok,
     Created,
+    NoContent,
     BadRequest,
     NotFound,
     MethodNotAllowed,
@@ -31,6 +32,7 @@ impl Display for Status {
         let text = match self {
             Status::Ok => "200 OK",
             Status::Created => "201 Created",
+            Status::NoContent => "204 No Content",
             Status::BadRequest => "400 Bad Request",
             Status::NotFound => "404 Not Found",
             Status::MethodNotAllowed => "405 Method Not Allowed",
@@ -60,9 +62,29 @@ impl Reply {
         Self::from_bytes(status, "text/html; charset=utf-8", data.to_string().into_bytes())
     }
 
+    pub fn empty(status: Status) -> Self {
+        let headers = hashmap! {
+            "Content-Length".to_string() => "0".to_string(),
+            "Connection".to_string() => "close".to_string(),
+        };
+
+        Self {
+            status,
+            headers,
+            data: Cursor::new(Vec::new()),
+        }
+    }
+
     pub fn from_json(status: Status, value: &impl serde::Serialize) -> Self {
         match serde_json::to_vec(value) {
-            Ok(bytes) => Self::from_bytes(status, "application/json", bytes),
+            Ok(bytes) => {
+                let mut reply = Self::from_bytes(status, "application/json", bytes);
+                // Scores change constantly; never let Vercel's CDN or the browser cache them.
+                reply
+                    .headers
+                    .insert("Cache-Control".to_string(), "no-store".to_string());
+                reply
+            }
             Err(_) => Self::from_bytes(
                 Status::InternalServerError,
                 "application/json",

@@ -8,7 +8,8 @@ const SPEED = 0.6;
 
 const nameColumn =
   "flex h-[119px] flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
-const subText = "sub pb-[4px] whitespace-nowrap font-['Geist'] text-lg/none font-medium text-[#555]";
+const subText =
+  "sub pb-[4px] whitespace-nowrap font-['Geist'] text-lg/none font-medium text-[#555]";
 
 function MobileHero({ className = "", rings = false }) {
   return (
@@ -136,7 +137,10 @@ function Loader({ onLogoMove, onComplete }) {
           ".frame",
           {
             scale: grow,
-            y: photo.top + photo.height / 2 - (full.bottom - (full.height * grow) / 2),
+            y:
+              photo.top +
+              photo.height / 2 -
+              (full.bottom - (full.height * grow) / 2),
             transformOrigin: "50% 100%",
             duration: 0.77,
             ease: "jump",

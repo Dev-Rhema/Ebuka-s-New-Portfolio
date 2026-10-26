@@ -35,8 +35,3 @@ export async function submitScore(name, score) {
   }
   throw new Error(message);
 }
-
-/** The API's UTC timestamp as a Date. */
-export function playedAt(createdAt) {
-  return new Date(createdAt.replace(" ", "T") + "Z");
-}

@@ -1,5 +1,6 @@
 import grassUrl from "../assets/Knight/Grass.svg";
 import knightUrl from "../assets/Knight/knight-game.webp";
+import knightIdleAvif from "../assets/Knight/knight-idle.avif";
 import knightIdleUrl from "../assets/Knight/knight-idle.webp";
 import bigRockUrl from "../assets/gameImages/bigRock.webp";
 import smallRockUrl from "../assets/gameImages/smallRock.webp";
@@ -116,12 +117,15 @@ export async function startGame(root, { onStart, onEnd } = {}) {
   const factEl = root.querySelector("[data-fact]");
   const expiresEl = root.querySelector("[data-expires]");
   const sheetEl = root.querySelector("[data-sheet]");
-  hintEl.textContent = TOUCH ? "Tap anywhere to begin" : `${PRESS} to test yourself`;
+  hintEl.textContent = TOUCH
+    ? "Tap anywhere to begin"
+    : `${PRESS} to test yourself`;
 
   const [knightImage, idleImage, grassImage, ...rockImages] = await Promise.all(
     [
       loadImage(knightUrl),
-      loadImage(knightIdleUrl),
+      // AVIF is a third smaller; browsers without it fall back to the WebP.
+      loadImage(knightIdleAvif).catch(() => loadImage(knightIdleUrl)),
       loadImage(grassUrl),
       ...ROCKS.map((rock) => loadImage(rock.url)),
     ],

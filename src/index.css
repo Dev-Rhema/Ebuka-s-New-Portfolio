@@ -96,8 +96,7 @@
 
 @font-face {
   font-family: "DM-Serif";
-  src: url("./assets/fonts/loaderFonts/DMSerifDisplay-Regular.ttf")
-    format("truetype");
+  src: url("./assets/fonts/DMSerifDisplay-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -105,7 +104,7 @@
 
 @font-face {
   font-family: "Geist";
-  src: url("./assets/fonts/loaderFonts/Geist-Medium.ttf") format("truetype");
+  src: url("./assets/fonts/Geist-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -130,16 +129,16 @@
 @utility bg-fade-white {
   background-image: linear-gradient(
     to bottom,
-    rgb(255 255 255 / 0.000) 0%,
+    rgb(255 255 255 / 0) 0%,
     rgb(255 255 255 / 0.028) 10%,
     rgb(255 255 255 / 0.104) 20%,
     rgb(255 255 255 / 0.216) 30%,
     rgb(255 255 255 / 0.352) 40%,
-    rgb(255 255 255 / 0.500) 50%,
+    rgb(255 255 255 / 0.5) 50%,
     rgb(255 255 255 / 0.648) 60%,
     rgb(255 255 255 / 0.784) 70%,
     rgb(255 255 255 / 0.896) 80%,
     rgb(255 255 255 / 0.972) 90%,
-    rgb(255 255 255 / 1.000) 100%
+    rgb(255 255 255 / 1) 100%
   );
 }

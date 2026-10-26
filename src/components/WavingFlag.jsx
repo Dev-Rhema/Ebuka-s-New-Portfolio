@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
 import { flagStaff as staff } from "../Data";
+import { whenNear } from "../whenNear";
 
 const STAFF_W = 94;
 const STAFF_H = 48;
@@ -57,105 +57,124 @@ export const WavingFlag = ({
   useEffect(() => {
     const canvas = canvasRef.current;
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
+    // three.js is a large download, so it loads only when the flag is about to show.
+    let stop;
+    let cancelled = false;
+    const cancelWait = whenNear(canvas, () => {
+      import("./three").then((THREE) => {
+        if (!cancelled) stop = start(THREE);
+      });
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const scene = new THREE.Scene();
 
-    const distance = (SIZE_W * 4) / 3;
-    const camera = new THREE.PerspectiveCamera(
-      THREE.MathUtils.radToDeg(
-        2 * Math.atan((SIZE_H * (1 + 2 * pad)) / 2 / distance),
-      ),
-      ASPECT,
-      distance / 10,
-      distance * 10,
-    );
-    camera.position.z = distance;
+    const start = (THREE) => {
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const scene = new THREE.Scene();
 
-    const light = new THREE.DirectionalLight();
-    light.position.set(10, 50, 100);
-    const facing = light.position.clone().normalize().z;
-    light.intensity = ((1 - AMBIENT) / facing) * Math.PI;
-    scene.add(light, new THREE.AmbientLight(0xffffff, AMBIENT * Math.PI));
+      const distance = (SIZE_W * 4) / 3;
+      const camera = new THREE.PerspectiveCamera(
+        THREE.MathUtils.radToDeg(
+          2 * Math.atan((SIZE_H * (1 + 2 * pad)) / 2 / distance),
+        ),
+        ASPECT,
+        distance / 10,
+        distance * 10,
+      );
+      camera.position.z = distance;
 
-    const geometry = new THREE.PlaneGeometry(SIZE_W, SIZE_H, SEG_W, SEG_H);
-    const position = geometry.attributes.position;
-    const rest = position.array.slice();
-    const material = new THREE.MeshLambertMaterial({
-      transparent: true,
-      side: THREE.DoubleSide,
-    });
-    const flag = new THREE.Mesh(geometry, material);
-    flag.visible = false;
-    scene.add(flag);
+      const light = new THREE.DirectionalLight();
+      light.position.set(10, 50, 100);
+      const facing = light.position.clone().normalize().z;
+      light.intensity = ((1 - AMBIENT) / facing) * Math.PI;
+      scene.add(light, new THREE.AmbientLight(0xffffff, AMBIENT * Math.PI));
 
-    let disposed = false;
-    let texture = null;
-    const img = new Image();
-    img.onload = () => {
-      if (disposed) return;
-      texture = new THREE.CanvasTexture(paintPennant(img));
-      texture.colorSpace = THREE.SRGBColorSpace;
-      material.map = texture;
-      material.needsUpdate = true;
-      flag.visible = true;
-      renderer.render(scene, camera);
+      const geometry = new THREE.PlaneGeometry(SIZE_W, SIZE_H, SEG_W, SEG_H);
+      const position = geometry.attributes.position;
+      const rest = position.array.slice();
+      const material = new THREE.MeshLambertMaterial({
+        transparent: true,
+        side: THREE.DoubleSide,
+      });
+      const flag = new THREE.Mesh(geometry, material);
+      flag.visible = false;
+      scene.add(flag);
+
+      let disposed = false;
+      let texture = null;
+      const img = new Image();
+      img.onload = () => {
+        if (disposed) return;
+        texture = new THREE.CanvasTexture(paintPennant(img));
+        texture.colorSpace = THREE.SRGBColorSpace;
+        material.map = texture;
+        material.needsUpdate = true;
+        flag.visible = true;
+        renderer.render(scene, camera);
+      };
+      img.src = logo;
+
+      const wave = (time) => {
+        const t = (time / 1000) * speed * 20;
+        for (let i = 0; i < position.count; i++) {
+          const x = rest[i * 3] + SIZE_W / 2;
+          const y = SIZE_H / 2 - rest[i * 3 + 1];
+          const z =
+            (Math.sin(horizontal * x + vertical * y - t) * swing * x) / 4;
+          position.setY(i, rest[i * 3 + 1] + z * TILT);
+          position.setZ(i, z);
+        }
+        position.needsUpdate = true;
+        geometry.computeVertexNormals();
+      };
+
+      const resize = () => {
+        const w = Math.max(canvas.clientWidth, 1);
+        const h = Math.max(canvas.clientHeight, 1);
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      };
+      resize();
+      const resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(canvas);
+
+      // The loop runs only while the flag is on screen.
+      let frameId;
+      const intersectionObserver = new IntersectionObserver(([entry]) => {
+        cancelAnimationFrame(frameId);
+        if (entry.isIntersecting) frameId = requestAnimationFrame(render);
+      });
+      intersectionObserver.observe(canvas);
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
+      const render = (time) => {
+        frameId = requestAnimationFrame(render);
+        if (!reducedMotion.matches) wave(time);
+        renderer.render(scene, camera);
+      };
+
+      return () => {
+        disposed = true;
+        cancelAnimationFrame(frameId);
+        resizeObserver.disconnect();
+        intersectionObserver.disconnect();
+        geometry.dispose();
+        material.dispose();
+        texture?.dispose();
+        renderer.dispose();
+      };
     };
-    img.src = logo;
-
-    const wave = (time) => {
-      const t = (time / 1000) * speed * 20;
-      for (let i = 0; i < position.count; i++) {
-        const x = rest[i * 3] + SIZE_W / 2;
-        const y = SIZE_H / 2 - rest[i * 3 + 1];
-        const z = (Math.sin(horizontal * x + vertical * y - t) * swing * x) / 4;
-        position.setY(i, rest[i * 3 + 1] + z * TILT);
-        position.setZ(i, z);
-      }
-      position.needsUpdate = true;
-      geometry.computeVertexNormals();
-    };
-
-    const resize = () => {
-      const w = Math.max(canvas.clientWidth, 1);
-      const h = Math.max(canvas.clientHeight, 1);
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    };
-    resize();
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(canvas);
-
-    let visible = true;
-    const intersectionObserver = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-    });
-    intersectionObserver.observe(canvas);
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    let frameId;
-    const render = (time) => {
-      frameId = requestAnimationFrame(render);
-      if (!visible) return;
-      if (!reducedMotion.matches) wave(time);
-      renderer.render(scene, camera);
-    };
-    frameId = requestAnimationFrame(render);
 
     return () => {
-      disposed = true;
-      cancelAnimationFrame(frameId);
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
-      geometry.dispose();
-      material.dispose();
-      texture?.dispose();
-      renderer.dispose();
+      cancelled = true;
+      cancelWait();
+      stop?.();
     };
   }, [logo, horizontal, vertical, swing, speed, pad]);
 

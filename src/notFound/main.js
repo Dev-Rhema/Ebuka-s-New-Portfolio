@@ -24,7 +24,9 @@ refreshLeaders();
 const sheet = document.querySelector("[data-sheet]");
 document
   .querySelectorAll("[data-open-leaders]")
-  .forEach((button) => button.addEventListener("click", () => sheet.showModal()));
+  .forEach((button) =>
+    button.addEventListener("click", () => sheet.showModal()),
+  );
 sheet.addEventListener("click", (event) => {
   if (event.target === sheet || event.target.closest("[data-close]")) {
     sheet.close();

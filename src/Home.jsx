@@ -212,7 +212,9 @@ function Home({ play, showLogo }) {
             </div>
           </div>
           <div className="relative aspect-216/278 overflow-hidden">
+            {/* Lazy, so phones (where the card is hidden) never download it. */}
             <img
+              loading="lazy"
               src={instagramThumb}
               alt="Latest Instagram post"
               className="h-full w-full object-cover"

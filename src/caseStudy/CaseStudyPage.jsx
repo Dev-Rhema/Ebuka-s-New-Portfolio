@@ -30,7 +30,11 @@ function Header() {
         >
           Let’s Chat
           <svg viewBox="0 0 12 12" className="size-10 md:size-11" fill="none">
-            <path d="M1 11 11 1M3 1h8v8" stroke="currentColor" strokeWidth="1.4" />
+            <path
+              d="M1 11 11 1M3 1h8v8"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
           </svg>
         </a>
         <button
@@ -94,25 +98,27 @@ function Questions({ questions }) {
 
   useGSAP(
     () => {
-      gsap.utils.toArray("[data-question]", container.current).forEach(
-        (block, index) => {
-          ScrollTrigger.create({
-            trigger: block,
-            start: "top center",
-            end: "bottom center",
-            onToggle: (self) => self.isActive && setActive(index),
-          });
-        },
-      );
+      const blocks = gsap.utils.toArray("[data-question]", container.current);
+      blocks.forEach((block, index) => {
+        ScrollTrigger.create({
+          trigger: block,
+          start: "top center",
+          end: "bottom center",
+          onToggle: (self) => self.isActive && setActive(index),
+        });
+      });
+      // Above the first question nothing is active, so point back at it.
+      ScrollTrigger.create({
+        trigger: blocks[0],
+        start: "top center",
+        onLeaveBack: () => setActive(0),
+      });
     },
     { scope: container },
   );
 
   return (
-    <section
-      ref={container}
-      className="mt-24 md:mt-26 md:flex md:items-start"
-    >
+    <section ref={container} className="mt-24 md:mt-26 md:flex md:items-start">
       <nav
         aria-label="Questions"
         className="hidden md:sticky md:top-32 md:block md:w-[26%] md:shrink-0 md:pr-20 xl:w-400 xl:pr-0"
@@ -237,11 +243,15 @@ const revealLines = (tl, block, at = 0) => {
 
 function CaseStudyPage({ study, next }) {
   const container = useRef(null);
-  // Lines are split by measured width, so wait for the web fonts first.
+  // Lines are split by measured width, so wait for the font first. Only the page's
+  // Geist text is split here; the footer's serif font can finish loading later.
   const [fontsReady, setFontsReady] = useState(false);
 
   useEffect(() => {
-    document.fonts.ready.then(() => setFontsReady(true));
+    document.fonts
+      .load("500 1em Geist")
+      .catch(() => {})
+      .then(() => setFontsReady(true));
   }, []);
 
   useGSAP(
@@ -307,6 +317,7 @@ function CaseStudyPage({ study, next }) {
         <img
           src={study.banner}
           alt={`${study.name} banner`}
+          fetchPriority="high"
           className="reveal-media mt-16 h-200 w-full object-cover md:mt-28 md:h-auto md:aspect-16/5"
         />
         <Questions questions={study.questions} />

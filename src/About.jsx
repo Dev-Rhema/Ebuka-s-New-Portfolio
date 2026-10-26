@@ -276,8 +276,7 @@ function About({ play }) {
           7 years
           <Plus className="inline-block align-[0.08em]" /> of experience
         </span>{" "}
-        <span className="block md:hidden" />
-        I have helped brands{" "}
+        <span className="block md:hidden" />I have helped brands{" "}
         <span
           role="img"
           aria-label="piggyvest, SendSprint and Lenco"
@@ -304,8 +303,7 @@ function About({ play }) {
           <TargetGlyph />
         </ShadowIcon>{" "}
         that <span className="block md:hidden" />
-        significantly impacts{" "}
-        <span className="text-black">revenue</span>
+        significantly impacts <span className="text-black">revenue</span>
       </p>
 
       <div className="order-last -mx-24 h-500 mask-[linear-gradient(transparent,black_18%,black_82%,transparent)] md:absolute md:top-301 md:left-469 md:mx-0 md:h-view md:w-581">

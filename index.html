@@ -5,6 +5,28 @@
     <link rel="icon" type="image/svg+xml" href="/Favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ebuka's Portfolio</title>
+    <!-- The loader waits for these, so fetch them alongside the scripts instead of after. -->
+    <link
+      rel="preload"
+      href="/src/assets/fonts/DMSerifDisplay-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/src/assets/fonts/Geist-Medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/src/assets/headerImgNoBg.webp"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+    />
 
     <meta property="og:title" content="Ebuka's Portfolio" />
     <meta property="og:type" content="website" />

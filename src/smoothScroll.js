@@ -5,7 +5,7 @@ import { gsap, ScrollTrigger } from "./animation";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 // Null when the visitor prefers reduced motion; the page then scrolls natively.
-export const lenis = reduceMotion.matches
+const lenis = reduceMotion.matches
   ? null
   : new Lenis({
       lerp: 0.08,

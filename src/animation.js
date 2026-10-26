@@ -75,7 +75,11 @@ const revealButton = (tl, button, at) =>
     .fromTo(
       button,
       { clipPath: "inset(0% 100% 0% 0%)" },
-      { clipPath: "inset(0% 0% 0% 0%)", ease: "logoMove", clearProps: "clipPath" },
+      {
+        clipPath: "inset(0% 0% 0% 0%)",
+        ease: "logoMove",
+        clearProps: "clipPath",
+      },
       at,
     )
     .from(

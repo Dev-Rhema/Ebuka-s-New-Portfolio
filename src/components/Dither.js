@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const CONTRAST = 0.9;
 const DOT = 1;
@@ -103,7 +103,17 @@ export function ditherProgram(gl) {
   };
   texture(1, gl.NEAREST);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 16, 16, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, bayerMatrix());
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.LUMINANCE,
+    16,
+    16,
+    0,
+    gl.LUMINANCE,
+    gl.UNSIGNED_BYTE,
+    bayerMatrix(),
+  );
   texture(0, gl.LINEAR);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
   gl.uniform1i(uniform("source"), 0);
@@ -115,139 +125,246 @@ export function ditherProgram(gl) {
   return uniform;
 }
 
+// One WebGL context dithers every image on the page. Each image draws into its own
+// 2D canvas, so the page never holds more than one context however many images it has.
+let shared;
+const sharedRenderer = () => {
+  if (shared !== undefined) return shared;
+  const canvas = document.createElement("canvas");
+  const gl = canvas.getContext("webgl", { premultipliedAlpha: true });
+  const uniform = gl && ditherProgram(gl);
+  if (!uniform) return (shared = null);
+  shared = {
+    gl,
+    canvas,
+    cellOffset: uniform("cellOffset"),
+    cellScale: uniform("cellScale"),
+  };
+  return shared;
+};
+
+const createTexture = (gl) => {
+  const texture = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return texture;
+};
+
+// The <img> already downloaded the file, so read it from the HTTP cache rather than the network.
+const decodeImage = (src, options) =>
+  fetch(src, { cache: "force-cache" })
+    .then((response) => response.blob())
+    .then((blob) => createImageBitmap(blob, options));
+
+// Sprite sheets are large, so each one is decoded and uploaded once and shared by
+// every image showing it. The upload runs in strips, one per frame, to avoid a long stall.
+const sprites = new Map();
+
+const acquireSprite = (src) => {
+  let entry = sprites.get(src);
+  if (!entry) {
+    const { gl } = shared;
+    entry = { texture: createTexture(gl), users: 0, deleted: false };
+    entry.ready = decodeImage(src, { premultiplyAlpha: "none" }).then(
+      (bitmap) =>
+        new Promise((resolve, reject) => {
+          const { width, height } = bitmap;
+          const strip = Math.ceil(height / SPRITE_STRIPS);
+          gl.bindTexture(gl.TEXTURE_2D, entry.texture);
+          gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            width,
+            height,
+            0,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            null,
+          );
+          const next = (y) => {
+            if (entry.deleted) return bitmap.close();
+            const h = Math.min(strip, height - y);
+            createImageBitmap(bitmap, 0, y, width, h, {
+              premultiplyAlpha: "none",
+            }).then((part) => {
+              if (!entry.deleted) {
+                gl.bindTexture(gl.TEXTURE_2D, entry.texture);
+                gl.texSubImage2D(
+                  gl.TEXTURE_2D,
+                  0,
+                  0,
+                  y,
+                  gl.RGBA,
+                  gl.UNSIGNED_BYTE,
+                  part,
+                );
+              }
+              part.close();
+              if (y + h < height)
+                return requestAnimationFrame(() => next(y + h));
+              bitmap.close();
+              resolve();
+            }, reject);
+          };
+          next(0);
+        }),
+    );
+    sprites.set(src, entry);
+  }
+  entry.users++;
+  return entry;
+};
+
+const releaseSprite = (src) => {
+  const entry = sprites.get(src);
+  if (--entry.users > 0) return;
+  entry.deleted = true;
+  shared.gl.deleteTexture(entry.texture);
+  sprites.delete(src);
+};
+
 export function useDither(imageRef, sprite) {
   const canvasRef = useRef(null);
-  const [active, setActive] = useState(true);
+  // Without WebGL the plain image shows instead.
+  const active = sharedRenderer() !== null;
 
   useEffect(() => {
     const image = imageRef.current;
     const canvas = canvasRef.current;
-    const gl = canvas.getContext("webgl", { premultipliedAlpha: true });
-    const uniform = gl && ditherProgram(gl);
-    if (!uniform) {
-      setActive(false);
-      return;
-    }
+    const renderer = sharedRenderer();
+    if (!renderer) return;
+    const { gl } = renderer;
+    const ctx = canvas.getContext("2d");
 
-    const raster = document.createElement("canvas");
     let disposed = false;
-    let decoding = false;
-    let bitmap = null;
-    let uploaded = false;
-    let uploading = false;
-    const uploadSprite = () => {
-      uploading = true;
-      const { width, height } = bitmap;
-      const strip = Math.ceil(height / SPRITE_STRIPS);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-      const next = (y) => {
-        const h = Math.min(strip, height - y);
-        createImageBitmap(bitmap, 0, y, width, h, { premultiplyAlpha: "none" }).then(
-          (part) => {
-            if (disposed) return part.close();
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, y, gl.RGBA, gl.UNSIGNED_BYTE, part);
-            part.close();
-            if (y + h < height) {
-              requestAnimationFrame(() => next(y + h));
-            } else {
-              uploaded = true;
-              draw();
-            }
-          },
-          () => {},
-        );
-      };
-      next(0);
-    };
-    const upload = () => {
-      if (!bitmap || !canvas.width) return;
-      if (sprite) {
-        if (!uploading) uploadSprite();
-        return;
+    let source = null;
+    let texture = null;
+    let frame = 0;
+
+    // Dithers the current frame in the shared context, then copies it into this canvas.
+    const draw = () => {
+      if (!texture || !canvas.width) return;
+      const { width: w, height: h } = canvas;
+      const target = renderer.canvas;
+      if (target.width < w || target.height < h) {
+        target.width = Math.max(target.width, w);
+        target.height = Math.max(target.height, h);
       }
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      if (sprite) {
+        const [cw, ch] = sprite.cell;
+        const col = frame % sprite.cols;
+        const row = Math.floor(frame / sprite.cols);
+        const { naturalWidth: sw, naturalHeight: sh } = image;
+        gl.uniform2f(
+          renderer.cellOffset,
+          (col * (cw + sprite.gap)) / sw,
+          (row * (ch + sprite.gap)) / sh,
+        );
+        gl.uniform2f(renderer.cellScale, cw / sw, ch / sh);
+      } else {
+        gl.uniform2f(renderer.cellOffset, 0, 0);
+        gl.uniform2f(renderer.cellScale, 1, 1);
+      }
+      gl.viewport(0, target.height - h, w, h);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(target, 0, 0, w, h, 0, 0, w, h);
+    };
+
+    // Still images are resampled to the canvas size before dithering, so they upload on every resize.
+    const raster = document.createElement("canvas");
+    const uploadStill = () => {
+      if (!source || !canvas.width) return;
       raster.width = canvas.width;
       raster.height = canvas.height;
-      raster.getContext("2d", { willReadFrequently: true }).drawImage(bitmap, 0, 0, raster.width, raster.height);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, raster);
-      uploaded = true;
+      raster
+        .getContext("2d")
+        .drawImage(source, 0, 0, raster.width, raster.height);
+      texture ??= createTexture(gl);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        raster,
+      );
     };
-    const decode = () => {
-      if (decoding || !image.complete || !image.naturalWidth) return;
-      decoding = true;
-      fetch(image.currentSrc)
-        .then((response) => response.blob())
-        .then((blob) =>
-          createImageBitmap(blob, sprite ? { premultiplyAlpha: "none" } : {}),
-        )
-        .then(
-          (decoded) => {
-            if (disposed) return decoded.close();
-            bitmap = decoded;
-            upload();
+
+    let spriteSrc = null;
+    const load = () => {
+      if (spriteSrc || source || !image.complete || !image.naturalWidth) return;
+      if (sprite) {
+        spriteSrc = image.currentSrc;
+        const entry = acquireSprite(spriteSrc);
+        entry.ready.then(
+          () => {
+            if (disposed) return;
+            texture = entry.texture;
             draw();
           },
           () => {},
         );
-    };
-
-    let frame = 0;
-    const draw = () => {
-      if (!uploaded) return;
-      if (sprite) {
-        const [w, h] = sprite.cell;
-        const col = frame % sprite.cols;
-        const row = Math.floor(frame / sprite.cols);
-        const { naturalWidth: sw, naturalHeight: sh } = image;
-        gl.uniform2f(uniform("cellOffset"), (col * (w + sprite.gap)) / sw, (row * (h + sprite.gap)) / sh);
-        gl.uniform2f(uniform("cellScale"), w / sw, h / sh);
+        return;
       }
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      decodeImage(image.currentSrc).then(
+        (bitmap) => {
+          if (disposed) return bitmap.close();
+          source = bitmap;
+          uploadStill();
+          draw();
+        },
+        () => {},
+      );
     };
 
     const resize = () => {
       const scale = 1440 / document.documentElement.clientWidth;
       canvas.width = Math.max(1, Math.round(canvas.clientWidth * scale));
       canvas.height = Math.max(1, Math.round(canvas.clientHeight * scale));
-      if (!sprite) uploaded = false;
-      upload();
+      if (!sprite) uploadStill();
       draw();
     };
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    image.addEventListener("load", decode);
-    decode();
+    image.addEventListener("load", load);
+    load();
 
-    let frameId;
-    let visible = false;
-    const intersection = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-    });
-    if (sprite && !reducedMotion()) {
-      intersection.observe(canvas);
-      let start;
-      const tick = (time) => {
-        frameId = requestAnimationFrame(tick);
-        start ??= time;
-        if (!visible) return;
-        const next =
-          Math.floor(((time - start) / 1000) * sprite.fps) % sprite.count;
-        if (next === frame) return;
-        frame = next;
-        draw();
-      };
+    // Sprites animate only while on screen; the loop stops entirely when they scroll away.
+    let frameId = 0;
+    let start;
+    const tick = (time) => {
       frameId = requestAnimationFrame(tick);
-    }
+      start ??= time;
+      const next =
+        Math.floor(((time - start) / 1000) * sprite.fps) % sprite.count;
+      if (next === frame) return;
+      frame = next;
+      draw();
+    };
+    const intersection = new IntersectionObserver(([entry]) => {
+      cancelAnimationFrame(frameId);
+      if (entry.isIntersecting) frameId = requestAnimationFrame(tick);
+    });
+    if (sprite && !reducedMotion()) intersection.observe(canvas);
 
     return () => {
       disposed = true;
       cancelAnimationFrame(frameId);
       intersection.disconnect();
       resizeObserver.disconnect();
-      image.removeEventListener("load", decode);
-      bitmap?.close();
+      image.removeEventListener("load", load);
+      source?.close();
+      if (spriteSrc) releaseSprite(spriteSrc);
+      else if (texture) gl.deleteTexture(texture);
     };
   }, [imageRef, sprite]);
 

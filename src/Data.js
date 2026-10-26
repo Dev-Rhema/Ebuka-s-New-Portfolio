@@ -41,10 +41,11 @@ import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg"
 import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
 import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
 import knightSprite from "./assets/Knight/knight-sprite.webp";
+import knightSpriteAvif from "./assets/Knight/knight-sprite.avif";
 import grass from "./assets/Knight/Grass.webp";
-import piggyBanner from "./assets/CaseImgs/CasePageBanners/piggyBanner.svg";
-import dangBanner from "./assets/CaseImgs/CasePageBanners/dangBanner.svg";
-import sendSprintBanner from "./assets/CaseImgs/CasePageBanners/sendSprintBanner.svg";
+import piggyBanner from "./assets/CaseImgs/CasePageBanners/piggyBanner.webp";
+import dangBanner from "./assets/CaseImgs/CasePageBanners/dangBanner.webp";
+import sendSprintBanner from "./assets/CaseImgs/CasePageBanners/sendSprintBanner.webp";
 import videoThumb from "./assets/CaseImgs/videoThumb.jpg";
 
 const aboutBrands = [aboutBrand1, aboutBrand2, aboutBrand3];
@@ -62,6 +63,7 @@ export {
   skillCard,
   skillDome,
   knightSprite,
+  knightSpriteAvif,
   grass,
 };
 
@@ -156,13 +158,34 @@ const answerPlaceholder =
   "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.";
 
 const piggyvestQuestions = [
-  ["Paid Acquisitions Before Me", "What did paid acquisition look like before you came in?"],
-  ["Need for Different Strategies on Different Platforms", "Why does a savings app need different strategies for iOS and Android?"],
-  ["Decision Making on Running Channels", "How did you decide which channels to run and which to leave alone?"],
-  ["Spotting Winning Ads", "What tells you an ad is a winner, and what do you do once you find one?"],
-  ["Keeping Stakeholders in the Loop", "How did you report to leadership so they understood performance without you in the room?"],
-  ["Ensuring the Business Understood the Caveats", "How do you keep trust when the business wants to double spend and you know efficiency will drop?"],
-  ["Lessons Learnt from Piggyvest", "What did Piggyvest teach you that you now apply to every client?"],
+  [
+    "Paid Acquisitions Before Me",
+    "What did paid acquisition look like before you came in?",
+  ],
+  [
+    "Need for Different Strategies on Different Platforms",
+    "Why does a savings app need different strategies for iOS and Android?",
+  ],
+  [
+    "Decision Making on Running Channels",
+    "How did you decide which channels to run and which to leave alone?",
+  ],
+  [
+    "Spotting Winning Ads",
+    "What tells you an ad is a winner, and what do you do once you find one?",
+  ],
+  [
+    "Keeping Stakeholders in the Loop",
+    "How did you report to leadership so they understood performance without you in the room?",
+  ],
+  [
+    "Ensuring the Business Understood the Caveats",
+    "How do you keep trust when the business wants to double spend and you know efficiency will drop?",
+  ],
+  [
+    "Lessons Learnt from Piggyvest",
+    "What did Piggyvest teach you that you now apply to every client?",
+  ],
 ].map(([label, question]) => ({
   label,
   question,

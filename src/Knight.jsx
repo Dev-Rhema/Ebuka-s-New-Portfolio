@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { KnightFigure, knightSprite } from "./Data";
+import { KnightFigure, knightSprite, knightSpriteAvif } from "./Data";
 import { useDither } from "./components/Dither";
 
 const { view, sprite } = KnightFigure;
@@ -19,17 +19,21 @@ function Knight({ className = "", style }) {
         ref={canvasRef}
         className={`absolute inset-0 size-full ${active ? "" : "hidden"}`}
       />
-      <img
-        ref={imageRef}
-        loading="lazy"
-        src={knightSprite}
-        alt=""
-        className={`absolute top-0 left-0 max-w-none ${active ? "opacity-0" : ""}`}
-        style={{
-          width: `${((sprite.cols * (cellW + sprite.gap)) / cellW) * 100}%`,
-          height: `${((sprite.rows * (cellH + sprite.gap)) / cellH) * 100}%`,
-        }}
-      />
+      {/* AVIF is half the size of the WebP; older browsers fall back to the WebP. */}
+      <picture>
+        <source srcSet={knightSpriteAvif} type="image/avif" />
+        <img
+          ref={imageRef}
+          loading="lazy"
+          src={knightSprite}
+          alt=""
+          className={`absolute top-0 left-0 max-w-none ${active ? "opacity-0" : ""}`}
+          style={{
+            width: `${((sprite.cols * (cellW + sprite.gap)) / cellW) * 100}%`,
+            height: `${((sprite.rows * (cellH + sprite.gap)) / cellH) * 100}%`,
+          }}
+        />
+      </picture>
     </div>
   );
 }

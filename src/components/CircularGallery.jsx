@@ -31,7 +31,6 @@ function CircularGallery({
     let dragging = false;
     let pointerX = 0;
     let pointerTime = 0;
-    let visible = false;
     let previous = performance.now();
     let frame;
 
@@ -57,7 +56,7 @@ function CircularGallery({
       frame = requestAnimationFrame(tick);
       const delta = Math.min((now - previous) / 1000, 0.05);
       previous = now;
-      if (!visible || dragging) return;
+      if (dragging) return;
       const cruise = reducedMotion.matches ? 0 : speed * itemWidth;
       velocity += (cruise - velocity) * (1 - Math.exp(-delta * 2.5));
       offset += velocity * delta;
@@ -95,8 +94,12 @@ function CircularGallery({
       place();
     });
     resizeObserver.observe(root);
+    // The loop runs only while the gallery is on screen.
     const intersectionObserver = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
+      cancelAnimationFrame(frame);
+      if (!entry.isIntersecting) return;
+      previous = performance.now();
+      frame = requestAnimationFrame(tick);
     });
     intersectionObserver.observe(root);
 
@@ -104,7 +107,6 @@ function CircularGallery({
     root.addEventListener("pointermove", onMove);
     root.addEventListener("pointerup", onUp);
     root.addEventListener("pointercancel", onUp);
-    frame = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(frame);

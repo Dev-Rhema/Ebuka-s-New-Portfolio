@@ -1,4 +1,4 @@
-//! Shared by the local dev server (`src/main.rs`) and the Vercel function (`api/scores.rs`).
+//! The database code and leaderboard rules used by the HTTP server in `src/main.rs`.
 
 pub mod db;
 pub mod scores;

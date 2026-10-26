@@ -2,32 +2,23 @@
 name = "server"
 version = "0.1.0"
 edition = "2024"
-# `cargo run` starts the local dev server rather than the Vercel function.
-default-run = "server"
-
-# This folder is deployed as its own Vercel project (Root Directory: server).
-# Vercel builds each `api/*.rs` file listed as a [[bin]] into one function,
-# served at the matching path, so `api/scores.rs` answers `/api/scores`.
+# This folder is deployed as its own Vercel project (Root Directory: server) with the
+# Rust preset. Vercel runs `src/main.rs` as a standalone HTTP server, passing the port
+# in the PORT environment variable. Don't add a `vercel_runtime` dependency: Vercel
+# switches to a different mode when it sees one, and this server would stop working.
 #
 # The `local` feature adds SQLite-file support for local development.
 [features]
 default = ["local"]
 local = ["libsql/core"]
 
-# Local development server (the hand-rolled HTTP server).
 [[bin]]
 name = "server"
 path = "src/main.rs"
 required-features = ["local"]
 
-# Vercel Function for GET/POST /api/scores.
-[[bin]]
-name = "scores"
-path = "api/scores.rs"
-
 [dependencies]
 anyhow = "1.0.104"
-http-body-util = "0.1"
 libsql = { version = "0.10.0", default-features = false, features = ["remote", "tls"] }
 maplit = "1.0.2"
 serde = { version = "1.0.229", features = ["derive"] }
@@ -35,7 +26,6 @@ serde_json = "1.0.154"
 tokio = { version = "1.54.1", features = ["full"] }
 tracing = "0.1.44"
 tracing-subscriber = "0.3.23"
-vercel_runtime = "2.4.1"
 
 [profile.release]
 codegen-units = 1

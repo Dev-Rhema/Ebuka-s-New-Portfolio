@@ -21,9 +21,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Rust (local dev server and Vercel functions)
+# Rust server (local dev server and Vercel function)
 server/target
-/target
 *.db
 *.db-wal
 *.db-shm

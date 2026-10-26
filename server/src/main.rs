@@ -15,7 +15,7 @@ static DEFAULT_PORT: &str = "8080";
 static NOT_FOUND_PAGE: &str = include_str!("../static/404.html");
 
 /// The local development server. In production the same routes are served by the
-/// Vercel function in `../api/scores.rs`, which shares the `server` library with this file.
+/// Vercel function in `api/scores.rs`, which shares the `server` library with this file.
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     // Initialize the default tracing subscriber.
@@ -27,7 +27,7 @@ async fn main() -> anyhow::Result<()> {
         .parse()?;
 
     // Open the database once, before accepting anything, so bad config fails loudly at startup.
-    let location = scores::location_from_env()?;
+    let location = scores::location_from_env();
     match &location {
         Location::Remote { url, .. } => info!(%url, "using Turso database"),
         Location::Local { path } => info!(%path, "using local database file"),

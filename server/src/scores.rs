@@ -44,25 +44,25 @@ pub fn country_from(header: Option<&str>) -> Option<String> {
     (looks_valid && code != "XX").then_some(code)
 }
 
-/// Turso when `TURSO_DATABASE_URL` is set. Otherwise a local SQLite file from `SCORES_DB`
-/// (default `scores.db`), but only in builds with the `local` feature.
-pub fn location_from_env() -> anyhow::Result<Location> {
-    if let Ok(url) = std::env::var("TURSO_DATABASE_URL") {
-        if !url.trim().is_empty() {
-            // A local `turso dev` server needs no token, so a missing one is not an error here.
-            let auth_token = std::env::var("TURSO_AUTH_TOKEN").unwrap_or_default();
-            return Ok(Location::Remote { url, auth_token });
-        }
+/// Turso from `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`, or an error if the URL is missing.
+/// The Vercel function uses this: its filesystem is read-only, so a local file is never an option.
+pub fn turso_from_env() -> anyhow::Result<Location> {
+    let url = std::env::var("TURSO_DATABASE_URL").unwrap_or_default();
+    if url.trim().is_empty() {
+        anyhow::bail!("TURSO_DATABASE_URL is not set");
     }
+    // A local `turso dev` server needs no token, so a missing one is not an error here.
+    let auth_token = std::env::var("TURSO_AUTH_TOKEN").unwrap_or_default();
+    Ok(Location::Remote { url, auth_token })
+}
 
-    #[cfg(feature = "local")]
-    {
-        let path = std::env::var("SCORES_DB").unwrap_or_else(|_| "scores.db".to_string());
-        Ok(Location::Local { path })
-    }
-
-    #[cfg(not(feature = "local"))]
-    anyhow::bail!("TURSO_DATABASE_URL is not set")
+/// Turso when `TURSO_DATABASE_URL` is set, otherwise a local SQLite file from `SCORES_DB`
+/// (default `scores.db`). Used by the local dev server.
+#[cfg(feature = "local")]
+pub fn location_from_env() -> Location {
+    turso_from_env().unwrap_or_else(|_| Location::Local {
+        path: std::env::var("SCORES_DB").unwrap_or_else(|_| "scores.db".to_string()),
+    })
 }
 
 #[cfg(test)]

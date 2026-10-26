@@ -2,21 +2,32 @@
 name = "server"
 version = "0.1.0"
 edition = "2024"
+# `cargo run` starts the local dev server rather than the Vercel function.
+default-run = "server"
 
-# The library (db + scoring rules) is shared with the Vercel function in ../api.
-# The `local` feature adds SQLite-file support, which compiles SQLite from C. The
-# Vercel function only talks to Turso over HTTPS, so it turns this feature off.
+# This folder is deployed as its own Vercel project (Root Directory: server).
+# Vercel builds each `api/*.rs` file listed as a [[bin]] into one function,
+# served at the matching path, so `api/scores.rs` answers `/api/scores`.
+#
+# The `local` feature adds SQLite-file support for local development.
 [features]
 default = ["local"]
 local = ["libsql/core"]
 
+# Local development server (the hand-rolled HTTP server).
 [[bin]]
 name = "server"
 path = "src/main.rs"
 required-features = ["local"]
 
+# Vercel Function for GET/POST /api/scores.
+[[bin]]
+name = "scores"
+path = "api/scores.rs"
+
 [dependencies]
 anyhow = "1.0.104"
+http-body-util = "0.1"
 libsql = { version = "0.10.0", default-features = false, features = ["remote", "tls"] }
 maplit = "1.0.2"
 serde = { version = "1.0.229", features = ["derive"] }
@@ -24,3 +35,9 @@ serde_json = "1.0.154"
 tokio = { version = "1.54.1", features = ["full"] }
 tracing = "0.1.44"
 tracing-subscriber = "0.3.23"
+vercel_runtime = "2.4.1"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 3

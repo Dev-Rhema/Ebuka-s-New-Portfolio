@@ -12,7 +12,7 @@ pub const LEADERBOARD_SIZE: u32 = 10;
 /// Refuse bodies bigger than this. A score submission is a few dozen bytes.
 pub const MAX_BODY_BYTES: usize = 16 * 1024;
 
-const MAX_NAME_CHARS: usize = 20;
+const MAX_NAME_CHARS: usize = 24;
 const MAX_SCORE: i64 = 1_000_000;
 
 /// Turn a request body and the country header into a score ready to save,
@@ -89,7 +89,9 @@ mod tests {
         assert!(parse_submission(br#"{"name":"   ","score":1}"#, None).is_err());
         assert!(parse_submission(br#"{"name":"a","score":-1}"#, None).is_err());
         assert!(parse_submission(br#"{"name":"a","score":1000001}"#, None).is_err());
-        let long = format!(r#"{{"name":"{}","score":1}}"#, "x".repeat(21));
+        let longest = format!(r#"{{"name":"{}","score":1}}"#, "x".repeat(24));
+        assert!(parse_submission(longest.as_bytes(), None).is_ok());
+        let long = format!(r#"{{"name":"{}","score":1}}"#, "x".repeat(25));
         assert!(parse_submission(long.as_bytes(), None).is_err());
     }
 

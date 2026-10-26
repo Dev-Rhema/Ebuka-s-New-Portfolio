@@ -36,14 +36,6 @@ export async function submitScore(name, score) {
   throw new Error(message);
 }
 
-/** "NG" -> Nigerian flag emoji. Empty string when the country is unknown. */
-export function flag(country) {
-  if (!country) return "";
-  return String.fromCodePoint(
-    ...[...country].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65),
-  );
-}
-
 /** The API's UTC timestamp as a Date. */
 export function playedAt(createdAt) {
   return new Date(createdAt.replace(" ", "T") + "Z");

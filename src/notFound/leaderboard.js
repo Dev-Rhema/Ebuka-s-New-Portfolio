@@ -1,5 +1,4 @@
 import globe from "./globe.svg";
-import { flag } from "../scoresApi";
 
 /** Renders score rows, or a single muted note when `entries` is a string. */
 export function renderLeaderboard(list, entries, spacing = "pt-16 pb-16") {
@@ -11,7 +10,7 @@ export function renderLeaderboard(list, entries, spacing = "pt-16 pb-16") {
     return;
   }
   list.replaceChildren(
-    ...entries.map(({ name, score, country }) => {
+    ...entries.map(({ name, score }) => {
       const row = document.createElement("li");
       row.className = `flex items-center ${spacing} not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat`;
       row.innerHTML = `
@@ -20,12 +19,7 @@ export function renderLeaderboard(list, entries, spacing = "pt-16 pb-16") {
         </span>
         <span class="ml-8 font-['Geist'] text-16 md:ml-9 md:text-19.7 leading-none font-medium tracking-[-0.04em] text-[#404040]"></span>
         <span class="ml-auto font-['Geist-Mono'] text-14 md:pr-7 md:text-18 leading-none tracking-widest text-[#8a8a8a]"></span>`;
-      const [badge, nameEl, scoreEl] = row.children;
-      if (country) {
-        badge.innerHTML = `<span role="img" class="text-16 md:text-20 leading-none"></span>`;
-        badge.firstChild.textContent = flag(country);
-        badge.firstChild.setAttribute("aria-label", country);
-      }
+      const [, nameEl, scoreEl] = row.children;
       nameEl.textContent = name;
       scoreEl.textContent = String(score).padStart(4, "0");
       return row;

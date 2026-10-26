@@ -70,26 +70,43 @@ const revealOnScroll = (trigger, build) => {
   });
 };
 
+const wipeIn = (tl, button, at) =>
+  tl.fromTo(
+    button,
+    { clipPath: "inset(0% 100% 0% 0%)" },
+    {
+      clipPath: "inset(0% 0% 0% 0%)",
+      ease: "logoMove",
+      clearProps: "clipPath",
+    },
+    at,
+  );
+
 const revealButton = (tl, button, at) =>
-  tl
-    .fromTo(
-      button,
-      { clipPath: "inset(0% 100% 0% 0%)" },
-      {
-        clipPath: "inset(0% 0% 0% 0%)",
-        ease: "logoMove",
-        clearProps: "clipPath",
-      },
-      at,
-    )
+  wipeIn(tl, button, at).from(
+    button.firstElementChild,
+    { y: () => button.offsetHeight / 2, ease: "logoMove" },
+    at + 0.1,
+  );
+
+// Buttons with a trailing arrow reveal like the hero's "Let's Chat": the label, then
+// the arrow, each rising inside its own mask (the button's two child spans).
+const revealArrowButton = (tl, button, at) => {
+  const [label, arrow] = [...button.children].map(
+    (mask) => mask.firstElementChild,
+  );
+  return wipeIn(tl, button, at)
+    .from(label, { yPercent: 110, ease: "heroText" }, at + 0.38)
     .from(
-      button.firstElementChild,
-      { y: () => button.offsetHeight / 2, ease: "logoMove" },
-      at + 0.1,
+      arrow,
+      { yPercent: 110, duration: 0.58, ease: "heroText" },
+      at + 1.42,
     );
+};
 
 export {
   gsap,
+  revealArrowButton,
   revealButton,
   revealOnScroll,
   ScrollTrigger,

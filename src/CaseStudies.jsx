@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import {
   gsap,
-  revealButton,
+  revealArrowButton,
   revealOnScroll,
   splitLines,
   useGSAP,
@@ -35,11 +35,13 @@ function CaseStudy({ study }) {
               href={study.link}
               className={`case-link mt-19 md:mt-20 ${arrowButton}`}
             >
-              <span className="flex items-center gap-8 md:gap-10">
-                Read Case Study
+              <span className="overflow-hidden py-[0.1em]">
+                <span className="block">Read Case Study</span>
+              </span>
+              <span className="overflow-hidden">
                 <svg
                   viewBox="0 0 20 14"
-                  className="w-13 md:w-15"
+                  className="block w-13 md:w-15"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.6"
@@ -153,7 +155,7 @@ function CaseStudies({ play }) {
             { clipPath: "inset(0% -50% 0% -50%)", clearProps: "clipPath" },
             0.1,
           ).from(lines, { yPercent: 100, stagger: 0.1 }, 0.2);
-          revealButton(
+          revealArrowButton(
             tl,
             study.querySelector(".case-link"),
             0.2 + lines.length * 0.1,

@@ -10,7 +10,7 @@ const button =
 export const callButton = `${button} w-112 md:w-144`;
 
 // Sized by its label, for buttons that carry an arrow after the text.
-export const arrowButton = `${button} w-fit px-16 md:px-18`;
+export const arrowButton = `${button} w-fit gap-12 px-16 md:px-18`;
 
 export const heroBackdrop = "bg-[linear-gradient(#aaa,#b4b4b4_40%)]";
 

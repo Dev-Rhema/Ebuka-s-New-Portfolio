@@ -1,22 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import Knight from "./Knight";
 import { useDither } from "./components/Dither";
-import { ContactEmail, KnightFigure, SocialLinks, grass } from "./Data";
+import { ContactEmail, SocialLinks, grass } from "./Data";
 import { shadowButton } from "./styles";
 
-const u = (value) => `calc(var(--u) * ${value})`;
-
 const KNIGHT_SCALE = 0.53;
-const { view, tip } = KnightFigure;
-const KNIGHT_W = view.w * KNIGHT_SCALE;
-const TIP_Y = (tip.y - view.y) * KNIGHT_SCALE;
-const TIP_OVERLAP = 13;
 const MOBILE_SCALE = 0.72;
 const RIDE_SPEED = 7.05 * 24 * KNIGHT_SCALE;
 const RIDE_TIME = 1440 / RIDE_SPEED;
 const MOBILE_RIDE_TIME = 440 / (RIDE_SPEED * MOBILE_SCALE);
-const knightWidth = (scale = 1) =>
-  `calc(var(--u) * ${KNIGHT_W * scale} * var(--knight-scale))`;
 
 const GLYPHS = {
   X: (
@@ -67,12 +59,12 @@ function SocialButton({ name, href, className = "" }) {
       target="_blank"
       rel="noreferrer"
       aria-label={name}
-      className={`flex size-[calc(var(--u)*32)] shrink-0 items-center justify-center md:size-[calc(var(--u)*30)] ${shadowButton} ${className}`}
+      className={`flex size-32 shrink-0 items-center justify-center md:size-30 ${shadowButton} ${className}`}
     >
       <svg
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-[calc(var(--u)*18)] md:w-[calc(var(--u)*15)]"
+        className="w-18 md:w-15"
       >
         {GLYPHS[name]}
       </svg>
@@ -94,37 +86,31 @@ function EmailPill() {
   };
 
   return (
-    <div
-      className="order-first mx-[calc((100%-var(--u)*311)/2)] flex shrink-0 items-center rounded-full border-[calc(var(--u)*2)] border-[#d9d9d9] bg-[#ededed] font-['Geist'] font-medium tracking-[-0.03em] text-[#838383] md:order-none md:mx-0"
-      style={{ width: u(311), height: u(50), paddingInline: u(7) }}
-    >
-      <a
-        href={`mailto:${ContactEmail}`}
-        className="flex min-w-0 flex-1 items-center"
-        style={{ gap: u(10), fontSize: u(18) }}
-      >
-        <span
-          className="flex shrink-0 items-center justify-center rounded-full bg-[#4A4A4A] text-[#F7F7F7] shadow-[inset_0_calc(var(--u)*-3)_calc(var(--u)*2)_rgba(0,0,0,0.25),inset_0_calc(var(--u)*2)_calc(var(--u)*2)_rgba(179,179,179,0.25)]"
-          style={{ width: u(32), height: u(32) }}
+    <div className="order-first flex basis-full justify-center md:contents">
+      <div className="flex h-50 w-311 shrink-0 items-center rounded-full border-pill border-[#d9d9d9] bg-[#ededed] px-7 font-['Geist'] font-medium tracking-[-0.03em] text-[#838383]">
+        <a
+          href={`mailto:${ContactEmail}`}
+          className="flex min-w-0 flex-1 items-center gap-10 text-18"
         >
-          <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: u(15) }}>
-            <path d="M21.4 2.6 2.9 10.2c-.8.3-.7 1.4.1 1.6l7.3 1.9 1.9 7.3c.2.8 1.3.9 1.6.1L21.4 2.6Z" />
+          <span className="flex size-32 shrink-0 items-center justify-center rounded-full bg-[#4A4A4A] text-[#F7F7F7] inset-shadow-bevel">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-15">
+              <path d="M21.4 2.6 2.9 10.2c-.8.3-.7 1.4.1 1.6l7.3 1.9 1.9 7.3c.2.8 1.3.9 1.6.1L21.4 2.6Z" />
+            </svg>
+          </span>
+          <span className="truncate">{copied ? "Copied!" : ContactEmail}</span>
+        </a>
+        <button
+          type="button"
+          onClick={copy}
+          aria-label="Copy email address"
+          className="flex size-28 shrink-0 items-center justify-center text-[#2b2b2b]"
+        >
+          <svg viewBox="0 0 24 24" fill="none" className="w-17">
+            <rect x="3" y="3" width="13" height="13" rx="3" fill="#bdbdbd" />
+            <rect x="8" y="8" width="13" height="13" rx="3" fill="currentColor" />
           </svg>
-        </span>
-        <span className="truncate">{copied ? "Copied!" : ContactEmail}</span>
-      </a>
-      <button
-        type="button"
-        onClick={copy}
-        aria-label="Copy email address"
-        className="flex shrink-0 items-center justify-center text-[#2b2b2b]"
-        style={{ width: u(28), height: u(28) }}
-      >
-        <svg viewBox="0 0 24 24" fill="none" style={{ width: u(17) }}>
-          <rect x="3" y="3" width="13" height="13" rx="3" fill="#bdbdbd" />
-          <rect x="8" y="8" width="13" height="13" rx="3" fill="currentColor" />
-        </svg>
-      </button>
+        </button>
+      </div>
     </div>
   );
 }
@@ -137,12 +123,8 @@ function GrassTile() {
 
   return (
     <div
-      className="relative w-[calc(var(--u)*var(--grass-w)*var(--mobile-scale))] shrink-0 md:w-[calc(var(--u)*var(--grass-w))]"
-      style={{
-        "--grass-w": GRASS.w * GRASS.scale,
-        "--mobile-scale": MOBILE_SCALE,
-        aspectRatio: `${GRASS.w} / ${GRASS.h}`,
-      }}
+      className="relative w-725.25 shrink-0 md:w-1007.25"
+      style={{ aspectRatio: `${GRASS.w} / ${GRASS.h}` }}
     >
       <img
         ref={imgRef}
@@ -188,22 +170,21 @@ function Footer() {
     <footer
       ref={footerRef}
       id="contact"
-      className="relative overflow-hidden bg-white pt-[calc(var(--u)*80)] text-center [--u:calc(100vw/440)] md:[--u:calc(100vw/1440)]"
+      className="relative overflow-hidden bg-white pt-80 text-center unit-440 md:unit-1440"
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.075),transparent)]"
-        style={{ top: u(170), width: u(860), height: u(520) }}
+        className="pointer-events-none absolute top-170 left-1/2 h-520 w-860 -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.075),transparent)]"
       />
 
-      <h2 className="relative font-['DM-Serif'] text-[calc(var(--u)*40)] leading-none tracking-[-0.02em] text-black md:text-[calc(var(--u)*44)]">
+      <h2 className="relative font-['DM-Serif'] text-40 leading-none tracking-[-0.02em] text-black md:text-44">
         Ebuka Chidube
       </h2>
-      <p className="relative mx-auto mt-[calc(var(--u)*16)] md:max-w-[calc(var(--u)*290)] font-['Geist'] text-[calc(var(--u)*19)] leading-[calc(var(--u)*25)] font-medium tracking-[-0.04em] text-[#838383] md:mt-[calc(var(--u)*18)] md:text-[calc(var(--u)*20)]">
+      <p className="relative mx-auto mt-16 md:max-w-290 font-['Geist'] text-19 leading-25 font-medium tracking-[-0.04em] text-[#838383] md:mt-18 md:text-20">
         Helping your brand become more through intentional marketing
       </p>
 
-      <div className="relative z-10 mt-[calc(var(--u)*32)] flex flex-wrap items-center justify-center gap-x-[calc(var(--u)*16)] gap-y-[calc(var(--u)*17)] md:mt-[calc(var(--u)*34)] md:flex-nowrap">
+      <div className="relative z-10 mt-32 flex flex-wrap items-center justify-center gap-x-16 gap-y-17 md:mt-34 md:flex-nowrap">
         <SocialButton {...x} className="order-2 md:order-none" />
         <SocialButton {...instagram} className="order-3 md:order-none" />
         <EmailPill />
@@ -212,24 +193,16 @@ function Footer() {
       </div>
 
       <div
-        className="pointer-events-none relative z-20 mt-[calc(var(--u)*93)] [--knight-scale:var(--mobile-scale)] [--ride-time:var(--ride-mobile)] motion-safe:animate-knight-ride md:mt-[calc(var(--u)*var(--knight-top))] md:[--knight-scale:1] md:[--ride-time:var(--ride-desktop)]"
+        className="pointer-events-none relative z-20 mt-93 [--ride-time:var(--ride-mobile)] motion-safe:animate-knight-ride md:-mt-14 md:[--ride-time:var(--ride-desktop)]"
         style={{
-          "--knight-top": -TIP_Y - TIP_OVERLAP,
-          "--mobile-scale": MOBILE_SCALE,
           "--ride-mobile": `${MOBILE_RIDE_TIME}s`,
           "--ride-desktop": `${RIDE_TIME}s`,
           animationDuration: "var(--ride-time)",
           animationPlayState: inView ? "running" : "paused",
         }}
       >
-        <Knight className="relative mx-auto" style={{ width: knightWidth() }} />
-        <Knight
-          className="absolute top-0 motion-reduce:hidden"
-          style={{
-            width: knightWidth(),
-            left: `calc(-50% - ${knightWidth(0.5)})`,
-          }}
-        />
+        <Knight className="relative mx-auto w-204 md:w-283.25" />
+        <Knight className="absolute top-0 -left-1/2 -ml-102 w-204 motion-reduce:hidden md:-ml-141.75 md:w-283.25" />
       </div>
       <Grass />
     </footer>

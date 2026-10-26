@@ -13,9 +13,9 @@ const RINGS = [
   },
   {
     className: "hidden xl:block",
-    size: 780,
-    inner: { r: 287.5, width: 25, dash: 6 },
-    outer: { r: 377.5, width: 25, dash: 14 },
+    size: 872,
+    inner: { r: 322.5, width: 25, dash: 6.73 },
+    outer: { r: 423.5, width: 25, dash: 15.71 },
   },
 ];
 
@@ -29,7 +29,7 @@ function Ring({ center, ring, className }) {
       stroke="white"
       strokeWidth={ring.width}
       strokeDasharray={`${ring.dash} ${ring.dash}`}
-      className={`origin-center [transform-box:fill-box] ${className}`}
+      className={`origin-center transform-fill ${className}`}
     />
   );
 }

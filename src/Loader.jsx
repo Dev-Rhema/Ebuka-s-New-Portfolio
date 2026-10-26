@@ -6,15 +6,15 @@ import { heroBackdrop } from "./styles";
 const SPEED = 0.6;
 
 const nameColumn =
-  "flex h-29.75 flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
-const subText = "sub pb-1 whitespace-nowrap font-['Geist'] text-lg/none font-medium text-[#555]";
+  "flex h-[119px] flex-col justify-between font-['DM-Serif'] text-[38px] leading-none text-white";
+const subText = "sub pb-[4px] whitespace-nowrap font-['Geist'] text-lg/none font-medium text-[#555]";
 
 function MobileHero({ className = "" }) {
   return (
     <div
       className={`flex items-start justify-center overflow-hidden ${heroBackdrop} ${className}`}
     >
-      <div className="relative mt-[calc(var(--u)*93)] aspect-147/119 w-[calc(var(--u)*515)] shrink-0">
+      <div className="relative mt-93 aspect-147/119 w-515 shrink-0">
         <img
           src={headerImgNoBg}
           alt=""
@@ -243,22 +243,22 @@ function Loader({ onReveal, onComplete }) {
   return (
     <div
       ref={container}
-      className="fixed inset-0 z-50 overflow-hidden bg-black [--u:calc(100vw/440)] md:[--u:calc(100vw/1024)] xl:[--s:var(--u)] xl:[--u:min(calc(100vw/1440),calc(100vh/900))]"
+      className="fixed inset-0 z-50 overflow-hidden bg-black unit-440 md:unit-1024 xl:unit-fit"
     >
-      <div className="line absolute top-[calc(50%-9px)] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
+      <div className="line absolute top-1/2 -mt-[9px] h-px w-full bg-[repeating-linear-gradient(to_right,#161616_0_4px,transparent_4px_5px)]" />
 
-      <div className="intro absolute inset-y-0 -inset-x-[41%] grid -translate-y-2.25 scale-[0.55] grid-cols-[1fr_auto_1fr] items-center sm:inset-x-0 sm:scale-100">
+      <div className="intro absolute inset-y-0 -inset-x-[41%] grid -translate-y-[9px] scale-[0.55] grid-cols-[1fr_auto_1fr] items-center sm:inset-x-0 sm:scale-100">
         <div className={`${nameColumn} items-end`}>
-          <div className="overflow-hidden pt-1.5">
+          <div className="overflow-hidden pt-[6px]">
             <p className="name">EBUKA</p>
           </div>
-          <div className="-mb-1.75 overflow-hidden max-sm:-translate-y-[23.5px]">
+          <div className="-mb-[7px] overflow-hidden max-sm:-translate-y-[23.5px]">
             <p className={subText}>Nihil Sine Deo</p>
           </div>
         </div>
 
-        <div className="photo mx-4.5 h-29.75 w-[calc(119px*440/510)] overflow-hidden md:w-36.75">
-          <MobileHero className="h-[calc(var(--u)*510)] w-[calc(var(--u)*440)] [--u:calc(119px/510)] md:hidden" />
+        <div className="photo mx-[18px] h-[119px] w-[102.67px] overflow-hidden md:w-[147px]">
+          <MobileHero className="h-510 w-440 unit-photo md:hidden" />
           <img
             src={headerImg}
             alt=""
@@ -268,31 +268,31 @@ function Loader({ onReveal, onComplete }) {
         </div>
 
         <div className={nameColumn}>
-          <div className="mt-6.5 overflow-hidden">
+          <div className="mt-[26px] overflow-hidden">
             <p className={subText}>Senior Digital Marketer</p>
           </div>
-          <div className="-mb-1.5 overflow-hidden pt-1.5 max-sm:-translate-y-[16.5px]">
+          <div className="-mb-[6px] overflow-hidden pt-[6px] max-sm:-translate-y-[16.5px]">
             <p className="name">CHIDUBE</p>
           </div>
         </div>
       </div>
 
-      <p className="counter absolute bottom-10 w-full text-center font-['Geist'] text-[16px] font-medium leading-none text-[#555]">
+      <p className="counter absolute bottom-[40px] w-full text-center font-['Geist'] text-[16px] font-medium leading-none text-[#555]">
         <span className="count">0</span>%
       </p>
 
       <div
-        className={`backdrop absolute inset-x-0 top-0 hidden md:block md:h-[calc(var(--u)*640)] xl:h-[min(100vh,62.5vw)] ${heroBackdrop}`}
+        className={`backdrop absolute inset-x-0 top-0 hidden md:block md:h-640 xl:h-hero ${heroBackdrop}`}
       />
 
-      <div className="wipe absolute inset-x-0 top-[calc(var(--u)*478)] bottom-0 bg-white md:hidden" />
+      <div className="wipe absolute inset-x-0 top-478 bottom-0 bg-white md:hidden" />
 
-      <MobileHero className="frame absolute inset-x-0 top-0 h-[calc(var(--u)*510)] will-change-transform md:hidden" />
-      <div className="fade absolute inset-x-0 top-[calc(var(--u)*478)] h-[calc(var(--u)*32)] bg-fade-white md:hidden" />
+      <MobileHero className="frame absolute inset-x-0 top-0 h-510 will-change-transform md:hidden" />
+      <div className="fade absolute inset-x-0 top-478 h-32 bg-fade-white md:hidden" />
 
-      <div className="absolute inset-x-0 top-0 hidden md:flex md:h-[calc(var(--u)*640)] md:items-start md:justify-center xl:h-[min(100vh,62.5vw)] xl:items-center">
+      <div className="absolute inset-x-0 top-0 hidden md:flex md:h-640 md:items-start md:justify-center xl:h-hero xl:items-center">
         <div
-          className={`fullscreen aspect-147/119 shrink-0 overflow-hidden will-change-transform md:mt-[calc(var(--u)*28)] md:w-[calc(var(--u)*1016)] xl:mt-0 xl:w-[calc(var(--u)*900*147/119)] ${heroBackdrop}`}
+          className={`fullscreen aspect-147/119 shrink-0 overflow-hidden will-change-transform md:mt-28 md:w-1016 xl:mt-0 xl:w-1111.75 ${heroBackdrop}`}
         >
           <img
             src={headerImgNoBg}
@@ -303,13 +303,13 @@ function Loader({ onReveal, onComplete }) {
         </div>
       </div>
 
-      <div className="backdrop absolute inset-x-0 hidden md:top-[calc(var(--u)*600)] md:block md:h-[calc(var(--u)*40)] md:bg-fade-white xl:top-[calc(min(100vh,62.5vw)*0.85)] xl:h-[calc(min(100vh,62.5vw)*0.15)]" />
-      <div className="backdrop absolute inset-x-0 bottom-0 hidden bg-white md:top-[calc(var(--u)*640)] md:block xl:top-[min(100vh,62.5vw)]" />
+      <div className="backdrop absolute inset-x-0 hidden md:top-600 md:block md:h-40 md:bg-fade-white xl:top-0 xl:h-hero xl:bg-[length:100%_15%] xl:bg-bottom xl:bg-no-repeat" />
+      <div className="backdrop absolute inset-x-0 bottom-0 hidden bg-white md:top-640 md:block xl:top-hero" />
 
       <img
         src="/logo.svg"
         alt="Logo"
-        className="logo absolute top-[calc(var(--u)*32.5)] left-1/2 h-[calc(var(--u)*34.5)] w-auto md:top-[calc(var(--u)*35.5)] md:h-[calc(var(--u)*36.6)] xl:top-[calc(var(--s)*34.5)] xl:h-[calc(var(--s)*44)] xl:w-[calc(var(--s)*40)]"
+        className="logo absolute top-32.5 left-1/2 h-34.5 w-auto md:top-35.5 md:h-36.5 xl:top-34.5 xl:h-44 xl:w-40"
       />
     </div>
   );

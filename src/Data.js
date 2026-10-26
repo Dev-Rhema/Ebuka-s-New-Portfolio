@@ -80,8 +80,7 @@ export const SkillsData = [
     description: "Data helps us plan ahead.",
     icon: {
       src: dataAnalysisIcon,
-      width: 253,
-      center: [102.44, 26.41],
+      className: "-top-26.5 -left-102.5 w-253",
       rotation: -24,
     },
   },
@@ -90,8 +89,7 @@ export const SkillsData = [
     description: "Content is king. I am a kingmaker.",
     icon: {
       src: contentStrategyIcon,
-      width: 216,
-      center: [95.65, 25],
+      className: "-top-25 -left-95.75 w-216",
       rotation: -12,
     },
   },
@@ -101,8 +99,7 @@ export const SkillsData = [
       "I have mastered the skill of turning zero to one with paid media.",
     icon: {
       src: advertisingIcon,
-      width: 170,
-      center: [84.68, 25],
+      className: "-top-25 -left-84.75 w-170",
       rotation: 0,
     },
   },
@@ -111,8 +108,7 @@ export const SkillsData = [
     description: "Love it when a good plan comes together.",
     icon: {
       src: marketingStrategyIcon,
-      width: 216,
-      center: [119.77, 25],
+      className: "-top-25 -left-119.75 w-216",
       rotation: 12,
     },
   },
@@ -121,8 +117,7 @@ export const SkillsData = [
     description: "Driving growth and scaling numbers.",
     icon: {
       src: growthMarketingIcon,
-      width: 170,
-      center: [84.68, 25],
+      className: "-top-25 -left-84.75 w-170",
       rotation: 0,
     },
   },

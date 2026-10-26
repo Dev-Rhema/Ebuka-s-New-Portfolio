@@ -1,9 +1,15 @@
 import { useRef } from "react";
-import { gsap, revealOnScroll, splitLines, useGSAP } from "./animation";
+import {
+  gsap,
+  revealButton,
+  revealOnScroll,
+  splitLines,
+  useGSAP,
+} from "./animation";
 import { CaseStudyData } from "./Data";
 import { Naira, Plus } from "./components/StatSymbols";
 import { WavingFlag } from "./components/WavingFlag";
-import { sectionLabel } from "./styles";
+import { arrowButton, sectionLabel } from "./styles";
 
 function CaseStudy({ study }) {
   const { stat, testimonial } = study;
@@ -25,23 +31,23 @@ function CaseStudy({ study }) {
             <p className="case-summary font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26">
               {study.summary}
             </p>
-            <div className="case-link-mask">
-              <a
-                href={study.link}
-                className="case-link mt-19 inline-flex items-center gap-9 md:mt-20 font-['Geist'] text-16 leading-none font-medium tracking-[-0.04em] text-black md:gap-5 md:text-20"
-              >
+            <a
+              href={study.link}
+              className={`case-link mt-19 md:mt-20 ${arrowButton}`}
+            >
+              <span className="flex items-center gap-8 md:gap-10">
                 Read Case Study
                 <svg
                   viewBox="0 0 20 14"
-                  className="w-15 md:w-20"
+                  className="w-13 md:w-15"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.6"
                 >
                   <path d="M0 7h18M12 1l6 6-6 6" />
                 </svg>
-              </a>
-            </div>
+              </span>
+            </a>
           </div>
         </div>
       </div>
@@ -133,9 +139,6 @@ function CaseStudies({ play }) {
             (selector) => splitLines(study.querySelector(selector)),
           );
           const lines = splits.flatMap((split) => split.lines);
-          const link = study.querySelector(".case-link");
-          const linkMask = link.parentElement;
-          gsap.set(linkMask, { clipPath: "inset(-50% -50% 0% -50%)" });
 
           if (index === 0) {
             const labelSplit = splitLines(label);
@@ -149,22 +152,14 @@ function CaseStudies({ play }) {
             { clipPath: "inset(100% -50% 0% -50%)" },
             { clipPath: "inset(0% -50% 0% -50%)", clearProps: "clipPath" },
             0.1,
-          )
-            .from(lines, { yPercent: 100, stagger: 0.1 }, 0.2)
-            .from(
-              link,
-              {
-                y: () =>
-                  linkMask.getBoundingClientRect().bottom -
-                  link.getBoundingClientRect().top,
-              },
-              0.2 + lines.length * 0.1,
-            );
+          ).from(lines, { yPercent: 100, stagger: 0.1 }, 0.2);
+          revealButton(
+            tl,
+            study.querySelector(".case-link"),
+            0.2 + lines.length * 0.1,
+          );
 
-          return () => {
-            splits.forEach((split) => split.revert());
-            gsap.set(linkMask, { clearProps: "clipPath" });
-          };
+          return () => splits.forEach((split) => split.revert());
         });
 
         revealOnScroll(study.querySelector(".case-media"), (tl) => {

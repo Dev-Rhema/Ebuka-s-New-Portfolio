@@ -135,7 +135,9 @@ function Home({ play, showLogo }) {
             className="hero-button flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-40 md:gap-12.5 md:pr-17.5 md:pl-16 md:text-16 xl:h-46 xl:gap-12 xl:px-18 xl:text-16"
           >
             <span className="overflow-hidden py-[0.1em]">
-              <span className="hero-chat-text block">Let’s Chat</span>
+              <span data-roll className="hero-chat-text block">
+                Let’s Chat
+              </span>
             </span>
             <span className="overflow-hidden">
               <svg

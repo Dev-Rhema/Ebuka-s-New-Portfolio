@@ -29,7 +29,7 @@ function Header() {
           href="#contact"
           className="flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-46 md:px-18 md:text-16"
         >
-          Let’s Chat
+          <span data-roll>Let’s Chat</span>
           <svg viewBox="0 0 12 12" className="size-10 md:size-11" fill="none">
             <path
               d="M1 11 11 1M3 1h8v8"
@@ -217,7 +217,9 @@ function NextCaseStudy({ study }) {
             href={study.link}
             className={`next-button shrink-0 max-md:hidden ${callButton}`}
           >
-            <span className="block">Next Case Study</span>
+            <span data-roll className="block">
+              Next Case Study
+            </span>
           </a>
         </div>
       </div>

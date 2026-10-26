@@ -138,7 +138,7 @@ function Skills({ play }) {
           href="#contact"
           className={`skills-button mx-auto mt-16 ${callButton}`}
         >
-          <span className="block">Book a Call</span>
+          <span data-roll className="block">Book a Call</span>
         </a>
       </div>
 

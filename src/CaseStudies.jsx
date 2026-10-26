@@ -36,7 +36,7 @@ function CaseStudy({ study }) {
               className={`case-link mt-19 md:mt-20 ${arrowButton}`}
             >
               <span className="overflow-hidden py-[0.1em]">
-                <span className="block">Read Case Study</span>
+                <span data-roll className="block">Read Case Study</span>
               </span>
               <span className="overflow-hidden">
                 <svg

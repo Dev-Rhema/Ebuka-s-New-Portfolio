@@ -71,6 +71,35 @@
             >Press Spacebar to test yourself</span
           >
         </div>
+        <form
+          data-save
+          hidden
+          class="mx-auto mt-24 flex w-fit flex-col items-center md:mt-40"
+        >
+          <div class="flex items-center gap-8">
+            <label
+              for="player-name"
+              class="font-['Geist-Mono'] text-14 leading-none tracking-[0.1em] text-[#8a8a8a] md:text-16"
+              >Your name</label
+            >
+            <input
+              id="player-name"
+              name="name"
+              maxlength="20"
+              class="h-32 w-176 border border-[#d8d8d8] bg-white px-12 font-['Geist'] text-14 font-medium tracking-[-0.04em] text-[#404040] outline-none focus:border-black md:h-46 md:w-240 md:text-16"
+            />
+            <button
+              type="submit"
+              disabled
+              class="flex h-32 w-112 items-center justify-center bg-black font-['Geist'] text-14 font-medium tracking-[-0.04em] text-white disabled:opacity-40 md:h-46 md:w-144 md:text-16"
+            ></button>
+          </div>
+          <p
+            data-save-error
+            role="alert"
+            class="mt-12 font-['Geist-Mono'] text-14 leading-none tracking-[0.1em] text-[#b42318] empty:hidden md:text-16"
+          ></p>
+        </form>
       </div>
 
       <div data-hud class="invisible">

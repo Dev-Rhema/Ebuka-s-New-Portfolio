@@ -102,7 +102,7 @@ const shuffle = (items) => {
   return deck;
 };
 
-export async function startGame(root) {
+export async function startGame(root, { onStart, onEnd } = {}) {
   const canvas = root.querySelector("[data-game]");
   const introEl = root.querySelector("[data-intro]");
   const titleEl = root.querySelector("[data-title]");
@@ -436,6 +436,7 @@ export async function startGame(root) {
     introEl.style.visibility = "hidden";
     hudEl.style.visibility = "visible";
     last = 0;
+    onStart?.();
     requestAnimationFrame(tick);
   };
 
@@ -451,6 +452,7 @@ export async function startGame(root) {
     hintEl.textContent = OVER.hint;
     hudEl.style.visibility = "";
     introEl.style.visibility = "";
+    onEnd?.(score());
   };
 
   const jump = () => {
@@ -487,12 +489,13 @@ export async function startGame(root) {
 
   window.addEventListener("keydown", (event) => {
     if (!["Space", "ArrowUp", "KeyW"].includes(event.code)) return;
+    if (event.target.closest?.("input")) return;
     if (event.code === "Space" && event.target.closest?.("a, button")) return;
     event.preventDefault();
     if (!event.repeat) jump();
   });
   root.addEventListener("pointerdown", (event) => {
-    if (event.target.closest("a, button")) return;
+    if (event.target.closest("a, button, form")) return;
     jump();
   });
 

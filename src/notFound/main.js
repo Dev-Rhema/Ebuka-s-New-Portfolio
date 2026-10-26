@@ -1,13 +1,25 @@
 import "../index.css";
 import { startGame } from "./game";
-import { leaders, renderLeaderboard } from "./leaderboard";
+import { renderLeaderboard } from "./leaderboard";
+import { loadScores, submitScore } from "../scoresApi";
 
-renderLeaderboard(document.querySelector("[data-leaders]"), leaders);
-renderLeaderboard(
-  document.querySelector("[data-sheet-leaders]"),
-  leaders,
-  "py-24 last:pb-0",
-);
+const leadersEl = document.querySelector("[data-leaders]");
+const sheetLeadersEl = document.querySelector("[data-sheet-leaders]");
+const showLeaders = (entries) => {
+  renderLeaderboard(leadersEl, entries);
+  renderLeaderboard(sheetLeadersEl, entries, "py-24 last:pb-0");
+};
+
+const refreshLeaders = async () => {
+  try {
+    showLeaders((await loadScores()).slice(0, 5));
+  } catch {
+    showLeaders("Leaderboard unavailable right now.");
+  }
+};
+
+showLeaders("Loading...");
+refreshLeaders();
 
 const sheet = document.querySelector("[data-sheet]");
 document
@@ -19,4 +31,47 @@ sheet.addEventListener("click", (event) => {
   }
 });
 
-startGame(document.getElementById("ride"));
+const form = document.querySelector("[data-save]");
+const nameInput = form.elements.name;
+const saveButton = form.querySelector("button");
+const saveError = form.querySelector("[data-save-error]");
+let finalScore = null;
+let saving = false;
+
+const syncSave = () => {
+  saveButton.disabled =
+    finalScore === null || saving || !nameInput.value.trim();
+  saveButton.textContent = saving ? "Saving..." : `Save ${finalScore}`;
+};
+nameInput.addEventListener("input", syncSave);
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (saveButton.disabled) return;
+  saving = true;
+  saveError.textContent = "";
+  syncSave();
+  try {
+    await submitScore(nameInput.value, finalScore);
+    form.hidden = true;
+    refreshLeaders();
+  } catch (error) {
+    saveError.textContent = error.message;
+  } finally {
+    saving = false;
+    syncSave();
+  }
+});
+
+startGame(document.getElementById("ride"), {
+  onStart() {
+    finalScore = null;
+    form.hidden = true;
+  },
+  onEnd(score) {
+    finalScore = score;
+    saveError.textContent = "";
+    form.hidden = false;
+    syncSave();
+  },
+});

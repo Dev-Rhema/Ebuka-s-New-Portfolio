@@ -5,11 +5,12 @@ import { gsap, ScrollTrigger } from "./animation";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 // Null when the visitor prefers reduced motion; the page then scrolls natively.
+// Lower lerp means a longer, softer glide after each wheel tick (Lenis's default is 0.1).
 const lenis = reduceMotion.matches
   ? null
   : new Lenis({
-      lerp: 0.08,
-      wheelMultiplier: 0.9,
+      lerp: 0.065,
+      wheelMultiplier: 1,
       anchors: true,
       autoRaf: false,
     });

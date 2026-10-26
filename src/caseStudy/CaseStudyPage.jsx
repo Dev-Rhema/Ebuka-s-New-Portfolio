@@ -68,7 +68,7 @@ function GoBack() {
 
 // 9:16, the shape of the videos, so they show whole instead of being trimmed to fit.
 const videoFrame =
-  "reveal-media aspect-9/16 w-full shrink-0 md:w-[38%] xl:w-308";
+  "reveal-media aspect-9/16 w-full md:col-start-1 md:row-span-2 md:row-start-1";
 
 // Placeholder card for questions whose video hasn't arrived yet.
 function VideoThumb({ title, thumbnail }) {
@@ -159,8 +159,15 @@ function Questions({ questions }) {
             key={item.label}
             id={`question-${index + 1}`}
             data-question
-            className="flex scroll-mt-24 flex-col gap-16 not-last:mb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-16 md:scroll-mt-56 md:flex-row md:gap-20 md:not-last:mb-24 xl:gap-24 md:not-last:pb-24"
+            // Phones stack question, video, answer; wider screens put the video beside both.
+            className="grid scroll-mt-24 content-start gap-16 not-last:mb-16 not-last:bg-dashes not-last:bg-[length:100%_1px] not-last:bg-bottom not-last:bg-no-repeat not-last:pb-16 md:scroll-mt-56 md:grid-cols-[38%_1fr] md:grid-rows-[auto_1fr] md:gap-x-20 md:gap-y-0 md:not-last:mb-24 md:not-last:pb-24 xl:grid-cols-[calc(var(--u)*308)_1fr] xl:gap-x-24"
           >
+            <h2
+              data-split
+              className="reveal-text font-['Geist'] text-20 leading-20 font-medium tracking-[-0.02em] text-black md:col-start-2 md:row-start-1 md:text-22 md:leading-24 xl:text-28 xl:leading-28"
+            >
+              {item.question}
+            </h2>
             {item.video ? (
               <VideoPlayer
                 title={item.label}
@@ -172,24 +179,16 @@ function Questions({ questions }) {
             ) : (
               <VideoThumb title={item.label} thumbnail={item.thumbnail} />
             )}
-            <div className="reveal-text md:flex-1">
-              <h2
-                data-split
-                className="font-['Geist'] text-20 leading-20 font-medium tracking-[-0.02em] text-black md:text-22 md:leading-24 xl:text-28 xl:leading-28"
-              >
-                {item.question}
-              </h2>
-              <div className="mt-16 space-y-16 md:space-y-20 xl:mt-20 xl:space-y-24">
-                {item.answer.map((paragraph, i) => (
-                  <p
-                    key={i}
-                    data-split
-                    className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-16 md:leading-21 xl:text-20 xl:leading-26"
-                  >
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+            <div className="reveal-text space-y-16 md:col-start-2 md:row-start-2 md:mt-16 md:space-y-20 xl:mt-20 xl:space-y-24">
+              {item.answer.map((paragraph, i) => (
+                <p
+                  key={i}
+                  data-split
+                  className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-16 md:leading-21 xl:text-20 xl:leading-26"
+                >
+                  {paragraph}
+                </p>
+              ))}
             </div>
           </article>
         ))}

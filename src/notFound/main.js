@@ -12,7 +12,7 @@ const showLeaders = (entries) => {
 
 const refreshLeaders = async () => {
   try {
-    showLeaders((await loadScores()).slice(0, 5));
+    showLeaders((await loadScores()).slice(0, 3));
   } catch {
     showLeaders("Leaderboard unavailable right now.");
   }

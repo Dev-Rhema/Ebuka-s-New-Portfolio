@@ -29,7 +29,7 @@ const ROCKS = [
   { url: smallRockUrl, w: 62 * UNIT, sink: 26 },
 ];
 const SCORE_PER_PX = 1 / (40 * UNIT);
-const CHECKPOINT = { every: 1000, shield: 4, clear: 2 };
+const CHECKPOINT = { every: 1000, shield: 10, clear: 2 };
 const SHIELD = {
   r: 278,
   rise: 184,

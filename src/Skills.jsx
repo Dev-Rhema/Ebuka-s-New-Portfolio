@@ -18,6 +18,12 @@ const FAN = [
   { className: "top-232 ml-408", angle: 24 },
 ];
 
+// The center card comes first in the DOM so the others fan out from behind it.
+const FAN_CARDS = SkillsData.map((skill, index) => ({
+  skill,
+  slot: FAN[index],
+})).sort((a, b) => Number(b.slot.angle === 0) - Number(a.slot.angle === 0));
+
 function SkillCardFace({ skill }) {
   const { icon } = skill;
 
@@ -57,8 +63,8 @@ function SkillCardFace({ skill }) {
 function SkillCard({ skill, slot }) {
   return (
     <li
-      className={`absolute left-1/2 h-244 w-174 overflow-hidden rounded-8 ${slot.className}`}
-      style={{ transform: `translate(-50%, -50%) rotate(${slot.angle}deg)` }}
+      data-angle={slot.angle}
+      className={`skill-card absolute left-1/2 h-244 w-174 overflow-hidden rounded-8 ${slot.className}`}
     >
       <SkillCardFace skill={skill} />
     </li>
@@ -71,6 +77,12 @@ function Skills({ play }) {
   useGSAP(
     () => {
       gsap.set(".skills-intro", { autoAlpha: 0 });
+      // GSAP owns the cards' transforms so the reveal can animate their position and angle.
+      gsap.set(".skill-card", {
+        xPercent: -50,
+        yPercent: -50,
+        rotation: (i, card) => Number(card.dataset.angle),
+      });
     },
     { scope: container },
   );
@@ -81,16 +93,26 @@ function Skills({ play }) {
 
       const find = (selector) => container.current.querySelector(selector);
 
-      revealOnScroll(find(".skills-intro"), (tl) => {
+      // Triggered by the cards rather than the heading, so the fan plays on screen.
+      revealOnScroll(find(".skills-fan"), (tl) => {
         const label = splitLines(find(".skills-label"));
         const heading = splitLines(find(".skills-heading"));
+        const cards = gsap.utils.toArray(".skill-card", container.current);
+        const center = cards.find((card) => card.dataset.angle === "0");
 
-        tl.from(label.lines, { yPercent: 100 }, 0).from(
-          heading.lines,
-          { yPercent: 100, stagger: 0.1 },
-          0.1,
-        );
+        tl.from(label.lines, { yPercent: 100 }, 0)
+          .from(heading.lines, { yPercent: 100, stagger: 0.1 }, 0.1)
+          .from(
+            cards,
+            {
+              x: (i, card) => center.offsetLeft - card.offsetLeft,
+              rotation: 0,
+            },
+            0,
+          );
         revealButton(tl, find(".skills-button"), 0.6);
+        // Every part of the intro now starts hidden by its own tween.
+        gsap.set(find(".skills-intro"), { autoAlpha: 1 });
 
         return () => [label, heading].forEach((split) => split.revert());
       });
@@ -120,10 +142,10 @@ function Skills({ play }) {
         </a>
       </div>
 
-      <div className="relative mt-59 h-316 md:mt-40 md:h-435">
+      <div className="skills-fan relative mt-59 h-316 md:mt-40 md:h-435">
         <ul className="hidden md:block">
-          {SkillsData.map((skill, index) => (
-            <SkillCard key={skill.title} skill={skill} slot={FAN[index]} />
+          {FAN_CARDS.map(({ skill, slot }) => (
+            <SkillCard key={skill.title} skill={skill} slot={slot} />
           ))}
         </ul>
 

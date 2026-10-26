@@ -105,7 +105,6 @@ function CaseStudy({ study }) {
   );
 }
 
-// Reveals a panel from its left edge, keeping its rounded corners.
 const clipFromLeft = (panel, right) => {
   const radius = getComputedStyle(panel).borderTopLeftRadius;
   return `inset(0% ${right}% 0% 0% round ${radius})`;
@@ -136,7 +135,6 @@ function CaseStudies({ play }) {
           const lines = splits.flatMap((split) => split.lines);
           const link = study.querySelector(".case-link");
           const linkMask = link.parentElement;
-          // Clips only the bottom edge so the arrow can overflow the line.
           gsap.set(linkMask, { clipPath: "inset(-50% -50% 0% -50%)" });
 
           if (index === 0) {
@@ -155,7 +153,6 @@ function CaseStudies({ play }) {
             .from(lines, { yPercent: 100, stagger: 0.1 }, 0.2)
             .from(
               link,
-              // From just below the mask's bottom edge.
               {
                 y: () =>
                   linkMask.getBoundingClientRect().bottom -

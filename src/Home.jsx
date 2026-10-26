@@ -63,8 +63,6 @@ function Home({ play, showLogo }) {
         .timeline()
         .timeScale(0.85)
         .to(menu, { ...bar, duration: 1 }, 0)
-        // Also drives the loader's copy of the rings, which rides the photo
-        // until the loader hands over.
         .fromTo(
           document.querySelectorAll(".hero-rings"),
           { scale: 0.05, autoAlpha: 1 },

@@ -188,7 +188,6 @@ function Footer({ play }) {
         const name = splitLines(footer.querySelector(".footer-name"));
         const copy = splitLines(footer.querySelector(".footer-copy"));
         const icons = gsap.utils.toArray(".footer-icon", footer);
-        // Keeps the large shadows from re-rasterizing at every scale step.
         gsap.set(icons, { willChange: "transform" });
 
         tl.from(name.lines, { yPercent: 100 }, 0)

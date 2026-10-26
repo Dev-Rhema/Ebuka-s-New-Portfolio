@@ -23,22 +23,12 @@ CustomEase.create("textReveal", "M0,0 C0.23,0 0.02,1 1,1");
 
 CustomEase.create("fadeInOut", "M0,0 C0.5,0 0.5,1 1,1");
 
-// Masks reach 0.12em below each line so descenders aren't clipped (the fonts
-// overflow by up to ~0.11em) while risen lines still start hidden (glyph tops
-// sit at least 0.13em below the line box).
 const splitLines = (targets) => {
   const split = SplitText.create(targets, { type: "lines", mask: "lines" });
   gsap.set(split.masks, { paddingBottom: "0.12em", marginBottom: "-0.12em" });
   return split;
 };
 
-// Plays a section's entrance the first time `trigger` scrolls 80% up the
-// viewport. `build` fills the timeline and may return a cleanup, called with
-// whether the entrance finished.
-//
-// The timeline is built a screen early, so splitting, measuring and image
-// decoding are done before the first frame has to animate. A width change in
-// between invalidates the split lines, so the build is redone at play time.
 const revealOnScroll = (trigger, build) => {
   let prepared = null;
 
@@ -80,8 +70,6 @@ const revealOnScroll = (trigger, build) => {
   });
 };
 
-// Grows a call button from its left edge with its label rising from the
-// bottom; the button's own clip doubles as the label's mask.
 const revealButton = (tl, button, at) =>
   tl
     .fromTo(

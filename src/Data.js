@@ -41,8 +41,6 @@ import growthMarketingIcon from "./assets/Skills/skillIcons/growthMarketing.svg"
 import marketingStrategyIcon from "./assets/Skills/skillIcons/digitalMarketing.svg";
 import advertisingIcon from "./assets/Skills/skillIcons/advertising.svg";
 import knightSprite from "./assets/Knight/knight-sprite.webp";
-// Pre-rasterized from Grass.svg: SVGs rasterize on the main thread, which
-// stalled the scroll when the footer's dithered grass loaded.
 import grass from "./assets/Knight/Grass.webp";
 
 const aboutBrands = [aboutBrand1, aboutBrand2, aboutBrand3];

@@ -16,9 +16,6 @@ import {
 } from "./Data";
 import { callButton, sectionHeading, sectionLabel } from "./styles";
 
-// The layers share the 504px artboard so they register exactly. The drop
-// shadows are pre-rendered: as live SVG filters they re-rasterize whenever
-// the icon scales.
 const iconLayer =
   "pointer-events-none absolute -top-4 -left-185.5 size-403.25 max-w-none md:-top-5 md:-left-232 md:size-504";
 
@@ -76,7 +73,6 @@ function TargetGlyph() {
   );
 }
 
-// One 2s pass of each icon's hover loop.
 const hoverCycles = {
   chart: (tl, icon) => {
     const short = icon.querySelector(".about-bar-short");
@@ -137,8 +133,6 @@ function About({ play }) {
       let overlays = [];
       const listeners = [];
 
-      // Hovering loops the icon's cycle; leaving lets the current pass finish.
-      // Bound after the reveal because reverting the split rebuilds the nodes.
       const bindHovers = contextSafe(() => {
         const icons = gsap.utils.toArray("[data-cycle]", container.current);
         icons.forEach((icon) => {
@@ -173,8 +167,6 @@ function About({ play }) {
         const label = splitLines(".about-label");
         const lines = splitLines(text);
 
-        // Icons scale in place on overlays so the line masks don't clip
-        // their shadows; the originals return once the lines are reverted.
         const origin = section.getBoundingClientRect();
         const icons = gsap.utils.toArray(".about-icon", section);
         overlays = icons.map((icon) => {
@@ -188,8 +180,6 @@ function About({ play }) {
             height: `${height}px`,
             margin: 0,
             pointerEvents: "none",
-            // Keeps Chrome from re-rasterizing the filtered shadow SVGs at
-            // every scale step.
             willChange: "transform",
           });
           return overlay;
@@ -235,8 +225,6 @@ function About({ play }) {
           container.current,
         );
         const labels = splitLines(".trusted-stat-label");
-        // Clips only the bottom edge so the values' glyphs can overflow
-        // their tight line boxes.
         gsap.set(masks, { clipPath: "inset(-50% -50% 0% -50%)" });
 
         gsap.utils

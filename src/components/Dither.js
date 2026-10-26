@@ -129,15 +129,12 @@ export function useDither(imageRef, sprite) {
       return;
     }
 
-    // CPU-backed, so uploading it to WebGL needs no GPU readback.
     const raster = document.createElement("canvas");
     let disposed = false;
     let decoding = false;
     let bitmap = null;
     let uploaded = false;
     let uploading = false;
-    // A sprite sheet is tens of megabytes as a texture; uploading it whole
-    // stalls a frame for ~100ms, so it goes up in strips over several frames.
     const uploadSprite = () => {
       uploading = true;
       const { width, height } = bitmap;
@@ -174,8 +171,6 @@ export function useDither(imageRef, sprite) {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, raster);
       uploaded = true;
     };
-    // Decodes from the (cached) file off the main thread: drawing the <img>
-    // itself, or making a bitmap from it, decodes synchronously mid-scroll.
     const decode = () => {
       if (decoding || !image.complete || !image.naturalWidth) return;
       decoding = true;

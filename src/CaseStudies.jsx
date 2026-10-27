@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import {
   gsap,
-  revealArrowButton,
+  revealButton,
   revealOnScroll,
   splitLines,
   useGSAP,
@@ -9,7 +9,7 @@ import {
 import { CaseStudyData } from "./Data";
 import { Naira, Plus } from "./components/StatSymbols";
 import { WavingFlag } from "./components/WavingFlag";
-import { arrowButton, sectionLabel } from "./styles";
+import { callButton, sectionLabel } from "./styles";
 
 function CaseStudy({ study }) {
   const { stat, testimonial } = study;
@@ -18,14 +18,16 @@ function CaseStudy({ study }) {
     <article className="case-study mb-32">
       <div className="case-header">
         <WavingFlag logo={study.logo} className="case-flag h-48 w-94" />
-        <h3 className="case-name font-['DM-Serif'] text-28 leading-none tracking-[-0.02em] text-black md:mt-16 md:text-40">
-          {study.name}
-        </h3>
-
-        <div className="mt-8 md:grid md:grid-cols-headline">
-          <p className="case-headline font-['Geist'] text-18 leading-20 font-medium tracking-[-0.025em] text-black md:max-w-560 md:tracking-[-0.02em] md:text-28 md:leading-28">
-            {study.headline}
-          </p>
+        {/* Same columns as the media below, so the summary lines up with the stat card. */}
+        <div className="md:mt-8 md:grid md:grid-cols-media md:gap-x-16">
+          <div>
+            <h3 className="case-name font-['DM-Serif'] text-28 leading-none tracking-[-0.02em] text-black md:mt-8 md:text-40">
+              {study.name}
+            </h3>
+            <p className="case-headline mt-8 font-['Geist'] text-18 leading-20 font-medium tracking-[-0.025em] text-black md:max-w-600 md:tracking-[-0.02em] md:text-28 md:leading-28">
+              {study.headline}
+            </p>
+          </div>
 
           <div className="mt-15.5 md:mt-0">
             <p className="case-summary font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-20 md:leading-26">
@@ -33,28 +35,17 @@ function CaseStudy({ study }) {
             </p>
             <a
               href={study.link}
-              className={`case-link mt-19 md:mt-20 ${arrowButton}`}
+              className={`case-link mt-19 md:mt-16 ${callButton}`}
             >
-              <span className="overflow-hidden py-[0.1em]">
-                <span data-roll className="block">Read Case Study</span>
-              </span>
-              <span className="overflow-hidden">
-                <svg
-                  viewBox="0 0 20 14"
-                  className="block w-13 md:w-15"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                >
-                  <path d="M0 7h18M12 1l6 6-6 6" />
-                </svg>
+              <span data-roll className="block">
+                Learn More
               </span>
             </a>
           </div>
         </div>
       </div>
 
-      <div className="case-media mt-23 flex flex-col gap-16 md:mt-30 md:grid md:h-447 md:grid-cols-media">
+      <div className="case-media mt-23 flex flex-col gap-16 md:mt-32 md:grid md:h-447 md:grid-cols-media">
         <div className="case-panel h-188 overflow-hidden rounded-8 md:h-auto">
           <img
             loading="lazy"
@@ -155,7 +146,7 @@ function CaseStudies({ play }) {
             { clipPath: "inset(0% -50% 0% -50%)", clearProps: "clipPath" },
             0.1,
           ).from(lines, { yPercent: 100, stagger: 0.1 }, 0.2);
-          revealArrowButton(
+          revealButton(
             tl,
             study.querySelector(".case-link"),
             0.2 + lines.length * 0.1,

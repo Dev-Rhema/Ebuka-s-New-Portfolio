@@ -228,7 +228,7 @@ export const CaseStudyData = [
     headline:
       "Helping the Nigerian Fintech Powerhouse generate ₦50+ billion in inflow and acquired over 1 million users",
     summary:
-      "Four years of paid media on Meta, Google, TikTok, Snapchat, Pinterest and Appnext. Every inflow attributed in AppsFlyer. Every user tracked from first click to first deposit.",
+      "Four years of paid media on Meta, Google, TikTok, Snapchat, Pinterest and Appnext. Every inflow attributed in AppsFlyer.",
     link: "/case-study/piggyvest",
     banner: piggyBanner,
     questions: piggyvestVideoQuestions,
@@ -256,7 +256,7 @@ export const CaseStudyData = [
     headline:
       "I helped a Nigerian skincare brand double its paid revenue in two months and grow international sales by 340%.",
     summary:
-      "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.",
+      "DANG sells in Nigeria, US, UK and Canada. We took over ads, and nearly doubled international ROAS in 1 month.",
     link: "/case-study/dang",
     // Placeholder: Piggyvest's questions until DANG's are ready.
     banner: dangBanner,
@@ -283,7 +283,7 @@ export const CaseStudyData = [
     headline:
       "Helped a US remittance company launch its pivot to Remittance-as-a-Service and generate 1,300 qualified B2B leads in 6 months.",
     summary:
-      "I ran paid acquisition on Meta and Google for the new product from August 2025 to January 2026, then oversaw creation of the assets that carried leads into the pipeline.",
+      "I ran paid acquisition on Meta and Google for the new product a year, then oversaw processes that brought leads.",
     link: "/case-study/sendsprint",
     // Placeholder: Piggyvest's questions until SendSprint's are ready.
     banner: sendSprintBanner,

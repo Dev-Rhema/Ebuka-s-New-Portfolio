@@ -17,7 +17,6 @@
     inset 0 calc(var(--u) * -3) calc(var(--u) * 2) rgba(0, 0, 0, 0.25),
     inset 0 calc(var(--u) * 2) calc(var(--u) * 2) rgba(179, 179, 179, 0.25);
   --border-width-pill: calc(var(--u) * 2);
-  --grid-template-columns-headline: calc(var(--u) * 759) 1fr;
   --grid-template-columns-media: calc(var(--u) * 794) 1fr;
 }
 

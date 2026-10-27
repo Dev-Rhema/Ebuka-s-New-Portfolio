@@ -7,7 +7,9 @@ import {
   splitLines,
   useGSAP,
 } from "../animation";
+import { ChatLink } from "../Data";
 import Footer from "../Footer";
+import { skipNextLoader } from "../skipLoader";
 import { callButton } from "../styles";
 import VideoPlayer from "./VideoPlayer";
 
@@ -26,7 +28,9 @@ function Header() {
       </a>
       <nav className="flex font-['Geist'] font-medium">
         <a
-          href="#contact"
+          href={ChatLink}
+          target="_blank"
+          rel="noreferrer"
           className="flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-46 md:px-18 md:text-16"
         >
           <span data-roll>Let’s Chat</span>
@@ -46,6 +50,7 @@ function Header() {
 function GoBack() {
   // Returns to wherever the visitor came from on this site, or to the home page.
   const back = (event) => {
+    skipNextLoader();
     if (document.referrer.startsWith(location.origin) && history.length > 1) {
       event.preventDefault();
       history.back();

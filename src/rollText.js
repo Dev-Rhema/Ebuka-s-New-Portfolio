@@ -3,8 +3,8 @@
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const SPINS = 3;
 const ROLL = {
-  duration: 450,
-  stagger: 25,
+  duration: 800,
+  stagger: 40,
   easing: "cubic-bezier(0.22, 1, 0.36, 1)",
 };
 

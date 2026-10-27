@@ -75,6 +75,8 @@ export const KnightFigure = {
 
 export const ContactEmail = "Ebuka@exodigital.org";
 
+export const ChatLink = "https://calendly.com/ebuka-exodigital/new-meeting";
+
 export const SocialLinks = [
   { name: "X", href: "https://x.com/Daevee007" },
   { name: "Instagram", href: "#" },

@@ -5,7 +5,12 @@ import CaseStudies from "./CaseStudies";
 import Footer from "./Footer";
 import FaceRings from "./components/FaceRings";
 import Skills from "./Skills";
-import { headerImgNoBg, piggyvestWordmark, instagramThumb } from "./Data";
+import {
+  ChatLink,
+  headerImgNoBg,
+  piggyvestWordmark,
+  instagramThumb,
+} from "./Data";
 import { heroBackdrop, heroRings } from "./styles";
 
 const headline =
@@ -53,7 +58,15 @@ function Home({ play, showLogo }) {
         container.current,
       );
       const chat = container.current.querySelector(".hero-button");
-      const rise = { yPercent: 0, autoAlpha: 1, duration: 1, ease: "heroText" };
+      // y: 0 as well, because when the loader is skipped this runs on mount, and React's
+      // dev-only double mount can leave the yPercent offset stored as pixels.
+      const rise = {
+        y: 0,
+        yPercent: 0,
+        autoAlpha: 1,
+        duration: 1,
+        ease: "heroText",
+      };
       const bar = { scaleX: 1, ease: "logoMove" };
 
       gsap
@@ -131,7 +144,9 @@ function Home({ play, showLogo }) {
 
         <nav className="absolute top-32 right-24 z-60 flex font-['Geist'] font-medium md:right-32 xl:top-32 xl:right-[5.556vw]">
           <a
-            href="#contact"
+            href={ChatLink}
+            target="_blank"
+            rel="noreferrer"
             className="hero-button flex h-32 items-center gap-12 bg-black pr-16 pl-14 text-14 tracking-[-0.04em] text-white md:h-40 md:gap-12.5 md:pr-17.5 md:pl-16 md:text-16 xl:h-46 xl:gap-12 xl:px-18 xl:text-16"
           >
             <span className="overflow-hidden py-[0.1em]">

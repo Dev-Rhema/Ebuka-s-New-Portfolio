@@ -297,7 +297,7 @@ export const CaseStudyData = [
     testimonial: {
       title: "Ebuka helped craft, refine and document our channel strategies",
       quote:
-        "I look forward to my meetings with Ebuka because he shows up prepared, has a clear view of what’s working and what isn’t.",
+        "I look forward to my meetings with Ebuka because he shows up prepared, he always has an action plan.",
       name: "Damisi (Dammy) Busari",
       role: "Founder & CEO of Sendsprint",
       avatar: sendSprintReviewer,

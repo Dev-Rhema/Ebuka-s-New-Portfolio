@@ -50,7 +50,7 @@ const SoundIcon = ({ muted, className }) => (
  */
 function VideoPlayer({ title, src, poster, duration, className = "" }) {
   const videoRef = useRef(null);
-  const trackRef = useRef(null);
+  const railRef = useRef(null);
   const fillRef = useRef(null);
   const knobRef = useRef(null);
   const timeRef = useRef(null);
@@ -181,7 +181,8 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
   };
 
   const seekToPointer = (clientX) => {
-    const { left, width } = trackRef.current.getBoundingClientRect();
+    // Measured on the knob's rail, so the knob stays under the pointer while dragging.
+    const { left, width } = railRef.current.getBoundingClientRect();
     seek(((clientX - left) / width) * total());
   };
 
@@ -254,10 +255,9 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
       )}
 
       <div
-        className={`absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 to-transparent px-8 pt-40 pb-10 text-white transition-opacity duration-300 ${controlsHidden ? "pointer-events-none opacity-0" : "opacity-100"}`}
+        className={`absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 to-transparent px-8 pt-40 pb-4 text-white transition-opacity duration-300 ${controlsHidden ? "pointer-events-none opacity-0" : "opacity-100"}`}
       >
         <div
-          ref={trackRef}
           role="slider"
           tabIndex={0}
           aria-label="Seek"
@@ -268,34 +268,45 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
           onKeyDown={onTrackKey}
           className="relative flex h-20 cursor-pointer touch-none items-center"
         >
-          <div className="h-4 w-full rounded-full bg-white/40" />
+          <div className="h-6 w-full rounded-full bg-white/40" />
           <div
             ref={fillRef}
-            className="absolute inset-x-0 h-4 origin-left scale-x-0 rounded-full bg-white"
+            // A transform, not Tailwind's scale-x (the scale property), which would multiply
+            // with the transform paint() writes and pin the fill at zero.
+            className="absolute inset-x-0 h-6 origin-left transform-[scaleX(0)] rounded-full bg-white"
           />
+          {/* The knob's centre travels a rail inset by its radius, so it never overhangs the track's ends. */}
           <div
-            ref={knobRef}
-            className="absolute left-0 size-16 -translate-x-1/2 rounded-full bg-white shadow-[0_0_0_2px_rgba(150,150,150,0.6)]"
-          />
+            ref={railRef}
+            className="pointer-events-none absolute inset-x-10 inset-y-0 flex items-center"
+          >
+            {/* A white dot in a ring of the same glass as the play button. */}
+            <div ref={knobRef} className="absolute left-0 -translate-x-1/2">
+              <GlassDisc className="size-20">
+                <span className="relative size-15 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.25)]" />
+              </GlassDisc>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-4 flex items-center">
+        {/* The play and mute icons sit flush with the ends of the track. */}
+        <div className="mt-6 flex h-24 items-center">
           <button
             type="button"
             onClick={toggle}
             aria-label={playing ? "Pause" : "Play"}
-            className="flex size-24 items-center justify-center"
+            className="flex h-full items-center"
           >
             {playing ? (
-              <PauseIcon className="w-12" />
+              <PauseIcon className="w-17" />
             ) : (
-              <PlayIcon className="w-12" />
+              <PlayIcon className="w-17" />
             )}
           </button>
-          <span className="mx-8 h-14 w-px bg-white/30" />
+          <span className="mx-8 h-16 w-2 rounded-full bg-white/25" />
           <span
             ref={timeRef}
-            className="font-['Geist-Mono'] text-12 leading-none tracking-[0.04em]"
+            className="font-['Geist-Mono'] text-11 leading-none tracking-[0.04em]"
           >
             {`0:00 of ${clock(duration)}`}
           </span>
@@ -303,7 +314,7 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
             type="button"
             onClick={() => (videoRef.current.muted = !muted)}
             aria-label={muted ? "Unmute" : "Mute"}
-            className="ml-auto flex size-24 items-center justify-center"
+            className="ml-auto flex h-full items-center"
           >
             <SoundIcon muted={muted} className="w-15" />
           </button>

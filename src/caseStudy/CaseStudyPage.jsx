@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   gsap,
   revealButton,
@@ -91,7 +91,38 @@ function VideoThumb({ title, thumbnail }) {
 
 function Questions({ questions }) {
   const container = useRef(null);
+  const list = useRef(null);
+  const marker = useRef(null);
   const [active, setActive] = useState(0);
+  const activeRef = useRef(active);
+
+  // One marker glides to the active question rather than each one fading in and out.
+  const placeMarker = (animate) => {
+    const link = list.current.children[activeRef.current]?.firstElementChild;
+    // The nav is hidden on phones, where there is nothing to measure.
+    if (!link?.offsetHeight) return;
+    const y =
+      link.offsetTop + (link.offsetHeight - marker.current.offsetHeight) / 2;
+    gsap.to(marker.current, {
+      y,
+      duration: animate ? 0.6 : 0,
+      ease: "expo.inOut",
+      overwrite: true,
+    });
+  };
+
+  useLayoutEffect(() => {
+    const first = activeRef.current === active;
+    activeRef.current = active;
+    placeMarker(!first);
+  }, [active]);
+
+  // Breakpoints and the web font change where each label sits, so jump straight there.
+  useEffect(() => {
+    const observer = new ResizeObserver(() => placeMarker(false));
+    observer.observe(list.current);
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(
     () => {
@@ -129,28 +160,30 @@ function Questions({ questions }) {
           </span>
           Questions
         </p>
-        <ol className="mt-1.5">
-          {questions.map((item, index) => (
-            <li key={item.label}>
-              <a
-                href={`#question-${index + 1}`}
-                aria-current={active === index ? "true" : undefined}
-                className={`relative block w-fit py-8 font-['Geist'] text-15 leading-18 font-medium xl:py-10.5 xl:text-16 xl:leading-none tracking-[-0.04em] transition-colors duration-300 ${
-                  active === index
-                    ? "text-[#404040]"
-                    : "text-[#838383] hover:text-[#404040]"
-                }`}
-              >
-                <span
-                  className={`absolute top-1/2 -left-12 h-14 w-4 -translate-y-1/2 rounded-full bg-[#E5BB5C] transition-opacity duration-300 ${
-                    active === index ? "opacity-100" : "opacity-0"
+        <div className="relative mt-1.5">
+          <ol ref={list}>
+            {questions.map((item, index) => (
+              <li key={item.label}>
+                <a
+                  href={`#question-${index + 1}`}
+                  aria-current={active === index ? "true" : undefined}
+                  className={`block w-fit py-8 font-['Geist'] text-15 leading-18 font-medium xl:py-10.5 xl:text-16 xl:leading-none tracking-[-0.04em] transition-colors duration-300 ${
+                    active === index
+                      ? "text-[#404040]"
+                      : "text-[#838383] hover:text-[#404040]"
                   }`}
-                />
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ol>
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+          <span
+            ref={marker}
+            aria-hidden="true"
+            className="absolute top-0 -left-12 h-14 w-4 rounded-full bg-[#E5BB5C]"
+          />
+        </div>
       </nav>
 
       <div className="md:mt-24 md:flex-1">

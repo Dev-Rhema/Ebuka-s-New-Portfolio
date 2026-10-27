@@ -217,17 +217,19 @@ function Questions({ questions }) {
             ) : (
               <VideoThumb title={item.label} thumbnail={item.thumbnail} />
             )}
-            <div className="reveal-text space-y-16 md:col-start-2 md:row-start-2 md:mt-16 md:space-y-20 xl:mt-20 xl:space-y-24">
-              {item.answer.map((paragraph, i) => (
-                <p
-                  key={i}
-                  data-split
-                  className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-16 md:leading-21 xl:text-20 xl:leading-26"
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            {item.answer.length > 0 && (
+              <div className="reveal-text space-y-16 md:col-start-2 md:row-start-2 md:mt-16 md:space-y-20 xl:mt-20 xl:space-y-24">
+                {item.answer.map((paragraph, i) => (
+                  <p
+                    key={i}
+                    data-split
+                    className="font-['Geist'] text-14 leading-18 font-medium tracking-[-0.04em] text-[#838383] md:text-16 md:leading-21 xl:text-20 xl:leading-26"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            )}
           </article>
         ))}
       </div>

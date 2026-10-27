@@ -206,26 +206,71 @@ const piggyvestQuestions = [
   answer: [answer],
 }));
 
-// question-N.mp4 and its poster question-N.webp answer question N.
-const piggyvestMedia = import.meta.glob("./assets/CaseImgs/piggy/videos/*", {
-  eager: true,
-  import: "default",
-});
-// In seconds, so the player can show each length before its video has loaded.
-const piggyvestDurations = [64.2, 78.6, 68.1, 63, 77.5, 66.9, 79.1, 39.6];
+// In each videos folder, question-N.mp4 and its poster question-N.webp answer question N.
+// Durations are in seconds, so the player can show each length before its video has loaded.
+const withVideos = (questions, media, folder, durations) =>
+  questions.map((item, i) => {
+    const file = `${folder}/question-${i + 1}`;
+    return {
+      ...item,
+      video: media[`${file}.mp4`],
+      poster: media[`${file}.webp`],
+      duration: durations[i],
+    };
+  });
 
-const piggyvestVideoQuestions = piggyvestQuestions.map((item, i) => {
-  const file = `./assets/CaseImgs/piggy/videos/question-${i + 1}`;
-  return {
-    ...item,
-    video: piggyvestMedia[`${file}.mp4`],
-    poster: piggyvestMedia[`${file}.webp`],
-    duration: piggyvestDurations[i],
-  };
-});
+const piggyvestVideoQuestions = withVideos(
+  piggyvestQuestions,
+  import.meta.glob("./assets/CaseImgs/piggy/videos/*", {
+    eager: true,
+    import: "default",
+  }),
+  "./assets/CaseImgs/piggy/videos",
+  [64.2, 78.6, 68.1, 63, 77.5, 66.9, 79.1, 39.6],
+);
 
-// DANG and SendSprint borrow Piggyvest's questions, with a placeholder answer and
-// thumbnail, until theirs are ready.
+// Answers to follow; until then each question shows only its video.
+const sendSprintQuestions = withVideos(
+  [
+    [
+      "The Product Pivot",
+      "What does a product pivot do to a paid media strategy?",
+    ],
+    [
+      "From Diaspora Senders to Banks",
+      "How do you market to a bank when the old audience was a diaspora sender?",
+    ],
+    [
+      "What a B2B Funnel Needs",
+      "What does a B2B lead gen funnel need that a consumer app campaign does not?",
+    ],
+    [
+      "Defining a Qualified Lead",
+      "How did you define a qualified lead, and who agreed on that bar?",
+    ],
+    [
+      "Going Beyond Ads",
+      "Why did the work expand from ads into landing pages, sales copy and a white paper?",
+    ],
+    [
+      "Keeping Long Sales Cycles Moving",
+      "How do you keep leads moving when the sales cycle is months, not minutes?",
+    ],
+    [
+      "What I Got Wrong",
+      "What is one thing you got wrong, and how did you fix it?",
+    ],
+  ].map(([label, question]) => ({ label, question, answer: [] })),
+  import.meta.glob("./assets/CaseImgs/SendS/videos/*", {
+    eager: true,
+    import: "default",
+  }),
+  "./assets/CaseImgs/SendS/videos",
+  [51.3, 83.9, 97.6, 53.8, 48.6, 68, 50.7],
+);
+
+// DANG borrows Piggyvest's questions, with a placeholder answer and thumbnail,
+// until its own are ready.
 const placeholderQuestions = piggyvestQuestions.map((item) => ({
   ...item,
   answer: [answerPlaceholder, answerPlaceholder],
@@ -297,9 +342,8 @@ export const CaseStudyData = [
     summary:
       "I ran paid acquisition on Meta and Google for the new product a year, then oversaw processes that brought leads.",
     link: "/case-study/sendsprint",
-    // Placeholder: Piggyvest's questions until SendSprint's are ready.
     banner: sendSprintBanner,
-    questions: placeholderQuestions,
+    questions: sendSprintQuestions,
     cover: sendSprintCover,
     stat: {
       value: "1300",

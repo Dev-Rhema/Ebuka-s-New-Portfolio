@@ -163,39 +163,47 @@ const piggyvestQuestions = [
   [
     "Paid Acquisitions Before Me",
     "What did paid acquisition look like before you came in?",
+    "Before joining PiggyVest in 2023, customer acquisition relied heavily on organic growth and referrals. Introducing paid acquisition meant building an entirely new system from the ground up. Here’s how that journey unfolded and laid the foundation for a more data-driven approach to growth.",
   ],
   [
     "Need for Different Strategies on Different Platforms",
     "Why does a savings app need different strategies for iOS and Android?",
+    "iOS and Android users may use the same savings app, but their behaviours, spending patterns, and conversion journeys can be surprisingly different. Discover why understanding these differences is essential to building effective campaigns and making smarter decisions about targeting, content, and budgets.",
   ],
   [
     "Decision Making on Running Channels",
     "How did you decide which channels to run and which to leave alone?",
+    "Choosing the right advertising channel goes beyond driving app installs. It’s about understanding where your ideal users spend their time and how they interact with their devices. Discover how these insights shape channel selection and help attract users who are more likely to engage with your app.",
   ],
   [
     "Setting Up Trustworthy Attribution",
     "How did you set up attribution so the business could trust what the ads were telling it?",
+    "Not all users engage with a savings app in the same way, and understanding their true value requires more than guesswork. Discover how accurate attribution and tools like AppsFlyer help connect marketing spend to user behaviour, measure campaign performance, and make smarter decisions about where to invest.",
   ],
   [
     "Spotting Winning Ads",
     "What tells you an ad is a winner, and what do you do once you find one?",
+    "What makes an ad a true winner, and how do you keep it performing long after launch? Discover how identifying patterns in successful creatives, refining messaging, and understanding audience behaviour can help turn strong-performing ads into repeatable, long-term results.",
   ],
   [
     "Keeping Stakeholders in the Loop",
     "How did you report to leadership so they understood performance without you in the room?",
+    "Great campaign performance means little if you can’t communicate its impact on the business. From finance teams to senior leadership, different stakeholders care about different metrics. Learn how tailored reporting and effective data storytelling can influence decisions, demonstrate value, and build confidence in marketing investments.",
   ],
   [
     "Ensuring the Business Understood the Caveats",
     "How do you keep trust when the business wants to double spend and you know efficiency will drop?",
+    "Increasing your advertising budget doesn’t always guarantee better results. Scaling campaigns requires careful planning, fresh creatives, and a clear understanding of what drives performance. This video explores the importance of balancing ambitious business targets with sustainable campaign growth, without compromising what already works.",
   ],
   [
     "A Call I Got Wrong",
     "What is one call you got wrong on this account, and what did it teach you?",
+    "Even the strongest marketing ideas don’t always deliver the expected results. When assumptions meet market realities, the ability to adapt becomes just as important as the original strategy. This video explores the value of testing hypotheses, recognising when to change direction, and turning setbacks into lessons for future campaigns.",
   ],
-].map(([label, question]) => ({
+].map(([label, question, answer]) => ({
   label,
   question,
-  answer: [answerPlaceholder, answerPlaceholder],
+  answer: [answer],
 }));
 
 // question-N.mp4 and its poster question-N.webp answer question N.
@@ -216,9 +224,11 @@ const piggyvestVideoQuestions = piggyvestQuestions.map((item, i) => {
   };
 });
 
-// DANG and SendSprint borrow Piggyvest's questions, with a placeholder thumbnail, until theirs are ready.
+// DANG and SendSprint borrow Piggyvest's questions, with a placeholder answer and
+// thumbnail, until theirs are ready.
 const placeholderQuestions = piggyvestQuestions.map((item) => ({
   ...item,
+  answer: [answerPlaceholder, answerPlaceholder],
   thumbnail: videoThumb,
 }));
 

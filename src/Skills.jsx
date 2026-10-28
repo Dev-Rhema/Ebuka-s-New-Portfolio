@@ -94,7 +94,7 @@ function Skills({ play }) {
 
       const find = (selector) => container.current.querySelector(selector);
 
-      // Starts once the intro is a quarter of the way up the screen; the fan has its own trigger.
+      // Starts the moment the intro reaches the screen, and stays hidden until then. The fan has its own trigger.
       revealOnScroll(
         find(".skills-intro"),
         (tl) => {
@@ -109,8 +109,6 @@ function Skills({ play }) {
             0.1,
           );
           revealButton(tl, find(".skills-button"), 0.6);
-          // Every part of the intro now starts hidden by its own tween.
-          gsap.set(find(".skills-intro"), { autoAlpha: 1 });
 
           // The cards wait as one stack until the whole stack is on screen, then fan out.
           const fan = gsap.from(cards, {
@@ -136,7 +134,7 @@ function Skills({ play }) {
             fan.revert();
           };
         },
-        "top 75%",
+        "top bottom",
       );
     },
     { dependencies: [play], scope: container },

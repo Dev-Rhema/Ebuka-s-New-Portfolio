@@ -75,25 +75,6 @@ function GoBack() {
 const videoFrame =
   "reveal-media aspect-9/16 w-full md:col-start-1 md:row-span-2 md:row-start-1";
 
-// Placeholder card for questions whose video hasn't arrived yet.
-function VideoThumb({ title, thumbnail }) {
-  return (
-    <div className={`relative overflow-hidden bg-black ${videoFrame}`}>
-      <img
-        loading="lazy"
-        src={thumbnail}
-        alt=""
-        className="size-full object-cover"
-      />
-      {/* Hides the title baked into the placeholder thumbnail so each card shows its own. */}
-      <div className="absolute inset-x-0 top-0 h-64 bg-[linear-gradient(#000_60%,transparent)]" />
-      <p className="absolute top-12 left-8 font-['Geist'] text-12 leading-none font-medium tracking-[-0.02em] text-white">
-        {title}
-      </p>
-    </div>
-  );
-}
-
 function Questions({ questions }) {
   const container = useRef(null);
   const list = useRef(null);
@@ -206,17 +187,13 @@ function Questions({ questions }) {
             >
               {item.question}
             </h2>
-            {item.video ? (
-              <VideoPlayer
-                title={item.label}
-                src={item.video}
-                poster={item.poster}
-                duration={item.duration}
-                className={videoFrame}
-              />
-            ) : (
-              <VideoThumb title={item.label} thumbnail={item.thumbnail} />
-            )}
+            <VideoPlayer
+              title={item.label}
+              src={item.video}
+              poster={item.poster}
+              duration={item.duration}
+              className={videoFrame}
+            />
             {item.answer.length > 0 && (
               <div className="reveal-text space-y-16 md:col-start-2 md:row-start-2 md:mt-16 md:space-y-20 xl:mt-20 xl:space-y-24">
                 {item.answer.map((paragraph, i) => (

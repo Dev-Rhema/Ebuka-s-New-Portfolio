@@ -46,7 +46,6 @@ import grass from "./assets/Knight/Grass.webp";
 import piggyBanner from "./assets/CaseImgs/CasePageBanners/piggyBanner.webp";
 import dangBanner from "./assets/CaseImgs/CasePageBanners/dangBanner.webp";
 import sendSprintBanner from "./assets/CaseImgs/CasePageBanners/sendSprintBanner.webp";
-import videoThumb from "./assets/CaseImgs/videoThumb.jpg";
 
 const aboutBrands = [aboutBrand1, aboutBrand2, aboutBrand3];
 
@@ -154,10 +153,6 @@ export const SpiralCards = [
   { src: heart2, alt: "Brand card" },
   { src: diamonds2, alt: "Truckmasters" },
 ];
-
-// Placeholder answer until each question has its real answer.
-const answerPlaceholder =
-  "DANG sells in Nigeria, US, UK and Canada. We took over paid media, rebuilt the creative testing and attribution setup, and nearly doubled international ROAS in a single month.";
 
 const piggyvestQuestions = [
   [
@@ -275,13 +270,45 @@ const sendSprintQuestions = withVideos(
   [51.3, 83.9, 97.6, 53.8, 48.6, 68, 50.7],
 );
 
-// DANG borrows Piggyvest's questions, with a placeholder answer and thumbnail,
-// until its own are ready.
-const placeholderQuestions = piggyvestQuestions.map((item) => ({
-  ...item,
-  answer: [answerPlaceholder, answerPlaceholder],
-  thumbnail: videoThumb,
-}));
+// Answers to follow; until then each question shows only its video.
+const dangQuestions = withVideos(
+  [
+    [
+      "The Real Problem",
+      "What did the brand think the problem was, and what was the actual problem?",
+    ],
+    [
+      "Taking DANG Abroad",
+      "How do you take a Nigerian skincare brand into the US, UK and Canada without losing what worked at home?",
+    ],
+    [
+      "Diaspora vs Local Creative",
+      "What changes in creative when the buyer is diaspora versus local?",
+    ],
+    [
+      "Deciding What to Test First",
+      "How did you decide what to test first, and how many ads at a time?",
+    ],
+    [
+      "Knowing When to Stop Spending",
+      "What tells you to stop spending on something, even when the client wants to keep going?",
+    ],
+    [
+      "Reporting for Quick Decisions",
+      "How did you report results so the founder could make decisions quickly?",
+    ],
+    [
+      "A Decision I Got Wrong",
+      "What is one decision you got wrong, and what did it cost?",
+    ],
+  ].map(([label, question]) => ({ label, question, answer: [] })),
+  import.meta.glob("./assets/CaseImgs/Dang/videos/*", {
+    eager: true,
+    import: "default",
+  }),
+  "./assets/CaseImgs/Dang/videos",
+  [52.3, 93.9, 54.2, 87.7, 67.3, 77.4, 49.7],
+);
 
 export const CaseStudyData = [
   {
@@ -321,9 +348,8 @@ export const CaseStudyData = [
     summary:
       "DANG sells in Nigeria, US, UK and Canada. We took over ads, and nearly doubled international ROAS in 1 month.",
     link: "/case-study/dang",
-    // Placeholder: Piggyvest's questions until DANG's are ready.
     banner: dangBanner,
-    questions: placeholderQuestions,
+    questions: dangQuestions,
     cover: dangCover,
     stat: {
       value: "340%",

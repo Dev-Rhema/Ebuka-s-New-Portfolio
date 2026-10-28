@@ -29,7 +29,7 @@ const splitLines = (targets) => {
   return split;
 };
 
-const revealOnScroll = (trigger, build) => {
+const revealOnScroll = (trigger, build, start = "top 80%") => {
   let prepared = null;
 
   const prepare = () => {
@@ -60,7 +60,7 @@ const revealOnScroll = (trigger, build) => {
 
   return ScrollTrigger.create({
     trigger,
-    start: "top 80%",
+    start,
     once: true,
     onEnter: () => {
       prepare();

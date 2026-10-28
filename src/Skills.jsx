@@ -3,6 +3,7 @@ import {
   gsap,
   revealButton,
   revealOnScroll,
+  ScrollTrigger,
   splitLines,
   useGSAP,
 } from "./animation";
@@ -93,29 +94,50 @@ function Skills({ play }) {
 
       const find = (selector) => container.current.querySelector(selector);
 
-      // Triggered by the cards rather than the heading, so the fan plays on screen.
-      revealOnScroll(find(".skills-fan"), (tl) => {
-        const label = splitLines(find(".skills-label"));
-        const heading = splitLines(find(".skills-heading"));
-        const cards = gsap.utils.toArray(".skill-card", container.current);
-        const center = cards.find((card) => card.dataset.angle === "0");
+      // Starts once the intro is a quarter of the way up the screen; the fan has its own trigger.
+      revealOnScroll(
+        find(".skills-intro"),
+        (tl) => {
+          const label = splitLines(find(".skills-label"));
+          const heading = splitLines(find(".skills-heading"));
+          const cards = gsap.utils.toArray(".skill-card", container.current);
+          const center = cards.find((card) => card.dataset.angle === "0");
 
-        tl.from(label.lines, { yPercent: 100 }, 0)
-          .from(heading.lines, { yPercent: 100, stagger: 0.1 }, 0.1)
-          .from(
-            cards,
-            {
-              x: (i, card) => center.offsetLeft - card.offsetLeft,
-              rotation: 0,
-            },
-            0,
+          tl.from(label.lines, { yPercent: 100 }, 0).from(
+            heading.lines,
+            { yPercent: 100, stagger: 0.1 },
+            0.1,
           );
-        revealButton(tl, find(".skills-button"), 0.6);
-        // Every part of the intro now starts hidden by its own tween.
-        gsap.set(find(".skills-intro"), { autoAlpha: 1 });
+          revealButton(tl, find(".skills-button"), 0.6);
+          // Every part of the intro now starts hidden by its own tween.
+          gsap.set(find(".skills-intro"), { autoAlpha: 1 });
 
-        return () => [label, heading].forEach((split) => split.revert());
-      });
+          // The cards wait as one stack until the whole stack is on screen, then fan out.
+          const fan = gsap.from(cards, {
+            x: (i, card) => center.offsetLeft - card.offsetLeft,
+            rotation: 0,
+            duration: 1,
+            ease: "textReveal",
+            paused: true,
+          });
+          const lowest = cards.find((card) => card.dataset.angle === "24");
+          const fanTrigger = ScrollTrigger.create({
+            trigger: lowest,
+            start: "bottom bottom",
+            once: true,
+            onEnter: () => fan.play(),
+          });
+
+          return (done) => {
+            [label, heading].forEach((split) => split.revert());
+            // Finishing the text must not cancel a fan that is still waiting.
+            if (done) return;
+            fanTrigger.kill();
+            fan.revert();
+          };
+        },
+        "top 75%",
+      );
     },
     { dependencies: [play], scope: container },
   );
@@ -138,7 +160,9 @@ function Skills({ play }) {
           href="#contact"
           className={`skills-button mx-auto mt-16 ${callButton}`}
         >
-          <span data-roll className="block">Book a Call</span>
+          <span data-roll className="block">
+            Book a Call
+          </span>
         </a>
       </div>
 

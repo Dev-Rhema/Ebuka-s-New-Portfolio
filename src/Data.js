@@ -229,38 +229,44 @@ const piggyvestVideoQuestions = withVideos(
   [64.2, 78.6, 68.1, 63, 77.5, 66.9, 79.1, 39.6],
 );
 
-// Answers to follow; until then each question shows only its video.
 const sendSprintQuestions = withVideos(
   [
     [
       "The Product Pivot",
       "What does a product pivot do to a paid media strategy?",
+      "What happens when a business changes direction and your entire marketing strategy needs to follow? When SendSprint pivoted from consumer remittances to serving businesses, the rules of customer acquisition changed overnight. This video explores the challenges of adapting to a new audience, rethinking campaign objectives, and aligning marketing with evolving business goals.",
     ],
     [
       "From Diaspora Senders to Banks",
       "How do you market to a bank when the old audience was a diaspora sender?",
+      "Going from marketing money transfers to individuals to selling remittance infrastructure to financial institutions is a completely different challenge. With SendSprint’s shift towards B2B services, reaching the right people required a fresh approach. This video explores the thinking behind adapting acquisition strategies to attract business decision-makers and generate meaningful leads.",
     ],
     [
       "What a B2B Funnel Needs",
       "What does a B2B lead gen funnel need that a consumer app campaign does not?",
+      "Moving from app installs to B2B lead generation changes more than just your target audience. It transforms the entire customer journey, from the first interaction to the final conversion. This video explores the added complexities of building a B2B funnel and why turning qualified leads into customers requires a different approach.",
     ],
     [
       "Defining a Qualified Lead",
       "How did you define a qualified lead, and who agreed on that bar?",
+      "Not every lead is worth pursuing, especially when you’re selling to businesses. At SendSprint, attracting interest was only half the challenge; identifying companies with the right needs and decision-makers was just as important. This video explores how clear qualification criteria and collaboration between marketing, leadership, and customer success helped focus efforts on the opportunities that mattered most.",
     ],
     [
       "Going Beyond Ads",
       "Why did the work expand from ads into landing pages, sales copy and a white paper?",
+      "An app install can happen in seconds, but turning a business lead into a paying customer takes more than a compelling ad. At SendSprint, paid advertising alone couldn’t address the questions, concerns, and information needs of business decision-makers. This video explores why the strategy expanded into tailored landing pages, persuasive sales copy, white papers, and other touchpoints designed to turn qualified leads into customers.",
     ],
     [
       "Keeping Long Sales Cycles Moving",
       "How do you keep leads moving when the sales cycle is months, not minutes?",
+      "When thousands of leads enter your pipeline, knowing who to prioritise can make all the difference. At SendSprint, this meant identifying businesses with stronger funding, assessing their readiness to convert, and focusing resources on the most promising opportunities. This video explores how strategic lead prioritisation, stakeholder collaboration, and targeted follow-ups helped move prospects through a lengthy B2B sales cycle.",
     ],
     [
       "What I Got Wrong",
       "What is one thing you got wrong, and how did you fix it?",
+      "What happens when the advertising channel you trusted most turns out to be the wrong fit? At SendSprint, an early assumption about B2B lead generation led to costly campaigns and a rethink of the acquisition strategy. This video explores how challenging conventional marketing wisdom and adapting to real campaign data helped turn an expensive setback into a valuable growth opportunity.",
     ],
-  ].map(([label, question]) => ({ label, question, answer: [] })),
+  ].map(([label, question, answer]) => ({ label, question, answer: [answer] })),
   import.meta.glob("./assets/CaseImgs/SendS/videos/*", {
     eager: true,
     import: "default",

@@ -5,9 +5,9 @@ import { useDither } from "./components/Dither";
 const { view, sprite } = KnightFigure;
 const [cellW, cellH] = sprite.cell;
 
-function Knight({ className = "", style }) {
+function Knight({ className = "", style, watchRef }) {
   const imageRef = useRef(null);
-  const { canvasRef, active } = useDither(imageRef, sprite);
+  const { canvasRef, active } = useDither(imageRef, sprite, watchRef);
 
   return (
     <div

@@ -254,8 +254,15 @@ function Footer({ play }) {
           animationPlayState: inView ? "running" : "paused",
         }}
       >
-        <Knight className="relative mx-auto w-204 md:w-283.25" />
-        <Knight className="absolute top-0 -left-1/2 -ml-102 w-204 motion-reduce:hidden md:-ml-141.75 md:w-283.25" />
+        {/* The second knight takes over from the first at the middle of the screen. */}
+        <Knight
+          watchRef={footerRef}
+          className="relative mx-auto w-204 md:w-283.25"
+        />
+        <Knight
+          watchRef={footerRef}
+          className="absolute top-0 -left-1/2 -ml-102 w-204 motion-reduce:hidden md:-ml-141.75 md:w-283.25"
+        />
       </div>
       <Grass />
     </footer>

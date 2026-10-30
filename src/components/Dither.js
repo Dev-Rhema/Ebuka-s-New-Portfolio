@@ -228,7 +228,7 @@ const releaseSprite = (src) => {
   sprites.delete(src);
 };
 
-export function useDither(imageRef, sprite) {
+export function useDither(imageRef, sprite, watchRef) {
   const canvasRef = useRef(null);
   // Without WebGL the plain image shows instead.
   const active = sharedRenderer() !== null;
@@ -339,13 +339,12 @@ export function useDither(imageRef, sprite) {
     load();
 
     // Sprites animate only while on screen; the loop stops entirely when they scroll away.
+    // A moving sprite can pass a fixed element to watch, so it is already on the right
+    // frame when it comes back into view. The page clock keeps every copy in step.
     let frameId = 0;
-    let start;
     const tick = (time) => {
       frameId = requestAnimationFrame(tick);
-      start ??= time;
-      const next =
-        Math.floor(((time - start) / 1000) * sprite.fps) % sprite.count;
+      const next = Math.floor((time / 1000) * sprite.fps) % sprite.count;
       if (next === frame) return;
       frame = next;
       draw();
@@ -354,7 +353,9 @@ export function useDither(imageRef, sprite) {
       cancelAnimationFrame(frameId);
       if (entry.isIntersecting) frameId = requestAnimationFrame(tick);
     });
-    if (sprite && !reducedMotion()) intersection.observe(canvas);
+    if (sprite && !reducedMotion()) {
+      intersection.observe(watchRef?.current ?? canvas);
+    }
 
     return () => {
       disposed = true;
@@ -366,7 +367,7 @@ export function useDither(imageRef, sprite) {
       if (spriteSrc) releaseSprite(spriteSrc);
       else if (texture) gl.deleteTexture(texture);
     };
-  }, [imageRef, sprite]);
+  }, [imageRef, sprite, watchRef]);
 
   return { canvasRef, active };
 }

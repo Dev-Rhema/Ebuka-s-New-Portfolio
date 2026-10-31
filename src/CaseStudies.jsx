@@ -19,7 +19,7 @@ function CaseStudy({ study }) {
       <div className="case-header">
         <WavingFlag logo={study.logo} className="case-flag h-48 w-94" />
         {/* Same columns as the media below, so the summary lines up with the stat card. */}
-        <div className="md:mt-8 md:grid md:grid-cols-media md:gap-x-16">
+        <div className="md:mt-8 md:grid md:grid-cols-2 md:gap-x-24 xl:grid-cols-media xl:gap-x-16">
           <div>
             <h3 className="case-name font-['DM-Serif'] text-28 leading-none tracking-[-0.02em] text-black md:mt-8 md:text-40">
               {study.name}
@@ -45,8 +45,8 @@ function CaseStudy({ study }) {
         </div>
       </div>
 
-      <div className="case-media mt-23 flex flex-col gap-16 md:mt-32 md:grid md:h-447 md:grid-cols-media">
-        <div className="case-panel h-188 overflow-hidden rounded-8 md:h-auto">
+      <div className="case-media mt-23 flex flex-col gap-16 md:mt-24 md:grid md:grid-cols-2 xl:mt-32 xl:h-447 xl:grid-cols-media">
+        <div className="case-panel h-188 overflow-hidden rounded-8 md:col-span-2 md:aspect-794/447 md:h-auto xl:col-auto xl:aspect-auto">
           <img
             loading="lazy"
             src={study.cover}
@@ -55,8 +55,9 @@ function CaseStudy({ study }) {
           />
         </div>
 
-        <div className="flex flex-col gap-16">
-          <div className="case-panel relative flex h-188 shrink-0 flex-col justify-end overflow-hidden rounded-8 bg-[#d9d9d9] p-16 text-white md:h-225">
+        {/* On tablets these sit side by side under the full-width image. */}
+        <div className="flex flex-col gap-16 md:contents xl:flex">
+          <div className="case-panel relative flex h-188 shrink-0 flex-col justify-end overflow-hidden rounded-8 bg-[#d9d9d9] p-16 text-white md:h-auto md:min-h-225 xl:h-225">
             {stat.image && (
               <img
                 loading="lazy"
@@ -76,7 +77,7 @@ function CaseStudy({ study }) {
             </p>
           </div>
 
-          <figure className="case-panel flex-1 rounded-8 bg-[#e5e5e5] px-16 pt-16 pb-14 md:pb-0">
+          <figure className="case-panel flex-1 rounded-8 bg-[#e5e5e5] px-16 pt-16 pb-14 md:pb-16 xl:pb-0">
             <p className="font-['Geist'] text-18 leading-20 font-medium tracking-[-0.04em] text-black md:text-24 md:leading-26">
               {testimonial.title}
             </p>
@@ -177,7 +178,7 @@ function CaseStudies({ play }) {
   return (
     <section
       ref={container}
-      className="bg-white px-24 pt-56 unit-440 md:pb-32 md:px-[3.125vw] xl:px-[5.556vw] md:unit-1440"
+      className="bg-white px-24 pt-56 unit-440 md:pb-32 md:px-[3.125vw] xl:px-[5.556vw] md:unit-tablet xl:unit-1440"
     >
       <p className={`case-label mb-26 ${sectionLabel}`}>
         Selected case studies

@@ -8,7 +8,7 @@ import {
   useGSAP,
 } from "./animation";
 import CircularGallery from "./components/CircularGallery";
-import { SkillsData, skillCard, skillDome } from "./Data";
+import { ChatLink, SkillsData, skillCard, skillDome } from "./Data";
 import { callButton, sectionHeading, sectionLabel } from "./styles";
 
 const FAN = [
@@ -24,6 +24,9 @@ const FAN_CARDS = SkillsData.map((skill, index) => ({
   skill,
   slot: FAN[index],
 })).sort((a, b) => Number(b.slot.angle === 0) - Number(a.slot.angle === 0));
+
+// Two rounds of cards, so wide tablets never see one wrap around at the edge.
+const GALLERY_CARDS = [...SkillsData, ...SkillsData];
 
 function SkillCardFace({ skill }) {
   const { icon } = skill;
@@ -143,7 +146,7 @@ function Skills({ play }) {
   return (
     <section
       ref={container}
-      className="overflow-hidden bg-white px-24 pt-25.5 text-center unit-440 md:overflow-visible md:px-[3.125vw] xl:px-[5.556vw] md:pt-56 md:unit-1440"
+      className="overflow-hidden bg-white px-24 pt-25.5 text-center unit-440 lg:overflow-x-clip lg:overflow-y-visible md:px-[3.125vw] xl:px-[5.556vw] md:pt-56 md:unit-tablet lg:unit-1100 xl:unit-1440"
     >
       <div className="skills-intro">
         <p className={`skills-label ${sectionLabel}`}>
@@ -155,7 +158,9 @@ function Skills({ play }) {
           My core focus of services aims at growth
         </h2>
         <a
-          href="#contact"
+          href={ChatLink}
+          target="_blank"
+          rel="noreferrer"
           className={`skills-button mx-auto mt-16 ${callButton}`}
         >
           <span data-roll className="block">
@@ -164,26 +169,26 @@ function Skills({ play }) {
         </a>
       </div>
 
-      <div className="skills-fan relative mt-59 h-316 md:mt-40 md:h-435">
-        <ul className="hidden md:block">
+      <div className="skills-fan relative mt-59 h-316 md:mt-40 lg:h-435">
+        <ul className="hidden lg:block">
           {FAN_CARDS.map(({ skill, slot }) => (
             <SkillCard key={skill.title} skill={skill} slot={slot} />
           ))}
         </ul>
 
         <CircularGallery
-          items={SkillsData}
-          getKey={(skill) => skill.title}
+          items={GALLERY_CARDS}
+          getKey={(skill, index) => `${skill.title}-${index}`}
           renderItem={(skill) => <SkillCardFace skill={skill} />}
           itemClassName="h-244 w-174 overflow-hidden rounded-8"
-          className="-mx-24 h-full md:hidden"
+          className="-mx-24 h-full md:-mx-[3.125vw] lg:hidden"
         />
 
         <img
           loading="lazy"
           src={skillDome}
           alt=""
-          className="absolute top-219 left-1/2 h-239 w-1268 max-w-none -translate-x-1/2 md:top-196"
+          className="absolute top-219 left-1/2 h-239 w-1268 max-w-none -translate-x-1/2 lg:top-196"
         />
       </div>
     </section>

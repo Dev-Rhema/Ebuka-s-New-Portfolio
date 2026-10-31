@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import GlassDisc from "../components/GlassDisc";
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -48,12 +48,19 @@ const SoundIcon = ({ muted, className }) => (
  * A portrait video with the site's own controls. Nothing downloads until the
  * visitor presses play; until then only the lazy-loaded poster shows.
  */
-function VideoPlayer({ title, src, poster, duration, className = "" }) {
+const VideoPlayer = memo(function VideoPlayer({
+  title,
+  src,
+  poster,
+  duration,
+  className = "",
+}) {
   const videoRef = useRef(null);
   const railRef = useRef(null);
   const fillRef = useRef(null);
   const knobRef = useRef(null);
   const timeRef = useRef(null);
+  const sliderRef = useRef(null);
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -67,7 +74,13 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
     const progress = clamp(time / total(), 0, 1) || 0;
     fillRef.current.style.transform = `scaleX(${progress})`;
     knobRef.current.style.left = `${progress * 100}%`;
-    timeRef.current.textContent = `${clock(time)} of ${clock(total())}`;
+    // These change once a second, so they skip the layout work on the other frames.
+    const label = `${clock(time)} of ${clock(total())}`;
+    if (timeRef.current.textContent !== label) {
+      timeRef.current.textContent = label;
+      sliderRef.current.setAttribute("aria-valuenow", Math.floor(time));
+      sliderRef.current.setAttribute("aria-valuetext", label);
+    }
   };
 
   useEffect(() => {
@@ -258,11 +271,13 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
         className={`absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 to-transparent px-8 pt-40 pb-4 text-white transition-opacity duration-300 ${controlsHidden ? "pointer-events-none opacity-0" : "opacity-100"}`}
       >
         <div
+          ref={sliderRef}
           role="slider"
           tabIndex={0}
           aria-label="Seek"
           aria-valuemin={0}
           aria-valuemax={Math.round(duration)}
+          aria-valuenow={0}
           onPointerDown={onTrackDown}
           onPointerMove={onTrackMove}
           onKeyDown={onTrackKey}
@@ -322,6 +337,6 @@ function VideoPlayer({ title, src, poster, duration, className = "" }) {
       </div>
     </div>
   );
-}
+});
 
 export default VideoPlayer;

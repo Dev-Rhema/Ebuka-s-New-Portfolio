@@ -7,7 +7,7 @@ import aboutBrand2 from "./assets/AboutImgs/aboutBrand2.svg";
 import aboutBrand3 from "./assets/AboutImgs/aboutBrand3.svg";
 import aboutIconCircle from "./assets/AboutImgs/aboutIconCircle.svg";
 import aboutIconShadow from "./assets/AboutImgs/aboutIconShadow.png";
-import cardBack from "./assets/Brands/Card - Back.svg";
+import cardBack from "./assets/Brands/Card - Back.webp";
 import ace from "./assets/Brands/Card - Front/Ace.svg";
 import ace1 from "./assets/Brands/Card - Front/Ace-1.svg";
 import ace2 from "./assets/Brands/Card - Front/Ace-2.svg";
@@ -67,8 +67,7 @@ export {
 };
 
 export const KnightFigure = {
-  view: { x: 91.5, y: 242, w: 534.5, h: 797.5 },
-  tip: { y: 244 },
+  view: { w: 534.5, h: 797.5 },
   sprite: { cols: 8, rows: 4, count: 32, fps: 24, cell: [425, 634], gap: 2 },
 };
 
@@ -78,7 +77,7 @@ export const ChatLink = "https://calendly.com/ebuka-exodigital/new-meeting";
 
 export const SocialLinks = [
   { name: "X", href: "https://x.com/Daevee007" },
-  { name: "Instagram", href: "#" },
+  { name: "Instagram", href: "https://www.instagram.com/theexodigital/" },
   { name: "YouTube", href: "https://www.youtube.com/@theexodigital" },
   { name: "LinkedIn", href: "https://www.linkedin.com/in/ebuka-chidube" },
 ];
@@ -158,7 +157,7 @@ const piggyvestQuestions = [
   [
     "Paid Acquisitions Before Me",
     "What did paid acquisition look like before you came in?",
-    "Before joining PiggyVest in 2023, customer acquisition relied heavily on organic growth and referrals. Introducing paid acquisition meant building an entirely new system from the ground up. Here’s how that journey unfolded and laid the foundation for a more data-driven approach to growth.",
+    "Before joining Piggyvest in 2023, customer acquisition relied heavily on organic growth and referrals. Introducing paid acquisition meant building an entirely new system from the ground up. Here’s how that journey unfolded and laid the foundation for a more data-driven approach to growth.",
   ],
   [
     "Need for Different Strategies on Different Platforms",
@@ -270,44 +269,68 @@ const sendSprintQuestions = withVideos(
   [51.3, 83.9, 97.6, 53.8, 48.6, 68, 50.7],
 );
 
-// Answers to follow; until then each question shows only its video.
+// A question without an answer yet shows only its video.
 const dangQuestions = withVideos(
   [
     [
       "The Real Problem",
       "What did the brand think the problem was, and what was the actual problem?",
+      [
+        "When my agency took over Dang’s advertising in April 2026, they uncovered a critical gap: great creatives were delivering results, but there was no system to push them beyond a certain threshold.",
+        "Discover how identifying the real problem shifted the focus from fixing ads to building a strategy for profitable growth.",
+      ],
     ],
     [
       "Taking DANG Abroad",
       "How do you take a Nigerian skincare brand into the US, UK and Canada without losing what worked at home?",
+      [
+        "Expanding a successful Nigerian brand into the US, UK, and Canada required more than replicating what worked in Nigeria. Each market needed a different approach to messaging, creatives, and customer engagement.",
+        "Discover how a combination of brand-building, audience-specific creatives, and Meta Ads helped create a strategy that reached potential customers at every stage of their buying journey.",
+      ],
     ],
     [
       "Diaspora vs Local Creative",
       "What changes in creative when the buyer is diaspora versus local?",
+      [
+        "Reaching diaspora audiences doesn’t always require a completely different creative strategy.",
+        "For Exodigital, the focus was on marketing skincare products to melanin-rich skin types with shared concerns like acne and hyperpigmentation, regardless of location.",
+        "Rather than changing the core message, the agency focused on finding creators and content that resonated with each audience while keeping the messaging consistent.",
+      ],
     ],
     [
       "Deciding What to Test First",
       "How did you decide what to test first, and how many ads at a time?",
+      [
+        "Effective ad testing isn’t about launching more creatives. It’s about testing the right ideas for the right audiences.",
+        "Rather than using a broad approach, Exodigital built a structured two-week testing system focused on specific skin concerns, customer personas, and stages of the buying journey.",
+        "Discover how targeted messaging, consistent creative refreshes, and scaling winning ads helped turn creative testing into a repeatable strategy for growth.",
+      ],
     ],
     [
       "Knowing When to Stop Spending",
       "What tells you to stop spending on something, even when the client wants to keep going?",
+      [
+        "A great-looking ad isn’t necessarily a profitable one, and knowing when to cut it can be just as important as knowing when to scale.",
+        "By setting clear cost-per-conversion thresholds and performance KPIs, every decision to pause, monitor, or increase ad spend was driven by data rather than emotions.",
+        "Discover how this disciplined approach helped eliminate underperforming creatives, protect advertising budgets, and make tough decisions, even when they challenged the client’s preferences.",
+      ],
     ],
     [
       "Reporting for Quick Decisions",
       "How did you report results so the founder could make decisions quickly?",
+      [
+        "Scaling a brand requires more than running profitable ads. It demands alignment across the entire business.",
+        "Through regular conversations with the founder and close collaboration with the supply, finance, and fulfillment teams, the agency ensured that advertising decisions reflected real business needs, from inventory levels to customer acquisition costs.",
+        "Learn how cross-functional collaboration, faster creative decisions, and data-driven communication helped connect marketing performance with broader business growth.",
+      ],
     ],
-    [
-      "A Decision I Got Wrong",
-      "What is one decision you got wrong, and what did it cost?",
-    ],
-  ].map(([label, question]) => ({ label, question, answer: [] })),
+  ].map(([label, question, answer = []]) => ({ label, question, answer })),
   import.meta.glob("./assets/CaseImgs/Dang/videos/*", {
     eager: true,
     import: "default",
   }),
   "./assets/CaseImgs/Dang/videos",
-  [52.3, 93.9, 54.2, 87.7, 67.3, 77.4, 49.7],
+  [52.3, 93.9, 54.2, 87.7, 67.3, 77.4],
 );
 
 export const CaseStudyData = [
@@ -335,7 +358,7 @@ export const CaseStudyData = [
       quote:
         "Ebuka brings data to disagreements and that is one of his characteristics that sets him apart.",
       name: "Joshua Chibueze",
-      role: "Co-Founder/CMO PiggyVest",
+      role: "Co-Founder/CMO Piggyvest",
       avatar: piggyReviewer,
     },
   },

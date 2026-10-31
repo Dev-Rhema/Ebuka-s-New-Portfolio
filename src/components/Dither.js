@@ -346,6 +346,9 @@ export function useDither(imageRef, sprite, watchRef) {
       frameId = requestAnimationFrame(tick);
       const next = Math.floor((time / 1000) * sprite.fps) % sprite.count;
       if (next === frame) return;
+      // A copy waiting off screen skips the work, and catches up the frame it reappears.
+      const { left, right } = canvas.getBoundingClientRect();
+      if (right <= 0 || left >= window.innerWidth) return;
       frame = next;
       draw();
     };

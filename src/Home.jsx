@@ -208,7 +208,7 @@ function Home({ play, showLogo }) {
           aria-label="Watch the latest Instagram reel"
           className="hero-card absolute z-60 top-141 right-32 hidden w-[14.5em] bg-black px-[0.5em] pb-[0.5em] text-16 md:block xl:top-[58.18%] xl:-mt-157.75 xl:right-[5.556vw]"
         >
-          <div className="h-[2.667em] overflow-hidden pt-[0.417em] font-['Geist'] text-[0.75em] leading-none font-medium whitespace-nowrap text-white">
+          <div className="h-[2.667em] overflow-hidden pt-[0.417em] font-['Geist'] text-[max(0.75em,11px)] leading-none font-medium whitespace-nowrap text-white">
             <div className="flex w-max animate-marquee">
               <MarqueeItems />
               <MarqueeItems />

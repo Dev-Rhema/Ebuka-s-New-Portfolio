@@ -9,8 +9,8 @@ const smoothstep = (min, max, value) => {
   return x * x * (3 - 2 * x);
 };
 
-const TEXTURE_WIDTH = 600;
-const TEXTURE_PADDING = 96;
+const TEXTURE_WIDTH = 400;
+const TEXTURE_PADDING = 64;
 
 const vertexShader = `
   uniform float uShear;

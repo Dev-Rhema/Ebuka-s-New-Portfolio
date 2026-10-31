@@ -41,8 +41,12 @@
   --u: calc(119px / 510);
 }
 
+/* Text scales with the layout, but never shrinks below a readable 12px. */
 @utility text-* {
-  font-size: calc(var(--u) * --value(number));
+  font-size: max(
+    calc(var(--u) * --value(number)),
+    min(calc(--value(number) * 1px), 12px)
+  );
 }
 
 @utility align-* {

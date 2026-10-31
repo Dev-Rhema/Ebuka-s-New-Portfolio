@@ -9,6 +9,7 @@ import {
 import Spiral from "./components/Spiral";
 import { Naira, Plus } from "./components/StatSymbols";
 import {
+  ChatLink,
   StatsData,
   aboutBrands,
   aboutIconCircle,
@@ -261,7 +262,7 @@ function About({ play }) {
   return (
     <section
       ref={container}
-      className="relative flex flex-col overflow-x-clip bg-white px-24 unit-440 md:block md:px-[3.125vw] xl:px-[5.556vw] md:unit-1440"
+      className="relative flex flex-col overflow-x-clip bg-white px-24 unit-440 md:block md:px-[3.125vw] xl:px-[5.556vw] md:unit-tablet xl:unit-1440"
     >
       <p
         className={`about-label mt-34 md:absolute md:top-59 md:left-[3.125vw] xl:left-[5.556vw] md:mt-0 ${sectionLabel}`}
@@ -269,7 +270,7 @@ function About({ play }) {
         About me
       </p>
 
-      <p className="about-text -mr-4 pt-12.5 font-['DM-Serif'] text-28 leading-33 tracking-[-0.01em] [word-spacing:-0.03em] text-[#838383] md:mr-0 md:py-56 md:text-55 md:leading-53.5">
+      <p className="about-text -mr-4 pt-12.5 font-['DM-Serif'] text-28 leading-33 tracking-[-0.01em] [word-spacing:-0.03em] text-[#838383] md:mr-0 md:py-56 md:text-44 md:leading-44 xl:text-55 xl:leading-53.5">
         <span className="hidden md:inline-block md:w-101.5" />
         With over{" "}
         <span className="text-black">
@@ -306,7 +307,7 @@ function About({ play }) {
         significantly impacts <span className="text-black">revenue</span>
       </p>
 
-      <div className="order-last -mx-24 h-500 mask-[linear-gradient(transparent,black_18%,black_82%,transparent)] md:absolute md:top-301 md:left-469 md:mx-0 md:h-view md:w-581">
+      <div className="order-last -mx-24 h-500 mask-[linear-gradient(transparent,black_18%,black_82%,transparent)] md:absolute md:right-0 md:bottom-0 md:mx-0 md:h-640 md:w-1/2 xl:top-301 xl:right-auto xl:bottom-auto xl:left-469 xl:h-view xl:w-581">
         <Spiral
           viewHeight={isMobile ? 906 : 900}
           radius={isTablet ? 270 : 300}
@@ -315,8 +316,8 @@ function About({ play }) {
         />
       </div>
 
-      <div className="mt-48 flex flex-col items-center md:mt-64 md:min-h-view md:flex-row md:items-start md:justify-between">
-        <div className="trusted-block flex flex-col items-center text-center md:block md:w-360 md:text-left">
+      <div className="mt-48 flex flex-col items-center md:mt-24 md:items-start md:pb-48 xl:mt-64 xl:min-h-view xl:flex-row xl:justify-between xl:pb-0">
+        <div className="trusted-block flex flex-col items-center text-center md:block md:w-340 md:text-left xl:w-360">
           <p className={`trusted-label mt-4 ${sectionLabel}`}>
             Trusted by incredible companies
           </p>
@@ -328,21 +329,25 @@ function About({ play }) {
             make your brand great together
           </p>
           <a
-            href="#contact"
+            href={ChatLink}
+            target="_blank"
+            rel="noreferrer"
             className={`trusted-button mt-15.5 md:mt-18 ${callButton}`}
           >
-            <span data-roll className="block">Book a Call</span>
+            <span data-roll className="block">
+              Book a Call
+            </span>
           </a>
         </div>
 
-        <ul className="trusted-stats mt-16 w-200 md:mt-0 md:mb-56 md:w-289 md:self-end">
+        <ul className="trusted-stats mt-16 w-200 md:mt-32 md:w-289 xl:mt-0 xl:mb-56 xl:self-end">
           {StatsData.map((stat, index) => (
             <li
               key={stat.label}
               className="trusted-stat relative flex h-129 flex-col items-center pt-31.5 md:h-120 md:pt-36.5 md:flex-row md:items-start"
             >
               <span className="trusted-value-mask">
-                <span className="trusted-value flex justify-center font-['DM-Serif'] text-48 leading-[0.75] tracking-[-0.02em] whitespace-nowrap text-black md:w-136 md:justify-end md:text-64">
+                <span className="trusted-value flex justify-center font-['DM-Serif'] text-48 leading-[0.75] tracking-[-0.02em] whitespace-nowrap text-black md:w-136 md:justify-end md:text-52 xl:text-64">
                   {stat.naira && <Naira />}
                   {stat.value}
                   <Plus />

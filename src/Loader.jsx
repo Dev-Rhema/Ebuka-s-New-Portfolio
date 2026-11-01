@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { gsap, useGSAP } from "./animation";
+import { gsap, useGSAP, warmUp } from "./animation";
 import FaceRings from "./components/FaceRings";
 import { headerImg, headerImgNoBg } from "./Data";
 import { heroBackdrop, heroRings } from "./styles";
@@ -205,6 +205,8 @@ function Loader({ onLogoMove, onComplete }) {
           null,
           2.2,
         );
+
+      warmUp(tl);
 
       const pageLoaded = new Promise((resolve) => {
         if (document.readyState === "complete") resolve();

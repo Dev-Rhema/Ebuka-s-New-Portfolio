@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
+import { isLowPower } from "../lowPower";
 
 const CONTRAST = 0.9;
 const DOT = 1;
 const GRAIN = 1.5;
 const GRAIN_STRENGTH = 0.25;
 const SPRITE_STRIPS = 16;
+const LOW_POWER_SPRITE_STRIPS = 64;
 
 const VERTEX = `
 attribute vec2 p;
@@ -173,7 +175,8 @@ const acquireSprite = (src) => {
       (bitmap) =>
         new Promise((resolve, reject) => {
           const { width, height } = bitmap;
-          const strip = Math.ceil(height / SPRITE_STRIPS);
+          const strips = isLowPower() ? LOW_POWER_SPRITE_STRIPS : SPRITE_STRIPS;
+          const strip = Math.ceil(height / strips);
           gl.bindTexture(gl.TEXTURE_2D, entry.texture);
           gl.texImage2D(
             gl.TEXTURE_2D,

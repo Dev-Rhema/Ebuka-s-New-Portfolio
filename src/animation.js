@@ -3,10 +3,23 @@ import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import { isLowPower, onLowPower } from "./lowPower";
 
 gsap.registerPlugin(useGSAP, CustomEase, ScrollTrigger, SplitText);
 
 gsap.ticker.lagSmoothing(250, 33);
+
+// A steady 30fps looks smoother than a frame rate that keeps dropping.
+const LOW_POWER_FPS = 30;
+const calmTicker = () => gsap.ticker.fps(LOW_POWER_FPS);
+if (isLowPower()) calmTicker();
+else onLowPower(calmTicker);
+
+// Tweens read computed styles on their first render. On a slow device that stalls the
+// start of the animation, so slow devices run it through once ahead of time, unseen.
+const warmUp = (tl) => {
+  if (isLowPower()) tl.progress(1, true).progress(0, true);
+};
 
 CustomEase.create("reveal", "M0,0 C0.35,0 0,1 1,1");
 
@@ -48,6 +61,7 @@ const revealOnScroll = (trigger, build, start = "top 80%") => {
     });
     const cleanup = build(tl);
     tl.eventCallback("onComplete", () => cleanup?.(true));
+    warmUp(tl);
     prepared = { tl, cleanup, width: trigger.offsetWidth };
   };
 
@@ -96,4 +110,5 @@ export {
   splitLines,
   SplitText,
   useGSAP,
+  warmUp,
 };

@@ -1,6 +1,7 @@
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { gsap, ScrollTrigger } from "./animation";
+import { isLowPower, onLowPower } from "./lowPower";
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -17,6 +18,22 @@ const lenis = reduceMotion.matches
 
 if (lenis) {
   // GSAP's ticker drives Lenis, so ScrollTrigger reads the smoothed position on the same frame.
+  const drive = (time) => lenis.raf(time * 1000);
   lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.add(drive);
+
+  // Low power mode caps the ticker, but the scroll itself should keep the screen's full frame rate.
+  const driveAlone = (time) => {
+    lenis.raf(time);
+    requestAnimationFrame(driveAlone);
+  };
+  const leaveTicker = () => {
+    gsap.ticker.remove(drive);
+    requestAnimationFrame((time) => {
+      lenis.time = time;
+      driveAlone(time);
+    });
+  };
+  if (isLowPower()) leaveTicker();
+  else onLowPower(leaveTicker);
 }

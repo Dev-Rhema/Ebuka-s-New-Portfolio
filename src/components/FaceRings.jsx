@@ -19,18 +19,25 @@ const RINGS = [
   },
 ];
 
-function Ring({ center, ring, className }) {
+// Each ring spins as its own svg. Spinning the svg rather than a circle inside it lets
+// the graphics chip turn it, so no browser has to repaint the ring on every frame.
+function Ring({ size, ring, className }) {
   return (
-    <circle
-      cx={center}
-      cy={center}
-      r={ring.r}
-      opacity="0.2"
-      stroke="white"
-      strokeWidth={ring.width}
-      strokeDasharray={`${ring.dash} ${ring.dash}`}
-      className={`origin-center transform-fill ${className}`}
-    />
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      fill="none"
+      className={`h-auto w-full ${className}`}
+    >
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={ring.r}
+        opacity="0.2"
+        stroke="white"
+        strokeWidth={ring.width}
+        strokeDasharray={`${ring.dash} ${ring.dash}`}
+      />
+    </svg>
   );
 }
 
@@ -38,23 +45,18 @@ function FaceRings({ className = "" }) {
   return (
     <div aria-hidden="true" className={className}>
       {RINGS.map(({ className: visibility, size, inner, outer }) => (
-        <svg
-          key={size + visibility}
-          viewBox={`0 0 ${size} ${size}`}
-          fill="none"
-          className={`h-auto w-full ${visibility}`}
-        >
+        <div key={size + visibility} className={`relative ${visibility}`}>
           <Ring
-            center={size / 2}
+            size={size}
             ring={inner}
             className="motion-safe:animate-[spin_40s_linear_infinite_reverse]"
           />
           <Ring
-            center={size / 2}
+            size={size}
             ring={outer}
-            className="motion-safe:animate-[spin_60s_linear_infinite]"
+            className="absolute inset-0 motion-safe:animate-[spin_60s_linear_infinite]"
           />
-        </svg>
+        </div>
       ))}
     </div>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { flagStaff as staff } from "../Data";
+import { LOW_POWER_FRAME_MS, isLowPower } from "../lowPower";
 import { whenNear } from "../whenNear";
 
 const STAFF_W = 94;
@@ -69,7 +70,7 @@ export const WavingFlag = ({
     const start = (THREE) => {
       const renderer = new THREE.WebGLRenderer({
         canvas,
-        antialias: true,
+        antialias: !isLowPower(),
         alpha: true,
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -144,6 +145,7 @@ export const WavingFlag = ({
 
       // The loop runs only while the flag is on screen.
       let frameId;
+      let lastDraw = 0;
       const intersectionObserver = new IntersectionObserver(([entry]) => {
         cancelAnimationFrame(frameId);
         if (entry.isIntersecting) frameId = requestAnimationFrame(render);
@@ -155,6 +157,8 @@ export const WavingFlag = ({
 
       const render = (time) => {
         frameId = requestAnimationFrame(render);
+        if (isLowPower() && time - lastDraw < LOW_POWER_FRAME_MS) return;
+        lastDraw = time;
         if (!reducedMotion.matches) wave(time);
         renderer.render(scene, camera);
       };

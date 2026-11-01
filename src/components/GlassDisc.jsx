@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { useLowPower } from "../lowPower";
 
 // Recreates the Figma "Glass" effect: light -45° at 80%, refraction 52, depth 100,
 // dispersion 49, frost 0. The video behind the disc is bent like a thick lens.
@@ -7,8 +8,9 @@ const DEPTH = 0.55; // how far in from the rim the glass curves
 const DISPERSION = 0.08; // how much further red bends than green, and blue less
 
 // Only Chromium renders SVG filters in backdrop-filter; other browsers get the
-// highlights over a brightened backdrop instead of the refraction.
-const refracts =
+// highlights over a brightened backdrop instead of the refraction. So do slow devices,
+// because the filter reruns on every video frame.
+const canRefract =
   typeof navigator !== "undefined" &&
   Boolean(navigator.userAgentData?.brands?.some((b) => b.brand === "Chromium"));
 
@@ -46,6 +48,8 @@ const CHANNELS = [
 
 function GlassDisc({ className = "", children }) {
   const id = useId();
+  const lowPower = useLowPower();
+  const refracts = canRefract && !lowPower;
 
   return (
     <span

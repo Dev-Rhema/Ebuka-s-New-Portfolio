@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import { SpiralCards, cardBack } from "../Data";
+import {
+  LOW_POWER_FRAME_MS,
+  cappedPixelRatio,
+  isLowPower,
+  onLowPower,
+} from "../lowPower";
 import { whenNear } from "../whenNear";
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -151,11 +157,10 @@ const Spiral = ({
       let frameId;
       let previousTime = performance.now();
       const renderer = new THREE.WebGLRenderer({
-        antialias: true,
+        antialias: !isLowPower(),
         alpha: true,
         powerPreference: "high-performance",
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setClearColor(0x000000, 0);
       renderer.domElement.className = "block size-full";
       host.appendChild(renderer.domElement);
@@ -228,6 +233,7 @@ const Spiral = ({
         const { width, height } = root.getBoundingClientRect();
         const w = Math.max(width, 1);
         const h = Math.max(height, 1);
+        renderer.setPixelRatio(cappedPixelRatio(w, h));
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         const visibleHeight = viewHeight ?? h;
@@ -239,6 +245,7 @@ const Spiral = ({
       resize();
       const resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(root);
+      const stopWatchingPower = onLowPower(resize);
       // The loop runs only while the spiral is on screen.
       const intersectionObserver = new IntersectionObserver(([entry]) => {
         cancelAnimationFrame(frameId);
@@ -255,6 +262,7 @@ const Spiral = ({
 
       const render = (time) => {
         frameId = requestAnimationFrame(render);
+        if (isLowPower() && time - previousTime < LOW_POWER_FRAME_MS) return;
         const delta = Math.min((time - previousTime) / 1000, 0.05);
         previousTime = time;
 
@@ -312,6 +320,7 @@ const Spiral = ({
         disposed = true;
         cancelAnimationFrame(frameId);
         resizeObserver.disconnect();
+        stopWatchingPower();
         intersectionObserver.disconnect();
         meshes.forEach((mesh) => mesh.material.dispose());
         geometry.dispose();

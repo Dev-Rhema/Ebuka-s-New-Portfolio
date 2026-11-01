@@ -222,13 +222,15 @@ function NextCaseStudy({ study }) {
           Next case study
         </p>
         <div className="mt-18 flex flex-col gap-24 md:mt-24 md:flex-row md:items-end md:justify-between">
-          <h2
-            data-split
-            className="font-['Geist'] text-18 leading-18 font-medium tracking-[-0.02em] text-black md:max-w-840 md:text-28 md:leading-28 xl:text-32 xl:leading-32"
-          >
-            {study.headline}
-          </h2>
-          {/* The banner below is the link on mobile. */}
+          <a href={study.link} className="block md:max-w-840">
+            <h2
+              data-split
+              className="font-['Geist'] text-18 leading-18 font-medium tracking-[-0.02em] text-black md:text-28 md:leading-28 xl:text-32 xl:leading-32"
+            >
+              {study.headline}
+            </h2>
+          </a>
+          {/* The title and banner are the links on mobile. */}
           <a
             href={study.link}
             className={`next-button shrink-0 max-md:hidden ${callButton}`}
@@ -310,17 +312,15 @@ function CaseStudyPage({ study, next }) {
       });
 
       const nextIntro = page.querySelector(".next-intro");
-      if (nextIntro) {
-        revealOnScroll(nextIntro, (tl) => {
-          const { lines, revert } = revealLines(tl, nextIntro);
-          revealButton(
-            tl,
-            nextIntro.querySelector(".next-button"),
-            0.1 + lines.length * 0.1,
-          );
-          return revert;
-        });
-      }
+      revealOnScroll(nextIntro, (tl) => {
+        const { lines, revert } = revealLines(tl, nextIntro);
+        revealButton(
+          tl,
+          nextIntro.querySelector(".next-button"),
+          0.1 + lines.length * 0.1,
+        );
+        return revert;
+      });
     },
     { dependencies: [fontsReady], scope: container },
   );
@@ -346,7 +346,7 @@ function CaseStudyPage({ study, next }) {
           className="reveal-media mt-16 h-200 w-full object-cover md:mt-28 md:h-auto md:aspect-16/5"
         />
         <Questions questions={study.questions} />
-        {next && <NextCaseStudy study={next} />}
+        <NextCaseStudy study={next} />
       </main>
       <Footer play />
     </>

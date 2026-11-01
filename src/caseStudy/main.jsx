@@ -14,7 +14,8 @@ if (index === -1) {
   location.replace("/404.html");
 } else {
   const study = CaseStudyData[index];
-  const next = CaseStudyData[index + 1];
+  // The last case study loops back to the first.
+  const next = CaseStudyData[(index + 1) % CaseStudyData.length];
   document.title = `${study.name} case study · Ebuka's Portfolio`;
 
   createRoot(document.getElementById("root")).render(

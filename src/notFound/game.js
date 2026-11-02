@@ -22,14 +22,15 @@ const LANDS_AT = JUMP.gather + JUMP.air;
 const JUMP_TIME = LANDS_AT + JUMP.land;
 const SPEED = { start: 320 * UNIT, max: 760 * UNIT, gain: 9 * UNIT };
 const SPEED_UP = { after: 20, factor: 2 };
-const SPEED_STEP = { every: 100, by: 0.1 };
+// Past the last step, rocks would pass too fast to jump.
+const SPEED_STEP = { every: 100, by: 0.1, most: 30 };
 const ROCK_GAPS = { spread: 1.2, tightest: 0.25, over: 60 };
 const ROCKS = [
   { url: bigRockUrl, w: 120 * UNIT, sink: 22 },
   { url: smallRockUrl, w: 62 * UNIT, sink: 26 },
 ];
 const SCORE_PER_PX = 1 / (40 * UNIT);
-const CHECKPOINT = { every: 1000, shield: 10, clear: 2 };
+const CHECKPOINT = { every: 20, shield: 10, clear: 2 };
 const SHIELD = {
   r: 278,
   rise: 184,
@@ -113,7 +114,6 @@ export async function startGame(root, { onStart, onEnd } = {}) {
   const hudEl = root.querySelector("[data-hud]");
   const scoreEl = root.querySelector("[data-score]");
   const bestEl = root.querySelector("[data-best]");
-  const bannerEl = root.querySelector("[data-banner]");
   const factEl = root.querySelector("[data-fact]");
   const expiresEl = root.querySelector("[data-expires]");
   const sheetEl = root.querySelector("[data-sheet]");
@@ -324,9 +324,8 @@ export async function startGame(root, { onStart, onEnd } = {}) {
   };
 
   const checkpoint = () => {
-    const fact = state.facts.pop();
-    factEl.textContent = fact ?? "";
-    bannerEl.hidden = !fact;
+    if (!state.facts.length) state.facts = shuffle(facts);
+    factEl.textContent = state.facts.pop();
     state.shield = CHECKPOINT.shield;
     root.dataset.checkpoint = "";
   };
@@ -339,6 +338,7 @@ export async function startGame(root, { onStart, onEnd } = {}) {
         rock.x + rockKinds[rock.kind].art.width < left,
     );
     delete root.dataset.checkpoint;
+    state.nextCheckpoint = state.time + CHECKPOINT.every;
   };
 
   const step = (dt) => {
@@ -356,17 +356,19 @@ export async function startGame(root, { onStart, onEnd } = {}) {
     const gain =
       SPEED.gain * (state.time > SPEED_UP.after ? SPEED_UP.factor : 1);
     state.cruise = Math.min(SPEED.max, state.cruise + gain * dt);
-    const steps = Math.floor(score() / SPEED_STEP.every);
+    const steps = Math.min(
+      SPEED_STEP.most,
+      Math.floor(score() / SPEED_STEP.every),
+    );
     state.speed = state.cruise * (1 + SPEED_STEP.by * steps);
     const travel = state.speed * dt;
     state.distance += travel;
 
-    if (score() >= state.nextCheckpoint) {
-      state.nextCheckpoint += CHECKPOINT.every;
-      checkpoint();
-    } else if (state.shield > 0) {
+    if (state.shield > 0) {
       state.shield = Math.max(0, state.shield - dt);
       if (!state.shield) dropShield();
+    } else if (state.time >= state.nextCheckpoint) {
+      checkpoint();
     }
 
     const pace = Math.min(

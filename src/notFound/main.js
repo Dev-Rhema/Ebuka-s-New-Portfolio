@@ -1,5 +1,4 @@
 import "../index.css";
-import "../rollText";
 import { startGame } from "./game";
 import { renderLeaderboard } from "./leaderboard";
 import { loadScores, submitScore } from "../scoresApi";

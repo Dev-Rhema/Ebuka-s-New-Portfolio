@@ -163,9 +163,7 @@ function Skills({ play }) {
           rel="noreferrer"
           className={`skills-button mx-auto mt-16 ${callButton}`}
         >
-          <span data-roll className="block">
-            Book a Call
-          </span>
+          <span className="block">Book a Call</span>
         </a>
       </div>
 

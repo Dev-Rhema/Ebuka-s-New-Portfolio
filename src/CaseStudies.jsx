@@ -37,7 +37,9 @@ function CaseStudy({ study }) {
               href={study.link}
               className={`case-link mt-19 md:mt-16 ${callButton}`}
             >
-              <span className="block">Learn More</span>
+              <span data-roll className="block">
+                Learn More
+              </span>
             </a>
           </div>
         </div>

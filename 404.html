@@ -46,15 +46,15 @@
         href="/"
         aria-label="Home"
         data-margin
-        class="absolute top-32.5 left-24 md:top-34.5 md:left-80"
+        class="absolute top-32.5 left-24 z-10 md:top-34.5 md:left-80"
       >
         <img src="/logo.svg" alt="" class="h-34 w-31 invert md:h-44 md:w-40" />
       </a>
       <a
         href="/"
-        class="absolute top-32 right-24 flex h-32 w-112 items-center justify-center bg-black font-['Geist'] text-14 font-medium tracking-[-0.04em] text-white md:right-80 md:h-46 md:w-144 md:text-16"
+        class="absolute top-32 right-24 z-10 flex h-32 w-112 items-center justify-center bg-black font-['Geist'] text-14 font-medium tracking-[-0.04em] text-white md:right-80 md:h-46 md:w-144 md:text-16"
       >
-        Home
+        <span data-roll>Home</span>
       </a>
 
       <div data-intro class="relative pt-98 md:pt-170">
@@ -109,6 +109,7 @@
             />
             <button
               type="submit"
+              data-roll
               disabled
               class="flex h-32 w-112 items-center justify-center bg-black font-['Geist'] text-14 font-medium tracking-[-0.04em] text-white disabled:opacity-40 md:h-46 md:w-144 md:text-16"
             ></button>

@@ -334,7 +334,9 @@ function About({ play }) {
             rel="noreferrer"
             className={`trusted-button mt-15.5 md:mt-18 ${callButton}`}
           >
-            <span className="block">Book a Call</span>
+            <span data-roll className="block">
+              Book a Call
+            </span>
           </a>
         </div>
 
